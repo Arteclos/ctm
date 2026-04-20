@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTM · Parcial 1 — Planck</title>
+<style>
+:root{--bg:#0e1016;--panel:#161a22;--panel2:#1c2230;--text:#e9edf5;--dim:#8a93a6;--accent:#ffd86b;--ok:#5ad7a3;--bad:#ff7aa3;--info:#7aa2ff;--trap:#ff9c6b;--border:#262c3a}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:60px 24px}
+h1{font-size:44px;margin:0 0 8px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#ffd86b,#ff7aa3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:12px;background:none;-webkit-text-fill-color:var(--dim)}
+.hero{padding:28px 32px;background:linear-gradient(135deg,#2a1a22,#1a1426);border:1px solid var(--bad);border-radius:14px;margin:32px 0;text-align:center}
+.hero .big{font-size:38px;font-weight:900;color:var(--bad)}
+.hero .sm{color:var(--dim);font-size:14px;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;text-decoration:none;color:var(--text);transition:all .2s;display:block;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.card .icon{font-size:32px;margin-bottom:8px}
+.card h3{margin:0 0 6px;font-size:19px;color:var(--accent)}
+.card p{margin:0;font-size:13px;color:var(--dim);line-height:1.5}
+.card.hunt{border-color:var(--bad)}
+.card.hunt h3{color:var(--bad)}
+.card.test{border-color:var(--ok)}
+.card.test h3{color:var(--ok)}
+.card .badge{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;background:var(--accent);color:#0e1016;padding:3px 8px;border-radius:999px;letter-spacing:0.5px}
+.card.hunt .badge{background:var(--bad);color:#fff}
+.card.test .badge{background:var(--ok);color:#0e1016}
+footer{text-align:center;margin-top:60px;color:var(--dim);font-size:13px;opacity:.7}
+.note{background:rgba(122,162,255,.08);border:1px solid var(--info);border-radius:10px;padding:14px 18px;margin:24px 0;font-size:13px;color:var(--text)}
+.note b{color:var(--info)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CTM · Parcial 1
+    <small>Ciència i Tecnologia de Materials · EEBE · 21 d'abril 2026</small>
+  </h1>
+
+  <div class="hero">
+    <div class="big" id="countdown">demà</div>
+    <div class="sm">per davant: objectiu 10/10</div>
+  </div>
+
+  <div class="note">
+    <b>💡 Ruta recomanada d'ús:</b> obre primer <b>Caçador</b> per veure què cau segur.
+    Després passa al <b>Test</b> per detectar llacunes. Torna a les sessions teòriques (T1–T7) només si un concepte et falla.
+  </div>
+
+  <div class="grid">
+    <a class="card hunt" href="cacador-preguntes.html">
+      <span class="badge">COMENÇA AQUÍ</span>
+      <div class="icon">🎯</div>
+      <h3>Caçador de preguntes</h3>
+      <p>El que cau SEGUR basat en 17 exàmens reals. Top trampes, predicció dels 2 problemes, checklist dels 15 conceptes crítics. Prioritats i % per tema.</p>
+    </a>
+
+    <a class="card test" href="simulador-test.html">
+      <span class="badge">PRACTICA</span>
+      <div class="icon">🧪</div>
+      <h3>Simulador de Test</h3>
+      <p>~260 preguntes reals dels últims 10 exàmens (2018–2025). Filtres per tema. Puntuació com a examen real (+1 / -0,5 / 0). Explicació de cada resposta.</p>
+    </a>
+
+    <a class="card" href="sessio-01-enllacos.html">
+      <div class="icon">🔗</div>
+      <h3>Tema 1 · Enllaços</h3>
+      <p>Metàl·lic, iònic, covalent, VdW, pont H. Com i per què els àtoms s'enganxen. Propietats dels 3 grups de materials.</p>
+    </a>
+
+    <a class="card" href="sessio-02-cristalografia.html">
+      <div class="icon">🔷</div>
+      <h3>Tema 2 · Cristalografia</h3>
+      <p>FCC / BCC / HCP. APF, coordinació, densitat teòrica. Defectes puntuals, lineals, superficials. Al·lotropia.</p>
+    </a>
+
+    <a class="card" href="sessio-03-difusio.html">
+      <div class="icon">🌊</div>
+      <h3>Tema 3 · Difusió</h3>
+      <p>Fick 1a i 2a. Arrhenius. Carburació / nitruració. Taula erf. Problema clau del parcial (92% probabilitat).</p>
+    </a>
+
+    <a class="card" href="sessio-05-mecaniques.html">
+      <div class="icon">🔧</div>
+      <h3>Tema 7 · Mecàniques</h3>
+      <p>Corba σ-ε. Mòdul Young, σ_y, tenacitat, ductilitat. Poisson. Resiliència. Fatiga. Interpretació d'assajos.</p>
+    </a>
+  </div>
+
+  <footer>
+    <p>Planck · Motor d'Estudi · <b>10/10 o res</b></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var exam = new Date('2026-04-21T15:30:00');
+  function update(){
+    var now = new Date();
+    var diff = exam - now;
+    var el = document.getElementById('countdown');
+    if (!el) return;
+    if (diff < 0) { el.textContent = 'EXAMEN AVUI'; return; }
+    var hours = Math.floor(diff / (1000*60*60));
+    var days = Math.floor(hours / 24);
+    if (days >= 1) el.textContent = days + (days === 1 ? ' dia' : ' dies');
+    else if (hours >= 1) el.textContent = hours + (hours === 1 ? ' hora' : ' hores');
+    else el.textContent = Math.floor(diff / (1000*60)) + ' minuts';
+  }
+  update();
+  setInterval(update, 60000);
+})();
+</script>
+</body>
+</html>
