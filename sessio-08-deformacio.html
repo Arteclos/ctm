@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 8A — Deformació plàstica</title>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff; --trap:#ff9c6b;
+  --border:#262c3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:38px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:50px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:28px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin:24px 0 28px}
+.hero .q{font-size:17px;color:var(--accent);margin-top:14px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-4,.grid-2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--panel2);color:var(--accent);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+.analogy{background:#0c1220;border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:14px;color:#cfd6e6;margin-top:10px}
+.analogy b{color:var(--accent)}
+.fml{background:#0a0d13;border-left:3px solid var(--info);padding:12px 16px;border-radius:6px;font-family:'JetBrains Mono','Consolas',monospace;font-size:14px;margin:8px 0}
+.trap{background:linear-gradient(135deg,rgba(255,156,107,.08),rgba(255,122,163,.05));border:1px solid var(--trap);border-radius:10px;padding:14px 18px;margin:10px 0}
+.trap .tlabel{color:var(--trap);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.mech-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.mech-card .mnum{display:inline-block;background:var(--accent);color:#0e1016;font-weight:800;width:28px;height:28px;border-radius:50%;line-height:28px;font-size:14px}
+.mech-card h4{margin:8px 0 4px;font-size:15px;color:var(--accent)}
+.mech-card p{font-size:13px;color:var(--dim);margin:4px 0 0}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-04-polimers.html" data-page="sessio-04-polimers">T4 · Polímers</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="sessio-08-deformacio.html" data-page="sessio-08-deformacio">T8A · Deformació</a>
+  <a href="sessio-09-corrosio.html" data-page="sessio-09-corrosio">Corrosió</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+
+<div class="wrap">
+<h1>Tema 8A · Deformació plàstica
+  <small>Com es deformen permanentment els metalls · Dislocacions · 4 mecanismes d'enduriment</small>
+</h1>
+
+<div class="hero">
+  <p><b>El fenomen real:</b> estires una barra d'acer. Primer torna a la longitud original (elàstic). Arriba un moment que ja no torna — s'ha deformat <b>permanentment</b>. Per què? A escala atòmica, s'han mogut <b>defectes lineals</b> anomenats dislocacions. El moviment d'aquests defectes és el mecanisme de tota la plasticitat dels metalls.</p>
+  <p class="q">"Els metalls són dúctils perquè tenen dislocacions. Els ceràmics iònics no deformen plàsticament perquè lliscar plans posaria ions del mateix signe cara a cara."</p>
+</div>
+
+<!-- ============ DEFORMACIÓ ELÀSTICA VS PLÀSTICA ============ -->
+<h2>🔄 Elàstica vs plàstica</h2>
+<div class="card">
+  <table>
+    <tr><th>Característica</th><th>Elàstica</th><th>Plàstica</th></tr>
+    <tr><td>Reversible?</td><td><b>Sí</b> — torna a l₀</td><td><b>No</b> — queda deformat</td></tr>
+    <tr><td>On passa?</td><td>σ &lt; σ_y</td><td>σ &gt; σ_y</td></tr>
+    <tr><td>Mecanisme</td><td>Estirament d'enllaços (ressorts)</td><td>Moviment de dislocacions</td></tr>
+    <tr><td>Energia</td><td>Retornable (resiliència Ur)</td><td>Dissipada (calor)</td></tr>
+    <tr><td>Llei</td><td>Hooke: σ = E·ε</td><td>No lineal, depèn del material</td></tr>
+  </table>
+
+  <div class="analogy"><b>Analogia:</b> un molles entre dues mans. Si l'estires poc, torna sol = elàstic. Si l'estires massa, queda permanent doblat = plàstic. La frontera és σ_y.</div>
+</div>
+
+<!-- ============ MECANISME: DISLOCACIONS ============ -->
+<h2>🧬 Mecanisme — dislocacions i maclatge</h2>
+<div class="card">
+  <p>La deformació plàstica dels metalls té <b>2 mecanismes principals</b>:</p>
+
+  <h3>1. Moviment de DISLOCACIONS (majoritari)</h3>
+  <p>Les dislocacions són <b>defectes lineals</b>. Quan s'aplica tensió, es mouen a través del cristall plan per plan → deformació. És molt més fàcil que moure tots els àtoms alhora.</p>
+
+  <div class="analogy"><b>Analogia catifa:</b> per arrossegar una catifa pesant, no tires de tota d'una vegada. Fas una ONA (arruga) i la fas avançar. La dislocació és com aquesta ona — permet lliscar amb poca força.</div>
+
+  <h3>Tipus de dislocacions</h3>
+  <table>
+    <tr><th>Tipus</th><th>Geometria</th><th>Vector de Burgers (b)</th></tr>
+    <tr><td>Aresta</td><td>Pla extra d'àtoms inserit</td><td><b>⊥</b> a la línia de dislocació</td></tr>
+    <tr><td>Helicoidal (o de cargol)</td><td>Plans desplaçats en espiral</td><td><b>∥</b> a la línia</td></tr>
+    <tr><td>Mixta</td><td>Combinació d'aresta + helicoidal</td><td>Angle intermedi</td></tr>
+  </table>
+
+  <p style="font-size:13px;color:var(--dim)"><b>Vector de Burgers b</b>: magnitud i direcció del desplaçament atòmic que causa la dislocació. Totes les dislocacions són defectes <b>LINEALS (1D)</b>.</p>
+
+  <h3>2. MACLATGE (secundari)</h3>
+  <p>Quan no hi ha prou sistemes de lliscament (p.ex. HCP), el cristall es deforma per <b>reflexió d'una porció</b>. Cada pla es desplaça una distància <b>proporcional</b> a la seva posició (no uniforme com en dislocacions).</p>
+  <p>Típic en HCP (Mg, Ti, Zn) i a baixa T. Produeix bandes visibles al microscopi.</p>
+</div>
+
+<!-- ============ SISTEMES DE LLISCAMENT ============ -->
+<h2>📐 Sistemes de lliscament</h2>
+<div class="card">
+  <p>Un <b>sistema de lliscament</b> = pla cristal·logràfic més dens + direcció més densa dins el pla. Les dislocacions llisquen per aquests sistemes (menor energia).</p>
+
+  <table>
+    <tr><th>Estructura</th><th>Pla</th><th>Direcció</th><th>Nº sistemes</th><th>Conseqüència</th></tr>
+    <tr><td><b>FCC</b> (Cu, Al, γ-Fe)</td><td>{111}</td><td>&lt;110&gt;</td><td><b>12</b></td><td>Molt dúctil</td></tr>
+    <tr><td><b>BCC</b> (α-Fe, W, Cr)</td><td>{110}, {112}, {123}</td><td>&lt;111&gt;</td><td><b>12</b> (actius a T ambient)</td><td>Dúctil però menys que FCC</td></tr>
+    <tr><td><b>HCP</b> (Mg, Ti, Zn)</td><td>basal {0001}</td><td>&lt;11-20&gt;</td><td><b>3</b></td><td><b>Fràgil</b> relatiu</td></tr>
+  </table>
+
+  <div class="trap">
+    <div class="tlabel">⚠ Punt clau</div>
+    <p style="margin:0"><b>HCP té només 3 sistemes</b> de lliscament basal actius a T ambient → poca capacitat de deformar-se plàsticament → Mg pur es trenca fàcilment. Per això Mg s'alia amb Al (Mg-Al és més dúctil que Mg pur).</p>
+  </div>
+</div>
+
+<!-- ============ PER QUÈ CERÀMICS NO DEFORMEN ============ -->
+<h2>🪨 Per què els ceràmics iònics no deformen plàsticament</h2>
+<div class="card">
+  <p>En un cristall iònic (NaCl, MgO), lliscar un pla posaria <b>ions del mateix signe cara a cara</b> → <b>repulsió</b> enorme → el cristall es <b>trenca</b> abans de deformar-se.</p>
+  <p>Només hi ha pocs sistemes on el desplaçament evita aquesta repulsió → ceràmics iònics = <b>fràgils</b>.</p>
+  <p>En covalents (SiC, diamant): els enllaços són direccionals i no es poden "remolcar" lateralment → també fràgils.</p>
+  <p>En metalls: enllaç NO direccional (núvol d'electrons) → els plans poden lliscar sense trencar enllaços → DÚCTILS.</p>
+</div>
+
+<!-- ============ 4 MECANISMES D'ENDURIMENT ============ -->
+<h2>⚒️ Els 4 mecanismes d'enduriment (clàssics)</h2>
+<div class="card">
+  <p>Tots fan <b>el mateix</b>: <b>obstaculitzar el moviment de dislocacions</b>. Més obstacles = més σ_y (més dur). Pagues en ductilitat (menys %EL).</p>
+
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="mech-card">
+      <span class="mnum">1</span>
+      <h4>Solució sòlida</h4>
+      <p>Àtoms soluts deformen la xarxa → "enganxen" dislocacions. Ex: C en Fe, Zn en Cu (llautó).</p>
+    </div>
+    <div class="mech-card">
+      <span class="mnum">2</span>
+      <h4>Gra fi (Hall-Petch)</h4>
+      <p>Més contorns de gra = més barreres. D petit → σ_y gran. σ_y = σ₀ + k/√D</p>
+    </div>
+    <div class="mech-card">
+      <span class="mnum">3</span>
+      <h4>Treball en fred</h4>
+      <p>Deformar plàsticament genera més dislocacions que s'interfereixen entre elles. Acumula dany.</p>
+    </div>
+    <div class="mech-card">
+      <span class="mnum">4</span>
+      <h4>Precipitació</h4>
+      <p>Partícules fines de 2a fase (envelliment) bloquegen dislocacions. Ex: aliatges Al 2024, 7075 d'avions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HALL-PETCH ============ -->
+<h2>📏 Hall-Petch — enduriment per mida de gra</h2>
+<div class="card">
+  <p>El contorn de gra és una <b>barrera</b> per al moviment de dislocacions. Una dislocació que arriba al contorn queda atrapada. Més contorns (grans petits) = més barreres = més dur.</p>
+
+  <div class="fml">
+    <b>Equació de Hall-Petch:</b><br>
+    σ_y = σ₀ + k · D<sup>-1/2</sup><br><br>
+    σ_y = límit elàstic (MPa)<br>
+    σ₀ = resistència intrínseca xarxa (MPa) · constant del material<br>
+    k = coeficient Hall-Petch (MPa·m<sup>1/2</sup>) · constant del material<br>
+    D = diàmetre mitjà dels grans (m)
+  </div>
+
+  <p><b>Conseqüència pràctica:</b> per endurir un metall, redueix la mida de gra. S'aconsegueix per:
+    <ul style="margin:6px 0 0 20px">
+      <li>Refredament ràpid durant solidificació</li>
+      <li>Tractament de recristal·lització controlada</li>
+      <li>Addició d'inoculants</li>
+    </ul>
+  </p>
+
+  <div class="analogy"><b>Intuïció:</b> comparar les dislocacions amb cotxes en un aparcament. Més divisions (grans petits) = els cotxes no poden recórrer distàncies llargues → metall més "atascat" → més rígid.</div>
+</div>
+
+<!-- ============ TREBALL EN FRED I RECRISTAL·LITZACIÓ ============ -->
+<h2>❄️🔥 Treball en fred i recristal·lització</h2>
+<div class="card">
+  <h3>Treball en fred (cold working)</h3>
+  <p>Deformar plàsticament un metall a T &lt; 0,3·T_m. Resultat:</p>
+  <ul>
+    <li>↑ densitat de dislocacions (moltes, interfereixen entre si)</li>
+    <li>↑ resistència (σ_y, σ_u)</li>
+    <li>↓ ductilitat (%EL)</li>
+    <li>Acumula energia emmagatzemada</li>
+  </ul>
+  <p>Ex: trefilar un fil de coure — fa cada vegada més rígid i trencadís.</p>
+
+  <h3>Recristal·lització</h3>
+  <p>Escalfar el metall treballat a T ≈ 0,3–0,5·T_m. Es formen <b>nous grans</b> equiaxials sense dislocacions. Conseqüències:</p>
+  <ul>
+    <li>↓ dislocacions (s'anul·len)</li>
+    <li>↓ σ_y (més tou)</li>
+    <li>↑ ductilitat (recuperada)</li>
+    <li>Elimina l'enduriment per treball en fred</li>
+  </ul>
+
+  <p><b>Procés industrial</b>: passada de laminació (treball fred) → recuit (recristal·lització) → nova passada → recuit → ... Això permet fabricar xapes fines sense trencar el material.</p>
+</div>
+
+<!-- ============ TRAMPES ============ -->
+<h2>⚠ Trampes típiques d'examen T8A</h2>
+
+<div class="trap">
+  <div class="tlabel">Trampa 1</div>
+  <b>Totes les dislocacions són LINEALS (1D)</b>
+  <p style="margin:4px 0 0;font-size:14px">Aresta, helicoidal, mixta — totes són lineals. NO puntuals (això són vacants). NO superficials (límit de gra).</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 2</div>
+  <b>Vector de Burgers: aresta ⊥, helicoidal ∥</b>
+  <p style="margin:4px 0 0;font-size:14px">Aresta: b <b>perpendicular</b> a la línia de dislocació. Helicoidal: b <b>paral·lel</b> a la línia. Invertir-ho és un error clàssic d'examen.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 3</div>
+  <b>HCP té POCS sistemes de lliscament (3)</b>
+  <p style="margin:4px 0 0;font-size:14px">FCC i BCC: 12 sistemes → dúctils. HCP: només 3 (basal) → fràgil relatiu. Per això Mg pur es trenca fàcilment.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 4</div>
+  <b>Ceràmics iònics: lliscar = repulsió</b>
+  <p style="margin:4px 0 0;font-size:14px">No deformen plàsticament perquè lliscar posaria ions del mateix signe cara a cara → repulsió elèctrica enorme → trenca abans. Per això NaCl és fràgil.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 5</div>
+  <b>Recristal·lització elimina DISLOCACIONS, no vacants</b>
+  <p style="margin:4px 0 0;font-size:14px">Recristal·lització (0,3-0,5·Tm) anul·la dislocacions i forma nous grans. Vacants i impureses no s'eliminen amb recristal·lització (requereixen altres tractaments).</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 6</div>
+  <b>Hall-Petch: grans PETITS = MÉS dur</b>
+  <p style="margin:4px 0 0;font-size:14px">D petit → k/√D gran → σ_y gran. Contra-intuïtiu si penses "petit = feble". La lògica: petit = més barreres = més difícil que dislocacions avancin.</p>
+</div>
+
+<!-- ============ RESUM ============ -->
+<h2>⚡ Resum flash per últim repàs</h2>
+<div class="card soft">
+  <ul style="font-size:14px;line-height:1.8">
+    <li><b>Plasticitat metalls = moviment dislocacions + maclatge</b></li>
+    <li><b>Dislocacions = LINEALS</b> (aresta, helicoidal, mixta). Tota dislocació és lineal.</li>
+    <li><b>Vector de Burgers</b>: aresta ⊥ línia · helicoidal ∥ línia</li>
+    <li><b>Sistemes de lliscament</b>: FCC 12 · BCC 12 · HCP 3 (basal)</li>
+    <li><b>HCP fràgil</b> per pocs sistemes — Mg, Ti, Zn</li>
+    <li><b>Ceràmics iònics</b> no deformen plàsticament per repulsió electrostàtica</li>
+    <li><b>4 mecanismes enduriment</b>: (1) solució sòlida · (2) gra fi Hall-Petch · (3) treball en fred · (4) precipitació</li>
+    <li><b>Hall-Petch</b>: σ_y = σ₀ + k·D<sup>-1/2</sup> · D petit = dur</li>
+    <li><b>Treball en fred</b> ↑σ_y ↓ductilitat · acumula dislocacions</li>
+    <li><b>Recristal·lització</b> (0,3-0,5·Tm) → elimina dislocacions, forma nous grans equiaxials</li>
+  </ul>
+  <p style="text-align:center;margin-top:16px">
+    <a href="simulador-test.html" style="display:inline-block;background:var(--ok);color:#0e1016;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🧪 Practica T8A al simulador</a>
+    &nbsp;
+    <a href="cacador-preguntes.html#t8a" style="display:inline-block;background:var(--bad);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🎯 T8A al Caçador</a>
+  </p>
+</div>
+
+</div>
+</body>
+</html>

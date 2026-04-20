@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Corrosió — 4 preguntes fixes</title>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff; --trap:#ff9c6b;
+  --border:#262c3a; --corr:#ff5aa7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:38px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:50px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:28px 30px;background:linear-gradient(135deg,#2a1622,#1a1426);border:1px solid var(--corr);border-radius:14px;margin:24px 0 28px}
+.hero .q{font-size:17px;color:var(--corr);margin-top:14px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--panel2);color:var(--accent);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+.analogy{background:#0c1220;border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:14px;color:#cfd6e6;margin-top:10px}
+.analogy b{color:var(--accent)}
+.fml{background:#0a0d13;border-left:3px solid var(--info);padding:12px 16px;border-radius:6px;font-family:'JetBrains Mono','Consolas',monospace;font-size:14px;margin:8px 0}
+.trap{background:linear-gradient(135deg,rgba(255,156,107,.08),rgba(255,122,163,.05));border:1px solid var(--trap);border-radius:10px;padding:14px 18px;margin:10px 0}
+.trap .tlabel{color:var(--trap);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.slot{background:var(--panel2);border:2px solid var(--corr);border-radius:12px;padding:20px 24px;margin:14px 0}
+.slot .snum{display:inline-block;background:var(--corr);color:#fff;font-weight:800;font-size:12px;padding:4px 10px;border-radius:4px;letter-spacing:1px}
+.slot h3{margin-top:10px;color:var(--corr)}
+.anode-cat{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.ac-cell{padding:18px;text-align:center}
+.ac-cell.anode{background:rgba(255,122,163,.12);border-right:1px solid var(--border)}
+.ac-cell.catode{background:rgba(90,215,163,.12)}
+.ac-cell h4{margin:0 0 6px;font-size:16px}
+.ac-cell.anode h4{color:var(--bad)}
+.ac-cell.catode h4{color:var(--ok)}
+.ac-cell p{margin:0;font-size:13px}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-04-polimers.html" data-page="sessio-04-polimers">T4 · Polímers</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="sessio-08-deformacio.html" data-page="sessio-08-deformacio">T8A · Deformació</a>
+  <a href="sessio-09-corrosio.html" data-page="sessio-09-corrosio">Corrosió</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+
+<div class="wrap">
+<h1>Corrosió · Autoaprenentatge
+  <small>4 preguntes FIXES al parcial · Electroquímica · Tipus de corrosió · Protecció</small>
+</h1>
+
+<div class="hero">
+  <p><b>El fenomen real:</b> deixes una barra de ferro a la intempèrie. Al cap d'uns dies apareix rovell vermellós. Dins, els àtoms de Fe han perdut electrons (oxidació) i s'han combinat amb l'O₂ de l'aire. Això és corrosió: la <b>destrucció electroquímica</b> dels metalls per reacció amb l'entorn.</p>
+  <p class="q">"Tots els metalls (excepte Au, Pt) volen tornar a ser òxids. La corrosió és aquest retorn al 'estat natural'. Nosaltres només l'alentim, no la podem aturar del tot."</p>
+  <p style="color:var(--corr);font-weight:700;margin-top:12px">⚡ 4 preguntes FIXES a l'examen — això és el que necessites saber.</p>
+</div>
+
+<!-- ============ FONAMENTS ============ -->
+<h2>⚗️ Fonaments: pila galvànica</h2>
+<div class="card">
+  <p>La corrosió electroquímica necessita <b>4 elements simultanis</b> (si en falta un, no hi ha corrosió):</p>
+  <ol>
+    <li><b>Ànode</b> — metall que s'oxida (perd electrons): M → M<sup>n+</sup> + n·e<sup>-</sup></li>
+    <li><b>Càtode</b> — on es redueix alguna cosa (guanya electrons): p.ex. O₂ + 2H₂O + 4e<sup>-</sup> → 4OH<sup>-</sup></li>
+    <li><b>Electròlit</b> — aigua amb sals, humitat, dissolució — transport d'ions</li>
+    <li><b>Contacte elèctric</b> entre ànode i càtode — permet flux d'electrons</li>
+  </ol>
+
+  <div class="anode-cat">
+    <div class="ac-cell anode">
+      <h4>ÀNODE</h4>
+      <p><b>Es corroeix</b></p>
+      <p>Material més ACTIU (menys noble)</p>
+      <p>Cedeix electrons</p>
+      <p>Ex: Zn, Mg, Fe</p>
+    </div>
+    <div class="ac-cell catode">
+      <h4>CÀTODE</h4>
+      <p><b>No es corroeix (protegit)</b></p>
+      <p>Material més NOBLE (inert)</p>
+      <p>Rep electrons</p>
+      <p>Ex: Cu, Au, Pt</p>
+    </div>
+  </div>
+
+  <div class="analogy"><b>Memòria:</b> <b>AN</b>ode = m<b>A</b>terial actiu = s'<b>A</b>caba. <b>CA</b>tode = m<b>C</b>etall noble = <b>C</b>ontinua. O també: "El que CRIDA més, es COrroeix primer" (A = Actiu = Atacat).</div>
+</div>
+
+<!-- ============ SÈRIES GALVÀNIQUES ============ -->
+<h2>📊 Sèries galvàniques</h2>
+<div class="card">
+  <p>Ordenen els metalls pel seu <b>potencial d'oxidació</b> (tendència termodinàmica a oxidar-se). De més actiu a més noble:</p>
+
+  <div class="fml">
+    <b>Ordre simplificat (de ÀNODE a CÀTODE):</b><br>
+    Mg → Zn → Al → Fe → Ni → Sn → Pb → Cu → Ag → Au/Pt<br>
+    <span style="color:var(--bad)">MÉS ACTIU</span> → → → → → → → → → → → <span style="color:var(--ok)">MÉS NOBLE</span>
+  </div>
+
+  <p style="font-size:14px;color:var(--dim)">Quan 2 metalls d'aquesta sèrie entren en contacte amb electròlit, el que està <b>a l'esquerra</b> (més actiu) és ànode i es corroeix. El que està a la dreta és càtode i queda protegit.</p>
+
+  <div class="trap">
+    <div class="tlabel">⚠ Important</div>
+    <p style="margin:0;font-size:14px">Les sèries diuen <b>QUI es corroirà</b> (termodinàmica), NO <b>quant ràpid</b> (cinètica). Per això Al és molt actiu però té capa passiva que l'aturà.</p>
+  </div>
+</div>
+
+<!-- ============ LLEI DE FARADAY ============ -->
+<h2>⚖️ Llei de Faraday</h2>
+<div class="card">
+  <p>Relaciona la massa corroïda amb el corrent que circula i el temps.</p>
+  <div class="fml">
+    m = (I · t · M) / (n · F)<br><br>
+    m = massa corroïda (g)<br>
+    I = corrent (A)<br>
+    t = temps (s)<br>
+    M = massa atòmica (g/mol)<br>
+    n = valència (nombre d'electrons intercanviats)<br>
+    F = constant de Faraday = 96 500 C/mol
+  </div>
+  <p style="font-size:13px;color:var(--dim)">Útil per calcular velocitat de corrosió en problemes quantitatius (poc habitual al parcial 1 però pot aparèixer).</p>
+</div>
+
+<!-- ============ 8 TIPUS DE CORROSIÓ ============ -->
+<h2>🧪 Els 8 tipus de corrosió</h2>
+<div class="card">
+  <div class="grid grid-2">
+    <div class="card soft">
+      <h3 style="margin-top:0">1. Uniforme</h3>
+      <p style="font-size:14px">Atac electroquímic que afecta <b>tota</b> la superfície per igual. Rovellament "normal" de Fe. És la MÉS PREDICTIBLE (pots dissenyar amb gruix extra).</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">2. Galvànica</h3>
+      <p style="font-size:14px">2 metalls diferents + electròlit + contacte elèctric. El MÉS ACTIU (ànode) es corroeix, el MÉS NOBLE (càtode) queda protegit. Ex: llauna d'acer soldada amb Cu.</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">3. Picadures (pitting)</h3>
+      <p style="font-size:14px">Forats rodons LOCALITZATS on es trenca la capa passiva. <b>Creixen cap AVALL per gravetat</b> (productes densos cauen dins). Típic en Cl⁻ (sal). Perillosa perquè és invisible des de fora.</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">4. Intergranular</h3>
+      <p style="font-size:14px">Als <b>límits de gra</b>. Típic en inox soldats: a 500-800°C precipita Cr₂₃C₆ als contorns → empobreix Cr → perd passivitat → corrosió. S'anomena "sensibilització".</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">5. Erosió-corrosió</h3>
+      <p style="font-size:14px">Atac químic + abrasió mecànica simultanis. Fluid que flueix ràpid + partícules → trenca capa passiva → corrosió accelerada. Típic en colzes, hèlixs, turbines.</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">6. SCC (Stress Corrosion Cracking)</h3>
+      <p style="font-size:14px">Esquerdes <b>perpendiculars a la tensió</b> aplicada. Necessita 3 condicions simultànies: TENSIÓ + AMBIENT CORROSIU específic + MATERIAL SUSCEPTIBLE. Ex: inox + Cl⁻.</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">7. Aeració diferencial</h3>
+      <p style="font-size:14px">Pila de CONCENTRACIÓ d'O₂. Zones amb diferent O₂ formen pila — la zona amb MENYS O₂ (sota cargols, juntes, brutícia) és ànode i es corroeix. Típic en unions cargolades/reblades.</p>
+    </div>
+    <div class="card soft">
+      <h3 style="margin-top:0">8. Eliminació selectiva</h3>
+      <p style="font-size:14px">Un component de l'aliatge es perd preferentment. Ex: <b>descincat</b> del llautó (Cu-Zn) en aigua estancada — Zn es dissol, queda estructura porosa de Cu molt debilitada.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PASSIVACIÓ ============ -->
+<h2>🛡️ Passivació</h2>
+<div class="card">
+  <p>Alguns metalls formen una <b>capa d'òxid fina, adherent i estable</b> que els protegeix de més corrosió. Aquesta capa fa que siguin "inerts" tot i ser termodinàmicament actius.</p>
+
+  <table>
+    <tr><th>Metall</th><th>Capa passiva</th><th>Gruix</th></tr>
+    <tr><td>Alumini</td><td>Al₂O₃</td><td>~2-10 nm</td></tr>
+    <tr><td>Titani</td><td>TiO₂</td><td>~5-10 nm</td></tr>
+    <tr><td>Acer inoxidable</td><td>Cr₂O₃ (requereix &gt;12% Cr)</td><td>~2-5 nm</td></tr>
+    <tr><td>Zinc</td><td>ZnO / ZnCO₃</td><td>Més gruixuda</td></tr>
+  </table>
+
+  <div class="trap">
+    <div class="tlabel">⚠ Punt clau</div>
+    <p style="margin:0;font-size:14px">La capa passiva és FINA però EFECTIVA. Si es trenca (per erosió, SCC, Cl⁻), el metall nu queda exposat i la corrosió es dispara. Per això metalls passivats són sensibles a EROSIÓ.</p>
+  </div>
+</div>
+
+<!-- ============ PROTECCIÓ ============ -->
+<h2>🔰 Mètodes de protecció</h2>
+<div class="card">
+  <h3>1. Protecció catòdica</h3>
+  <p><b>Converteix el material a protegir en CÀTODE</b> → no es corroeix. Dos mètodes:</p>
+  <div class="grid grid-2">
+    <div class="card soft">
+      <h4 style="margin-top:0;color:var(--accent)">a) Ànode de sacrifici</h4>
+      <p style="font-size:14px">Es connecta un metall MÉS ACTIU (normalment <b>Mg o Zn</b>) al material a protegir. El metall més actiu es corroeix (sacrifici), el material queda protegit.</p>
+      <p style="font-size:13px;color:var(--dim)">Ex: galvanitzat (Zn sobre Fe). Oleoductes amb ànodes de Mg. Cascs de vaixell amb Zn.</p>
+    </div>
+    <div class="card soft">
+      <h4 style="margin-top:0;color:var(--accent)">b) Corrent impressionada</h4>
+      <p style="font-size:14px">Font externa de corrent + ànode inert (Pt, grafit) fa que el material a protegir rebi electrons (càtode).</p>
+      <p style="font-size:13px;color:var(--dim)">Ex: estructures subterrànies grans, oleoductes, vaixells militars.</p>
+    </div>
+  </div>
+
+  <h3>2. Recobriments</h3>
+  <ul>
+    <li><b>Metàl·lics</b>: galvanitzat (Zn), crom, nickel. Doble funció: barrera física + protecció catòdica si és Zn.</li>
+    <li><b>Orgànics</b>: pintures, vernissos, plàstics. Barrera física només.</li>
+    <li><b>Conversió química</b>: anoditzat (Al), fosfatat (Fe). Capa passiva artificial.</li>
+  </ul>
+
+  <h3>3. Inhibidors</h3>
+  <p>Substàncies afegides a l'electròlit que s'adsorbeixen al metall formant pel·lícula que frena la corrosió. Usats en <b>circuits tancats</b> (radiador de cotxe, calderes). Ex: fosfats, cromats (tòxics, en desús), amines.</p>
+
+  <h3>4. Disseny preventiu</h3>
+  <ul>
+    <li>Evitar contactes entre metalls distants a la sèrie galvànica</li>
+    <li>Drenatge: no deixar aigua estancada</li>
+    <li>Soldar millor que cargolar (evita aeració diferencial)</li>
+    <li>Reduir tensions residuals (recuit) per evitar SCC</li>
+  </ul>
+</div>
+
+<!-- ============ EL QUE CAU AL PARCIAL ============ -->
+<h2>🎯 Les 4 preguntes FIXES del parcial</h2>
+<p style="color:var(--dim)">Apareixen en el 100% dels exàmens des de 2021. Aquests són els conceptes concrets que cauran (per ordre de probabilitat):</p>
+
+<div class="slot">
+  <span class="snum">SLOT 1 · ~78%</span>
+  <h3>Corrosió intergranular a soldadura d'acers inoxidables</h3>
+  <p><b>Mecanisme (sensibilització):</b></p>
+  <ol style="font-size:14px">
+    <li>Soldar inox → zona afectada tèrmicament (ZAT) es calenta a 500-800°C.</li>
+    <li>A aquesta T, <b>precipita Cr₂₃C₆</b> als límits de gra (carbur de crom).</li>
+    <li>Això EMPOBREIX el Cr al voltant dels contorns (&lt;12%).</li>
+    <li>Sense prou Cr, la capa passiva NO es forma → perd passivitat.</li>
+    <li>Els contorns queden exposats → corrosió intergranular.</li>
+  </ol>
+  <p><b>Solucions:</b> inox baix en C (<b>304L</b>, &lt;0,03% C) · inox estabilitzat amb Ti (321) o Nb (347) que "segresten" el C.</p>
+  <p style="font-size:13px;color:var(--dim)"><b>Resposta examen:</b> "un cas típic d'intergranular és la soldadura d'acers inoxidables".</p>
+</div>
+
+<div class="slot">
+  <span class="snum">SLOT 2 · ~85%</span>
+  <h3>Protecció catòdica · Zn sacrifici · Galvanitzat</h3>
+  <p><b>Galvanitzat:</b> recobriment de Zn sobre Fe. Zn és més actiu (més esquerra a la sèrie galvànica) → Zn actua com <b>ànode sacrifici</b> i es corroeix abans que el Fe.</p>
+  <p>Fins i tot si el recobriment es ratlla, el Zn del voltant continua protegint el Fe exposat (protecció galvànica continua).</p>
+  <p><b>Ànodes de sacrifici típics:</b> <span style="color:var(--accent);font-weight:700">Mg i Zn</span> (els més actius). NO Cu, NO llautó (massa nobles). NO Fe sol (no prou actiu per protegir altres Fe).</p>
+  <p><b>Protecció catòdica</b> = convertir el material en CÀTODE. El que NO volem és convertir-lo en ànode (seria accelerar la corrosió).</p>
+  <p style="font-size:13px;color:var(--dim)"><b>Resposta examen:</b> "el galvanitzat es basa en protecció catòdica" · "ànodes de sacrifici habituals: Mg i Zn".</p>
+</div>
+
+<div class="slot">
+  <span class="snum">SLOT 3 · ~65%</span>
+  <h3>Picadures · Galvànica · Erosió</h3>
+  <p><b>Picadures:</b> forats rodons petits a la xapa. Creixen cap AVALL per gravetat (productes densos cauen). Típic en xapes de cotxe (Cl⁻ de la sal d'hivern).</p>
+  <p><b>Galvànica:</b> 2 metalls diferents + electròlit + contacte. El més actiu es corroeix. Es redueix: aïllant elèctricament, escollint metalls propers a la sèrie, o afegint un 3r metall més anòdic.</p>
+  <p><b>Erosió-corrosió:</b> combinació atac químic + abrasió mecànica. Típic en colzes de canonades, turbines. Ataca especialment metalls passivats (trenca la capa passiva).</p>
+  <p style="font-size:13px;color:var(--dim)"><b>Respostes examen:</b> "forats rodons xapa cotxe = picadura" · "canonada llautó desguàs corroïda = erosió" · "evitar galvànica = aïllar elèctricament".</p>
+</div>
+
+<div class="slot">
+  <span class="snum">SLOT 4 · ~55%</span>
+  <h3>SCC · Aeració diferencial · Inhibidors · Passivació</h3>
+  <p><b>SCC (Stress Corrosion Cracking):</b> esquerdes <b>perpendiculars a la tensió</b> aplicada. Necessita 3 condicions simultànies: tensió + ambient corrosiu específic + material susceptible. Ex clàssic: inox + Cl⁻ + tensió.</p>
+  <p><b>Aeració diferencial:</b> diferent concentració d'O₂ entre zones → pila de concentració. Zona amb MENYS O₂ = ànode (es corroeix). Típic en cargols, juntes, sota brutícia.</p>
+  <p><b>Inhibidors:</b> substàncies al radiador del cotxe, calderes. Formen pel·lícula protectora sobre el metall.</p>
+  <p><b>Passivació:</b> els metalls que es passiven (Al, Ti, inox) tenen problemes especials amb EROSIÓ (que trenca la capa).</p>
+  <p style="font-size:13px;color:var(--dim)"><b>Respostes examen:</b> "esquerdes perpendiculars a tensió = SCC" · "unions cargolades = aeració diferencial" · "inhibidors a radiadors" · "metalls passivats sensibles a erosió".</p>
+</div>
+
+<!-- ============ TRAMPES ============ -->
+<h2>⚠ Trampes típiques d'examen Corrosió</h2>
+
+<div class="trap">
+  <div class="tlabel">Trampa 1</div>
+  <b>"Actiu" ≠ "Noble"</b>
+  <p style="margin:4px 0 0;font-size:14px">Actiu = MÉS reactiu = ÀNODE (es corroeix). Noble = MENYS reactiu = CÀTODE (protegit). Memòria: Au (noble) no es corroeix. Mg (actiu) es corroeix molt fàcilment.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 2</div>
+  <b>Protecció catòdica = convertir en CÀTODE</b>
+  <p style="margin:4px 0 0;font-size:14px">El material a protegir ha d'actuar com CÀTODE. NO com ànode (això seria accelerar la corrosió). Molts estudiants s'equivoquen aquí.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 3</div>
+  <b>Àrea ANÒDICA gran = MILLOR</b>
+  <p style="margin:4px 0 0;font-size:14px">Contra-intuïtiu. Ànode gran = corrosió dispersa, lenta en densitat. Ànode petit + càtode gran = CORROSIÓ LOCALITZADA DEVASTADORA (tota concentrada). Per això remachar acer amb reblons de Cu (Cu càtode enorme, reblons ànodes petits) = desastre.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 4</div>
+  <b>Aeració diferencial: MENYS O₂ = ÀNODE</b>
+  <p style="margin:4px 0 0;font-size:14px">Contra-intuïtiu. La zona amb MENYS oxigen és la que es corroeix (ànode). La zona oxigenada és càtode (reducció d'O₂). Per això sota cargols (poc O₂) es corroeix abans que la superfície exposada.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 5</div>
+  <b>Picadures creixen cap AVALL, no horitzontalment</b>
+  <p style="margin:4px 0 0;font-size:14px">Els productes densos cauen al fons per gravetat → el forat es fa més profund. Petita obertura a la superfície pot amagar cràter gran. Per això són difícils de detectar i molt perilloses.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 6</div>
+  <b>Intergranular soldadura INOX (no llautó, no Mg)</b>
+  <p style="margin:4px 0 0;font-size:14px">El cas típic d'intergranular és la soldadura d'acers INOXIDABLES (sensibilització Cr). No llautó, no Mg. Resposta directa.</p>
+</div>
+
+<!-- ============ RESUM ============ -->
+<h2>⚡ Resum flash per l'examen</h2>
+<div class="card soft">
+  <h3 style="margin-top:0">Les 4 preguntes FIXES</h3>
+  <ol style="font-size:14px;line-height:1.8">
+    <li><b>Intergranular</b> → soldadura d'acers inoxidables (sensibilització Cr₂₃C₆)</li>
+    <li><b>Protecció catòdica / galvanitzat / ànodes sacrifici</b> → Zn o Mg (els més actius)</li>
+    <li><b>Picadures / galvànica / erosió</b> → picadures = forats rodons / galvànica = 2 metalls / erosió = atac + abrasió</li>
+    <li><b>SCC / aeració dif / inhibidors / passivació</b> → SCC perpendicular a tensió / aeració dif en cargols / inhibidors en radiador / passivació sensible a erosió</li>
+  </ol>
+
+  <h3>Memoritzacions absolutes</h3>
+  <ul style="font-size:14px;line-height:1.8">
+    <li><b>Ànode</b> = actiu = es corroeix (Mg, Zn, Fe)</li>
+    <li><b>Càtode</b> = noble = protegit (Cu, Au, Pt)</li>
+    <li><b>4 condicions</b>: ànode + càtode + electròlit + contacte</li>
+    <li><b>Galvanitzat</b> = Zn sobre Fe = protecció catòdica per ànode sacrifici</li>
+    <li><b>Picadures cap avall</b> per gravetat (productes densos)</li>
+    <li><b>SCC</b> = esquerdes perpendiculars a tensió (3 condicions simultànies)</li>
+    <li><b>Aeració diferencial</b> = menys O₂ = ànode (no al revés!)</li>
+    <li><b>Passivats</b> (Al, Ti, inox) sensibles a EROSIÓ</li>
+    <li><b>Inhibidors</b> a circuits tancats (radiador, calderes)</li>
+  </ul>
+
+  <p style="text-align:center;margin-top:16px">
+    <a href="simulador-test.html" style="display:inline-block;background:var(--ok);color:#0e1016;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🧪 Practica Corrosió al simulador</a>
+    &nbsp;
+    <a href="cacador-preguntes.html#corrosio" style="display:inline-block;background:var(--corr);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🎯 Corrosió al Caçador</a>
+  </p>
+</div>
+
+</div>
+</body>
+</html>

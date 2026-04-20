@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 4 — Polímers</title>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff; --trap:#ff9c6b;
+  --border:#262c3a;
+  --tp:#7aa2ff; --te:#ff7aa3; --el:#5ad7a3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:38px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:50px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:28px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin:24px 0 28px}
+.hero .q{font-size:17px;color:var(--accent);margin-top:14px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill.tp{background:rgba(122,162,255,.18);color:var(--tp)}
+.pill.te{background:rgba(255,122,163,.18);color:var(--te)}
+.pill.el{background:rgba(90,215,163,.18);color:var(--el)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--panel2);color:var(--accent);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+.analogy{background:#0c1220;border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:14px;color:#cfd6e6;margin-top:10px}
+.analogy b{color:var(--accent)}
+.fml{background:#0a0d13;border-left:3px solid var(--info);padding:12px 16px;border-radius:6px;font-family:'JetBrains Mono','Consolas',monospace;font-size:14px;margin:8px 0}
+.trap{background:linear-gradient(135deg,rgba(255,156,107,.08),rgba(255,122,163,.05));border:1px solid var(--trap);border-radius:10px;padding:14px 18px;margin:10px 0}
+.trap .tlabel{color:var(--trap);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.state-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.state{padding:14px;text-align:center;font-size:13px;position:relative}
+.state .slabel{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+.state .sname{font-size:16px;font-weight:700;margin:4px 0}
+.state.vitri{background:rgba(122,162,255,.15);color:var(--tp)}
+.state.gomos{background:rgba(90,215,163,.15);color:var(--el)}
+.state.fos{background:rgba(255,122,163,.15);color:var(--te)}
+.state-arrow{display:flex;justify-content:space-around;margin:-6px 0 8px;font-size:11px;color:var(--dim);font-weight:600}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-04-polimers.html" data-page="sessio-04-polimers">T4 · Polímers</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="sessio-08-deformacio.html" data-page="sessio-08-deformacio">T8A · Deformació</a>
+  <a href="sessio-09-corrosio.html" data-page="sessio-09-corrosio">Corrosió</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+
+<div class="wrap">
+<h1>Tema 4 · Polímers
+  <small>Per què els plàstics són plàstics · Del monòmer a la cadena · Termoplàstic vs termoestable vs elastòmer</small>
+</h1>
+
+<div class="hero">
+  <p><b>El fenomen real:</b> Agafa una ampolla de plàstic i un tros de cautxú d'una roda. Totes dues són molècules gegants (cadenes llargues de carboni). Però l'ampolla és rígida i el cautxú s'estira. Per què? La resposta està en <b>com s'uneixen les cadenes entre si</b> — la clau de tot el tema.</p>
+  <p class="q">"Si els àtoms a les cadenes són covalents, com és que els plàstics fonen a baixa T? La màgia és que entre cadenes els enllaços són MOLT més febles."</p>
+</div>
+
+<!-- ============ QUÈ ÉS UN POLÍMER ============ -->
+<h2>🧬 Què és un polímer</h2>
+<div class="card">
+  <p><b>Polímer</b> = macromolècula formada per repetició d'una unitat petita (monòmer). "Poly" = molts, "mer" = unitats.</p>
+  <p>Ex: polietilè (PE) = cadenes llargues de CH₂-CH₂-CH₂... a partir del monòmer etilè (CH₂=CH₂).</p>
+
+  <h3>Polimerització — com es formen</h3>
+  <ul>
+    <li><b>Addició:</b> obres el doble enllaç del monòmer i els enganxes un darrere l'altre. Ex: etilè → PE. Sense subproducte.</li>
+    <li><b>Condensació:</b> 2 molècules s'uneixen i s'allibera H₂O o altre. Ex: Nylon, PET.</li>
+  </ul>
+
+  <h3>Grau de polimerització (n)</h3>
+  <p>Nombre d'unitats monomèriques per cadena. Polímers industrials: n = 10³-10⁵.</p>
+
+  <h3>Pes molecular: Mn vs Mw</h3>
+  <div class="fml">
+    M_n = mitjana en NOMBRE (pesa totes igual)<br>
+    M_w = mitjana en PES (pesa més les cadenes grans)<br><br>
+    <b>Sempre M_w ≥ M_n</b> · PDI = M_w / M_n ≥ 1<br>
+    PDI = 1 → monodispers (ideal, irreal) · PDI 2-10 → real
+  </div>
+</div>
+
+<!-- ============ 3 TIPUS ============ -->
+<h2>🔷 Els 3 tipus fonamentals</h2>
+<div class="grid grid-3">
+  <div class="card">
+    <span class="pill tp">TERMOPLÀSTIC</span>
+    <h3 style="margin-top:12px">Cadenes independents</h3>
+    <p style="font-size:14px">Cadenes lineals o ramificades <b>sense enllaços covalents entre si</b>. Només enllaços secundaris (VdW, pont H).</p>
+    <p style="font-size:13px;color:var(--dim);margin-top:10px"><b>Comportament:</b> escalfa → cadenes es mouen → fon → es reforma. <b>Reciclables.</b></p>
+    <p style="font-size:13px;color:var(--dim)"><b>Exemples:</b> PE, PP, PVC, PS, PET, PMMA, nylon.</p>
+  </div>
+
+  <div class="card">
+    <span class="pill te">TERMOESTABLE</span>
+    <h3 style="margin-top:12px">Xarxa 3D covalent</h3>
+    <p style="font-size:14px">Reticulació alta: moltes lligadures covalents <b>entre</b> cadenes → xarxa 3D rígida.</p>
+    <p style="font-size:13px;color:var(--dim);margin-top:10px"><b>Comportament:</b> un cop curats (cross-link), NO es poden estovar. Es degraden abans de fluir. <b>Irreversibles.</b></p>
+    <p style="font-size:13px;color:var(--dim)"><b>Exemples:</b> baquelita, epòxid, poliuretà rígid, resines fenòliques.</p>
+  </div>
+
+  <div class="card">
+    <span class="pill el">ELASTÒMER</span>
+    <h3 style="margin-top:12px">Entrecreuament LLEUGER</h3>
+    <p style="font-size:14px">Pocs enllaços covalents entre cadenes (vulcanització amb S). Molt deformables però tornen.</p>
+    <p style="font-size:13px;color:var(--dim);margin-top:10px"><b>Comportament:</b> estiren molt (fins 500%) i retornen. Tg &lt; T ambient.</p>
+    <p style="font-size:13px;color:var(--dim)"><b>Exemples:</b> cautxú natural, silicona, neoprè, SBR (pneumàtics).</p>
+  </div>
+</div>
+
+<div class="analogy"><b>Analogia mental:</b> imagina 3 caixes d'espaguetis:
+<ul style="margin:6px 0 0 20px;font-size:13px">
+<li>Caixa 1 = espaguetis crus sense cuinar, tots separats (termoplàstic). Si els escalfes (fusió), flueixen.</li>
+<li>Caixa 2 = fils de ferro soldats entre si en totes direccions (termoestable). Per moure'n un has de trencar soldadures.</li>
+<li>Caixa 3 = espaguetis lligats amb gomes elàstiques cada X (elastòmer). Els pots estirar → tornen.</li>
+</ul>
+</div>
+
+<!-- ============ Tg I Tm ============ -->
+<h2>🌡️ Tg i Tm — els dos punts crítics</h2>
+<div class="card">
+  <p><b>Tg</b> = temperatura de transició vítria. Per sota, el material està "congelat" (vitri, rígid). Per sobre, les cadenes poden moure's relativament (gomós).</p>
+  <p><b>Tm</b> = temperatura de fusió. Només la tenen els polímers amb FASE CRISTAL·LINA. Amorfs NO tenen Tm.</p>
+
+  <h3>Els 3 estats en funció de T</h3>
+  <div class="state-bar">
+    <div class="state vitri"><div class="slabel">T &lt; Tg</div><div class="sname">VITRI</div><div>rígid, fràgil</div></div>
+    <div class="state gomos"><div class="slabel">Tg &lt; T &lt; Tm</div><div class="sname">GOMÓS</div><div>flexible</div></div>
+    <div class="state fos"><div class="slabel">T &gt; Tm</div><div class="sname">FOS</div><div>líquid viscós</div></div>
+    <div class="state" style="background:var(--panel2)"><div class="slabel">+ alta T</div><div class="sname">DEGRADA</div><div>trenca cadenes</div></div>
+  </div>
+
+  <h3>Exemples de Tg, Tm</h3>
+  <table>
+    <tr><th>Polímer</th><th>Tg (°C)</th><th>Tm (°C)</th><th>Estat a 25°C</th></tr>
+    <tr><td>PE (HDPE)</td><td>-125</td><td>137</td><td>Gomós/semicristal·lí</td></tr>
+    <tr><td>PVC</td><td>80</td><td>—</td><td>Vitri (sota Tg)</td></tr>
+    <tr><td>PS atàctic</td><td>100</td><td>— (amorf)</td><td>Vitri</td></tr>
+    <tr><td>Cautxú natural</td><td>-75</td><td>—</td><td>Gomós (elastòmer)</td></tr>
+    <tr><td>PET</td><td>75</td><td>260</td><td>Vitri (per ampolles)</td></tr>
+    <tr><td>PP (isotàctic)</td><td>-18</td><td>175</td><td>Gomós/semicristal·lí</td></tr>
+  </table>
+</div>
+
+<!-- ============ CRISTALINITAT ============ -->
+<h2>🔬 Cristal·linitat: amorf vs semicristal·lí</h2>
+<div class="card">
+  <p>Els polímers NO solen ser 100% cristal·lins. Són <b>semicristal·lins</b> (% cristal·lí + % amorf).</p>
+
+  <h3>Factors que FAVOREIXEN cristal·linitat</h3>
+  <ul>
+    <li><b>Refredament LENT</b> → temps perquè les cadenes s'ordenin. Refredar ràpid → amorf ("congelat" en desordre).</li>
+    <li><b>Cadenes lineals i regulars</b> (sense ramificacions). HDPE (lineal) cristal·linitza més que LDPE (ramificat).</li>
+    <li><b>Tacticitat</b>: isotàctic/sindiotàctic (regular) cristal·litza. Atàctic (aleatori) → amorf. Ex: PS atàctic = amorf transparent.</li>
+    <li><b>Grups laterals petits</b>. Grans voluminosos impedeixen empaquetar.</li>
+  </ul>
+
+  <h3>Model cadena plegada (termoplàstics semicristal·lins)</h3>
+  <p>Les cadenes es <b>pleguen sobre si mateixes</b> formant làmines cristal·lines (lamel·les) d'uns 10-20 nm de gruix. Entre làmines, zones amorfes amb cadenes de connexió (tie molecules).</p>
+
+  <div class="analogy"><b>Intuïció:</b> imagina un espagueti molt llarg que es plega com un acordió. Cada plec entra a la zona cristal·lina. Les puntes "mengen aire" a la zona amorfa entre lamel·les.</div>
+
+  <h3>Efecte sobre propietats</h3>
+  <table>
+    <tr><th>Propietat</th><th>Més cristal·linitat →</th></tr>
+    <tr><td>Rigidesa (E)</td><td>↑ més rígid</td></tr>
+    <tr><td>Resistència mecànica</td><td>↑</td></tr>
+    <tr><td>Densitat</td><td>↑ (HDPE 0,96 vs LDPE 0,92)</td></tr>
+    <tr><td>Tmfusió (comportament tèrmic)</td><td>↑ Tm més definida</td></tr>
+    <tr><td>Transparència</td><td>↓ OPAC (cristalls dispersen llum)</td></tr>
+    <tr><td>Resistència química</td><td>↑</td></tr>
+  </table>
+</div>
+
+<!-- ============ ENLLAÇOS ============ -->
+<h2>🔗 Enllaços dins i entre cadenes</h2>
+<div class="card">
+  <p>Els polímers tenen 2 tipus d'enllaços simultanis — entendre'ls separadament és clau.</p>
+
+  <table>
+    <tr><th>Ubicació</th><th>Tipus</th><th>Força</th><th>Trenquen per</th></tr>
+    <tr><td>DINS cadena (C-C, C-H)</td><td><b>Covalent primari</b></td><td>350-700 kJ/mol</td><td>Degradació (T molt alta)</td></tr>
+    <tr><td>ENTRE cadenes (termoplàstic)</td><td><b>Secundari</b> (VdW, pont H, dipol)</td><td>1-40 kJ/mol</td><td>Fusió (T moderada)</td></tr>
+    <tr><td>ENTRE cadenes (termoestable)</td><td><b>Covalent reticulat</b></td><td>350-700 kJ/mol</td><td>Degradació (irreversible)</td></tr>
+  </table>
+
+  <div class="trap">
+    <div class="tlabel">⚠ Trampa d'examen</div>
+    <p style="margin:0;font-size:14px">"Els polímers només tenen enllaços secundaris" → <b>FALS</b>. Dins la cadena són covalents primaris. Només entre cadenes (termoplàstics) són secundaris.</p>
+  </div>
+</div>
+
+<!-- ============ RAMIFICACIONS, COPOLÍMERS ============ -->
+<h2>🌿 Ramificacions i copolímers</h2>
+<div class="card">
+  <h3>Ramificacions</h3>
+  <p>Cadenes laterals que surten de la principal. <b>Dificulten l'empaquetament</b> → menys cristal·linitat → material més tou, més amorf.</p>
+  <p>Exemple: LDPE (Low Density PE) té moltes ramificacions → 55-65% cristal·linitat, densitat 0,92. HDPE (High Density) quasi sense → 85-95% cristal·linitat, densitat 0,96.</p>
+
+  <h3>Copolímers (2+ monòmers)</h3>
+  <table>
+    <tr><th>Tipus</th><th>Estructura</th><th>Exemple</th></tr>
+    <tr><td>Aleatori</td><td>AABABBABA...</td><td>SBR (estirè + butadiè)</td></tr>
+    <tr><td>Alternat</td><td>ABABABAB...</td><td>SAN (estirè + acrilonitril)</td></tr>
+    <tr><td>En bloc</td><td>AAAA-BBBB-AAAA</td><td>SBS (termoplàstic elastomèric)</td></tr>
+    <tr><td>Injert (graft)</td><td>AAAA amb branques de B</td><td>ABS (acrilonitril+butadiè+estirè)</td></tr>
+  </table>
+</div>
+
+<!-- ============ VULCANITZACIÓ ============ -->
+<h2>🛞 Vulcanització (elastòmers)</h2>
+<div class="card">
+  <p>El cautxú natural pur és enganxós i es deforma permanentment. Goodyear (1839) va descobrir que afegint <b>sofre (S)</b> i escalfant, els àtoms de S formen <b>ponts entre cadenes</b> → entrecreuament lleuger → elastòmer estable.</p>
+  <p>Sense vulcanitzar: cautxú inútil per pneumàtics.</p>
+  <p><b>Densitat de reticulació</b>:
+    <ul style="margin:6px 0 0 20px;font-size:14px">
+      <li>Molt baixa (1 pont cada 100+ monòmers) → elastòmer suau.</li>
+      <li>Alta (1 pont cada ~10) → caucho dur (ebonita), quasi termoestable.</li>
+    </ul>
+  </p>
+</div>
+
+<!-- ============ TRAMPES D'EXAMEN ============ -->
+<h2>⚠ Trampes típiques d'examen T4</h2>
+
+<div class="trap">
+  <div class="tlabel">Trampa 1</div>
+  <b>Termoestables NO es poden estovar</b>
+  <p style="margin:4px 0 0;font-size:14px">La baquelita o l'epòxid un cop curats tenen xarxa 3D covalent. Escalfar-los els degrada ABANS que fluir. Contràriament als termoplàstics que sí es poden estovar repetidament.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 2</div>
+  <b>Amorfs NO tenen Tm clara</b>
+  <p style="margin:4px 0 0;font-size:14px">Tm és de la fase cristal·lina. Si el polímer és 100% amorf (PS atàctic, PMMA), s'estova gradualment — NO hi ha Tm neta. Només tenen Tg. Si un examen dóna "amorf + Tm", és contradictori; interpretar com zona gomosa per sobre de Tg.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 3</div>
+  <b>Refredament RÀPID disminueix cristal·linitat</b>
+  <p style="margin:4px 0 0;font-size:14px">Contra-intuïtiu però crític: ràpid = cadenes no tenen temps d'ordenar-se → AMORF. LENT = temps per ordenar → més cristal·lí. Al revés que metalls, on refredament ràpid pot donar estructures dures.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 4</div>
+  <b>Elastòmer = entrecreuament LLEUGER, no reticulació alta</b>
+  <p style="margin:4px 0 0;font-size:14px">Distinció fina: termoestable = reticulació ALTA (rígid). Elastòmer = entrecreuament BAIX (deformable però torna). Ambdós tenen covalent entre cadenes, diferents densitats.</p>
+</div>
+
+<div class="trap">
+  <div class="tlabel">Trampa 5</div>
+  <b>Substituents voluminosos = MENYS cristal·linitat</b>
+  <p style="margin:4px 0 0;font-size:14px">Grups laterals grans (anell de benzè del PS, grup Cl del PVC) impedeixen empaquetament regular. Menys cristal·linitat → més amorf → més transparent però menys resistent.</p>
+</div>
+
+<!-- ============ RESUM FLASH ============ -->
+<h2>⚡ Resum flash per últim repàs</h2>
+<div class="card soft">
+  <ul style="font-size:14px;line-height:1.8">
+    <li><b>3 tipus:</b> termoplàstic (reciclable) · termoestable (irreversible) · elastòmer (entrecreuament lleu)</li>
+    <li><b>Estats:</b> T&lt;Tg vitri · Tg&lt;T&lt;Tm gomós · T&gt;Tm fos</li>
+    <li><b>Enllaços:</b> COVALENT dins cadena + SECUNDARIS entre cadenes (termoplàstic)</li>
+    <li><b>Cristal·linitat ↑</b> amb: refredament lent, cadenes lineals, tacticitat regular, grups petits</li>
+    <li><b>Amorfs NO tenen Tm</b> · semicristal·lins tenen Tg I Tm · termoestables: ni una ni altra utilitzable</li>
+    <li><b>M_w ≥ M_n</b> sempre · PDI = M_w/M_n ≥ 1</li>
+    <li><b>Vulcanització</b> = afegir S al cautxú per entrecreuar lleugerament</li>
+    <li><b>Copolímers:</b> aleatori · alternat · bloc · injert</li>
+  </ul>
+  <p style="text-align:center;margin-top:16px">
+    <a href="simulador-test.html" style="display:inline-block;background:var(--ok);color:#0e1016;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🧪 Practica T4 al simulador</a>
+    &nbsp;
+    <a href="cacador-preguntes.html#t4" style="display:inline-block;background:var(--bad);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🎯 T4 al Caçador</a>
+  </p>
+</div>
+
+</div>
+</body>
+</html>
