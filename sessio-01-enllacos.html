@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 1 — Per què els àtoms s'enganxen</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false,
+    errorColor: '#ff7a7a'
+  });
+});
+</script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --metal:#f2b040; --covalent:#5ad7a3; --ionic:#7aa2ff; --vdw:#c87aff; --hbond:#ff7aa3;
+  --accent:#ffd86b; --border:#262c3a; --code:#0a0d13;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
+h1{font-size:38px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--dim);margin-top:8px;letter-spacing:0}
+h2{font-size:24px;margin:54px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:28px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin-bottom:28px}
+.hero .q{font-size:19px;color:var(--accent);margin-top:14px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.3px}
+.pill.metal{background:rgba(242,176,64,.18);color:var(--metal)}
+.pill.covalent{background:rgba(90,215,163,.18);color:var(--covalent)}
+.pill.ionic{background:rgba(122,162,255,.18);color:var(--ionic)}
+.pill.vdw{background:rgba(200,122,255,.18);color:var(--vdw)}
+.pill.hbond{background:rgba(255,122,163,.18);color:var(--hbond)}
+.bond{border-top:3px solid}
+.bond.metal{border-color:var(--metal)}
+.bond.covalent{border-color:var(--covalent)}
+.bond.ionic{border-color:var(--ionic)}
+.bond.vdw{border-color:var(--vdw)}
+.bond.hbond{border-color:var(--hbond)}
+.energy{font-size:13px;color:var(--dim);margin-top:4px}
+.analogy{background:#0c1220;border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:14px;color:#cfd6e6;margin-top:10px}
+.analogy b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+.formula{background:var(--code);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:15px;overflow-x:auto}
+.key{background:rgba(255,216,107,.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0}
+.key b{color:var(--accent)}
+#curves{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;min-height:520px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border);padding:5px 10px;border-radius:6px;font-size:13px;margin:4px 4px 0 0}
+.chip b{font-weight:600}
+.atomcanvas{display:block;margin:12px auto}
+.ranges{display:grid;grid-template-columns:1fr 180px 60px;gap:8px;align-items:center;font-size:14px;margin:8px 0}
+.bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;position:relative}
+.bar>span{display:block;height:100%;border-radius:4px}
+.bar>span.metal{background:var(--metal)}
+.bar>span.covalent{background:var(--covalent)}
+.bar>span.ionic{background:var(--ionic)}
+.feyn{background:linear-gradient(135deg,#1a1f2e,#231a2e);border:1px solid #3a2a4a;padding:22px 26px;border-radius:12px;margin-top:36px}
+.feyn h2{border:none;padding:0;margin:0 0 10px;color:#ffb3d9}
+.feyn ol{margin:10px 0;padding-left:22px}
+.feyn li{margin:6px 0}
+.note{font-size:13px;color:var(--dim);margin-top:12px}
+.youtube{color:#ff7aa3;text-decoration:none;border-bottom:1px dashed #ff7aa3}
+.dim{color:var(--dim)}
+.vsplit{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.vsplit > div{flex:1;min-width:240px}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+<div class="wrap">
+
+<div class="nav" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+  <a class="current" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,216,107,0.1);border:1px solid #ffd86b;border-radius:8px;color:#ffd86b;text-decoration:none;font-size:13px">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1c2230;border:1px solid #262c3a;border-radius:8px;color:#e9edf5;text-decoration:none;font-size:13px">T2 · Cristal·lografia →</a>
+  <a href="../REPORT-PARCIAL-1.md" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1c2230;border:1px solid #262c3a;border-radius:8px;color:#e9edf5;text-decoration:none;font-size:13px">📊 Informe parcial</a>
+</div>
+
+<div class="hero">
+  <h1>Tema 1 — Per què els àtoms s'enganxen?<small>CTM · Parcial 1 · Sessió 1 · Comprensió (Fase A)</small></h1>
+  <p>Abans de cap fórmula: tot aquest tema va d'UNA pregunta.</p>
+  <p class="q">Si els àtoms són neutres, <b>per què no els podem separar?</b></p>
+  <p>Quan tinguis la resposta d'aquesta pregunta, entendràs l'enllaç, entendràs per què el ferro condueix i el vidre no, i entendràs per què un polímer es fon a 150 °C i un ceràmic aguanta 1500 °C.</p>
+</div>
+
+<h2>1 · L'àtom en 10 segons</h2>
+<div class="card">
+  <div class="vsplit">
+    <div>
+      <p>Un àtom = <b>nucli (+)</b> amb protons i neutrons, envoltat d'<b>electrons (−)</b> en capes.</p>
+      <p>Els electrons de l'<b>última capa</b> (capa de valència) són els que "negocien" amb altres àtoms.</p>
+      <p>Objectiu dels àtoms: <b>complir la regla de l'octet</b> (8 electrons a la capa de valència).</p>
+      <p class="dim">Els gasos nobles (He, Ne, Ar…) ja la compleixen. Per això són "feliços sols" — no fan enllaços. Els altres àtoms estan en mode "em falta alguna cosa".</p>
+    </div>
+    <div>
+      <svg viewBox="0 0 220 160" width="220" height="160" class="atomcanvas">
+        <ellipse cx="110" cy="80" rx="90" ry="30" stroke="#3a4458" stroke-width="1" fill="none"/>
+        <ellipse cx="110" cy="80" rx="60" ry="20" stroke="#3a4458" stroke-width="1" fill="none"/>
+        <circle cx="110" cy="80" r="14" fill="#f2b040"/>
+        <text x="110" y="84" text-anchor="middle" font-size="10" fill="#0a0d13" font-weight="700">+</text>
+        <circle cx="200" cy="80" r="4" fill="#5ad7a3"/>
+        <circle cx="50"  cy="75" r="4" fill="#5ad7a3"/>
+        <circle cx="170" cy="85" r="4" fill="#5ad7a3"/>
+        <circle cx="110" cy="58" r="4" fill="#7aa2ff"/>
+        <text x="110" y="148" text-anchor="middle" font-size="11" fill="#8a93a6">nucli + electrons en capes</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<h2>2 · La pregunta fonamental: per què s'enganxen?</h2>
+<div class="card">
+  <p>Dues forces actuen entre àtoms alhora:</p>
+  <p><span class="pill metal">ATRACCIÓ</span> — nuclis positius atreuen els electrons de l'altre àtom.</p>
+  <p><span class="pill ionic">REPULSIÓ</span> — quan s'apropen massa, els núvols electrònics (−/−) i els nuclis (+/+) es repelen.</p>
+  <div class="formula">
+    $$F_{\text{enllaç}}(r) = F_A(r) + F_R(r)$$
+    $$E_{\text{enllaç}}(r) = E_A(r) + E_R(r)$$
+  </div>
+  <p>L'enllaç és <b>l'equilibri</b> entre aquestes dues forces. A una distància <b>r₀</b> (interatòmica d'equilibri), la força neta és zero i l'energia és <b>mínima</b>.</p>
+  <div id="curves"></div>
+  <div class="key">
+    <b>Intuïció clau:</b> pensa en un camp de futbol amb un pou al mig. L'àtom veí "cau" al pou i hi queda. Per treure'l, has d'aportar energia = <b>energia d'enllaç</b>. Més profund el pou → més fort l'enllaç → més dur/refractari el material.
+  </div>
+</div>
+
+<h2>3 · Tres maneres d'unir-se (enllaços FORTS / primaris)</h2>
+<p class="dim">L'electronegativitat (EN) decideix qui mana: tendència d'un àtom a atraure els electrons compartits. Creix cap a dalt-dreta de la taula periòdica.</p>
+
+<div class="grid grid-3">
+
+  <div class="card bond metal">
+    <span class="pill metal">METÀL·LIC</span>
+    <h3>Metall + Metall (EN↓ EN↓)</h3>
+    <p>Com que <b>cap dels dos vol retenir</b> els electrons fort, els posen en comú en un "núvol" que envolta tota la xarxa de nuclis positius.</p>
+    <svg viewBox="0 0 180 100" width="100%" height="100">
+      <rect x="0" y="0" width="180" height="100" fill="rgba(242,176,64,0.08)" rx="8"/>
+      <g fill="#f2b040">
+        <circle cx="30" cy="30" r="8"/><circle cx="70" cy="30" r="8"/><circle cx="110" cy="30" r="8"/><circle cx="150" cy="30" r="8"/>
+        <circle cx="30" cy="70" r="8"/><circle cx="70" cy="70" r="8"/><circle cx="110" cy="70" r="8"/><circle cx="150" cy="70" r="8"/>
+      </g>
+      <g fill="#5ad7a3">
+        <circle cx="50" cy="20" r="2.5"/><circle cx="90" cy="50" r="2.5"/><circle cx="130" cy="80" r="2.5"/>
+        <circle cx="20" cy="55" r="2.5"/><circle cx="60" cy="85" r="2.5"/><circle cx="100" cy="15" r="2.5"/>
+        <circle cx="140" cy="50" r="2.5"/><circle cx="165" cy="80" r="2.5"/><circle cx="35" cy="90" r="2.5"/>
+      </g>
+      <text x="90" y="96" text-anchor="middle" font-size="10" fill="#8a93a6">nuclis (+) · núvol d'electrons lliures</text>
+    </svg>
+    <p class="energy">Energia: <b>70 – 850 kJ/mol</b> · <b>No direccional</b></p>
+    <div class="analogy"><b>Analogia:</b> un concert. Tothom comparteix l'ambient (electrons) sense que ningú sigui "seu". Per això els metalls condueixen l'electricitat — els electrons circulen lliures.</div>
+  </div>
+
+  <div class="card bond covalent">
+    <span class="pill covalent">COVALENT</span>
+    <h3>No-metall + No-metall (EN↑ EN↑)</h3>
+    <p>Tots dos volen captar electrons. Com que cap vol cedir, <b>els comparteixen</b> en parelles fixes entre àtoms concrets.</p>
+    <svg viewBox="0 0 180 100" width="100%" height="100">
+      <rect x="0" y="0" width="180" height="100" fill="rgba(90,215,163,0.08)" rx="8"/>
+      <circle cx="65" cy="50" r="20" fill="#5ad7a3" opacity="0.35"/>
+      <circle cx="115" cy="50" r="20" fill="#5ad7a3" opacity="0.35"/>
+      <circle cx="65" cy="50" r="10" fill="#5ad7a3"/>
+      <circle cx="115" cy="50" r="10" fill="#5ad7a3"/>
+      <circle cx="90" cy="45" r="3" fill="#7aa2ff"/>
+      <circle cx="90" cy="55" r="3" fill="#7aa2ff"/>
+      <line x1="75" y1="50" x2="105" y2="50" stroke="#ffd86b" stroke-width="2" stroke-dasharray="3 3"/>
+      <text x="90" y="92" text-anchor="middle" font-size="10" fill="#8a93a6">electrons compartits fixos entre àtoms</text>
+    </svg>
+    <p class="energy">Energia: <b>200 – 700 kJ/mol</b> · <b>Direccional</b></p>
+    <div class="analogy"><b>Analogia:</b> un matrimoni. Comparteixes exactament amb aquesta persona — no amb el veí. Això fa que l'enllaç tingui una <b>orientació</b> concreta a l'espai (angles tetraèdrics 109.5° al carboni del diamant, 120° al grafè…).</div>
+  </div>
+
+  <div class="card bond ionic">
+    <span class="pill ionic">IÒNIC</span>
+    <h3>Metall + No-metall (EN↓ EN↑)</h3>
+    <p>El metall <b>cedeix</b> l'electró (queda +). El no-metall el <b>capta</b> (queda −). Els dos ions oposats s'atreuen elèctricament.</p>
+    <svg viewBox="0 0 180 100" width="100%" height="100">
+      <rect x="0" y="0" width="180" height="100" fill="rgba(122,162,255,0.08)" rx="8"/>
+      <circle cx="60" cy="50" r="16" fill="#f2b040"/>
+      <text x="60" y="54" text-anchor="middle" font-size="14" font-weight="700" fill="#0a0d13">+</text>
+      <circle cx="120" cy="50" r="20" fill="#7aa2ff"/>
+      <text x="120" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#0a0d13">−</text>
+      <path d="M76,42 Q90,30 104,42" stroke="#ffd86b" fill="none" stroke-width="2"/>
+      <circle cx="90" cy="33" r="2.5" fill="#ffd86b"/>
+      <text x="90" y="92" text-anchor="middle" font-size="10" fill="#8a93a6">electró transferit completament</text>
+    </svg>
+    <p class="energy">Energia: <b>600 – 1500 kJ/mol</b></p>
+    <div class="analogy"><b>Analogia:</b> un venedor i un comprador. Un es queda el diner (electró), l'altre el paga. Resultat: tots dos carregats oposadament → s'atrauen. Si tiris sal a l'aigua, l'aigua "compra" els ions i es dissolen → per això els iònics dissolts <b>condueixen en líquid</b>.</div>
+  </div>
+
+</div>
+
+<h2>4 · Amistats més fluixes (enllaços secundaris)</h2>
+<div class="grid grid-2">
+  <div class="card bond hbond">
+    <span class="pill hbond">PONTS D'HIDROGEN</span>
+    <p>Un H unit covalentment a un àtom molt electronegatiu (O, N, F) té càrrega parcial <b>δ+</b>. L'altre àtom electronegatiu proper amb parell lliure d'electrons l'atreu.</p>
+    <p class="dim">Exemple: aigua. Per això bull a 100 °C i no a −60 °C com hauria de ser per la seva mida molecular.</p>
+  </div>
+  <div class="card bond vdw">
+    <span class="pill vdw">VAN DER WAALS</span>
+    <p><b>Dipol permanent</b>: molècules polars s'alineen (+ cap a −).<br>
+    <b>Dipol induït</b>: distribució momentània d'electrons crea un dipol que n'indueix un altre al veí.</p>
+    <p class="dim">Molt feble — però és el que manté junts els plàstics i el que fa que els geckos s'enganxin al sostre.</p>
+  </div>
+</div>
+
+<h2>5 · Els rangs d'energia (memoritza l'ordre!)</h2>
+<div class="card">
+  <div class="ranges"><span>Iònic</span><div class="bar"><span class="ionic" style="width:100%"></span></div><span>600–1500</span></div>
+  <div class="ranges"><span>Metàl·lic</span><div class="bar"><span class="metal" style="width:56%"></span></div><span>70–850</span></div>
+  <div class="ranges"><span>Covalent</span><div class="bar"><span class="covalent" style="width:47%"></span></div><span>200–700</span></div>
+  <p class="note">Nota: els rangs se solapen. La diferència qualitativa (no direccional vs direccional vs iònic) importa més que el número concret.</p>
+</div>
+
+<h2>6 · Dels enllaços als materials</h2>
+<div class="card">
+  <table>
+    <tr><th>Família</th><th>Enllaç</th><th>Estructura</th><th>Propietats típiques</th></tr>
+    <tr>
+      <td><span class="pill metal">METALLS</span></td>
+      <td>Metàl·lic</td>
+      <td>Cristal·lina</td>
+      <td>Conductor elèctric/tèrmic, opacs, dúctils, mal·leables</td>
+    </tr>
+    <tr>
+      <td><span class="pill covalent">POLÍMERS</span></td>
+      <td>Covalent intern + VdW/H-bond entre cadenes</td>
+      <td>Amorfa o semicristal·lina</td>
+      <td>Aïllants, flexibles, T de fusió baixa</td>
+    </tr>
+    <tr>
+      <td><span class="pill ionic">CERÀMICS</span></td>
+      <td>Covalent / iònic</td>
+      <td>Amorfa o cristal·lina</td>
+      <td>T fusió ALTA (E enllaç alta), fràgils, aïllants, químicament inerts</td>
+    </tr>
+  </table>
+  <div class="key"><b>Regla d'or exam:</b> "Aquest material condueix en estat líquid però no en sòlid" → <b>iònic</b>. "Aquest condueix sempre" → <b>metàl·lic</b>. "Aïllant, fràgil, aguanta 1500 °C" → <b>ceràmic</b>. "Flexible, baixa T fusió, aïllant" → <b>polímer</b>.</div>
+</div>
+
+<h2>7 · Estructures (també pesca al test)</h2>
+<div class="card">
+  <table>
+    <tr><th>Tipus</th><th>Ordre</th><th>Isotropia</th><th>Al·lotropia</th><th>Exemple</th></tr>
+    <tr><td><b>Cristal·lina</b></td><td>Ordenada, compacta</td><td>NO (anisotropia)</td><td>SÍ</td><td>Metalls purs, diamant</td></tr>
+    <tr><td><b>Amorfa</b></td><td>Desordenada</td><td>SÍ</td><td>NO</td><td>Vidre, polímers</td></tr>
+    <tr><td><b>Policristal·lina</b></td><td>Grans cristal·lins separats per contorns</td><td>SÍ (mitjana)</td><td>NO</td><td>Metalls reals (99% dels casos)</td></tr>
+  </table>
+  <p class="dim"><b>Anisotropia:</b> les propietats canvien segons la direcció. Ex: la fusta es talla fàcil en una direcció, gens en l'altra. <br>
+  <b>Al·lotropia:</b> mateix element, diferents estructures → diferents propietats. Ex: carboni → grafit (tou, conductor) vs diamant (dur, aïllant) vs grafè.</p>
+</div>
+
+<div class="feyn">
+  <h2>Checkpoint Feynman — abans d'avançar, respon (a tu mateix o en veu alta):</h2>
+  <ol>
+    <li>Per què NO podem tenir un àtom infinitament a prop d'un altre?</li>
+    <li>Si et dono un material que es dissol en aigua i condueix quan està dissolt, quin enllaç té?</li>
+    <li>Quin enllaç creus que té el diamant? Per què és tan dur?</li>
+    <li>Explica'm en 2 frases per què els metalls condueixen l'electricitat.</li>
+    <li>Què és al·lotropia? Dóna un exemple.</li>
+  </ol>
+  <p class="note">Si no pots respondre una, apunta-la. Quan la hi digui a Claude, ens aturem i repassem aquell concepte.</p>
+</div>
+
+<p class="note" style="margin-top:40px">📺 Si vols vídeo-complement (recomanats en anglès però molt visuals):<br>
+· <a class="youtube" href="https://www.youtube.com/watch?v=Kj5-sPhjkVk" target="_blank">Why Atoms Bond — TED-Ed (5 min)</a><br>
+· <a class="youtube" href="https://www.youtube.com/watch?v=QqjcCvzWwww" target="_blank">Ionic vs Covalent vs Metallic — Physics Girl (8 min)</a></p>
+
+<script>
+(function(){
+  const r = [];
+  for(let x=0.8; x<=3.5; x+=0.02) r.push(x);
+  const FA = r.map(x => -1.2/(x*x));
+  const FR = r.map(x => 8/Math.pow(x,9));
+  const FN = FA.map((v,i)=>v+FR[i]);
+  const EA = r.map(x => -1.2/x);
+  const ER = r.map(x => 1/Math.pow(x,8));
+  const EN = EA.map((v,i)=>v+ER[i]);
+  let r0 = r[0], Emin = Infinity;
+  EN.forEach((v,i)=>{ if(v<Emin){Emin=v; r0=r[i]} });
+  const common = {
+    paper_bgcolor:'#161a22', plot_bgcolor:'#161a22',
+    font:{color:'#e9edf5', family:'Inter, sans-serif', size:14},
+    margin:{t:50,r:70,b:60,l:70},
+    xaxis:{gridcolor:'#262c3a', zerolinecolor:'#3a4458', title:{text:'distància entre àtoms (r)', font:{size:14}}},
+    yaxis:{gridcolor:'#262c3a', zerolinecolor:'#3a4458'},
+    showlegend:true, legend:{bgcolor:'rgba(22,26,34,0.8)', font:{size:13}, x:0.72, y:0.98}
+  };
+  Plotly.newPlot('curves',[
+    {x:r, y:FA, name:'F atracció (−)', line:{color:'#7aa2ff', width:2.5, dash:'dot'}},
+    {x:r, y:FR, name:'F repulsió (+)', line:{color:'#ff7aa3', width:2.5, dash:'dot'}},
+    {x:r, y:FN, name:'F NETA', line:{color:'#ffd86b', width:4}},
+    {x:[r0,r0], y:[-3,3], name:'r₀', line:{color:'#5ad7a3', width:2, dash:'dash'}, showlegend:false},
+    {x:r, y:EN, name:'E enllaç (pou)', yaxis:'y2', line:{color:'#5ad7a3', width:4}}
+  ],{
+    ...common,
+    height:480,
+    title:{text:'Forces i energia entre dos àtoms en funció de la distància', font:{size:17}},
+    yaxis:{...common.yaxis, title:{text:'Força', font:{size:14}}, range:[-2,2]},
+    yaxis2:{...common.yaxis, title:{text:'Energia', font:{size:14,color:'#5ad7a3'}}, overlaying:'y', side:'right', range:[-1.5,1], tickfont:{color:'#5ad7a3'}},
+    annotations:[
+      {x:r0, y:0, ax:-50, ay:-80, text:'<b>r₀ (equilibri)</b><br>F neta = 0', showarrow:true, arrowcolor:'#5ad7a3', font:{color:'#5ad7a3', size:13}, bgcolor:'rgba(22,26,34,0.9)', bordercolor:'#5ad7a3', borderpad:4},
+      {x:r0, y:EN[r.indexOf(r0)] || Emin, ax:60, ay:-50, text:'<b>mínim E</b><br>(pou de potencial)', showarrow:true, arrowcolor:'#5ad7a3', yref:'y2', font:{color:'#5ad7a3', size:13}, bgcolor:'rgba(22,26,34,0.9)', bordercolor:'#5ad7a3', borderpad:4}
+    ]
+  },{responsive:true, displaylogo:false});
+})();
+</script>
+
+</div>
+</body>
+</html>

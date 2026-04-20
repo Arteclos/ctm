@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Caçador de Preguntes — Parcial 1 (21 abril 2026)</title>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff; --trap:#ff9c6b;
+  --border:#262c3a;
+  --p100:#5ad7a3; --p80:#b4d75a; --p60:#ffd86b; --p40:#ff9c6b; --p20:#ff7aa3;
+  --t1:#ff9c6b; --t2:#5ad7a3; --t3:#7aa2ff; --t4:#c87aff; --t7:#ffd86b; --t8:#ff7aa3; --corr:#ff5aa7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 24px 80px}
+
+/* NAVIGATION */
+.nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);margin:-30px -24px 24px;padding:12px 24px}
+.nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.nav-title{font-weight:700;color:var(--accent);margin-right:16px;font-size:14px}
+.nav a{color:var(--dim);text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.nav a:hover{color:var(--text);background:var(--panel)}
+.nav a.active{color:var(--accent);border-color:var(--accent);background:rgba(255,216,107,.08)}
+.nav a.test{color:var(--ok);border:1px solid var(--ok)}
+.nav a.test:hover{background:rgba(90,215,163,.12)}
+.nav a.hunt{color:var(--bad);border:1px solid var(--bad)}
+.nav a.hunt:hover{background:rgba(255,122,163,.12)}
+
+h1{font-size:38px;margin:0 0 8px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--dim);margin-top:8px;letter-spacing:0}
+h2{font-size:26px;margin:54px 0 14px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:18px;margin:22px 0 10px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+
+.hero{padding:28px 30px;background:linear-gradient(135deg,#2a1a22,#1a1426);border:1px solid var(--bad);border-radius:14px;margin-bottom:28px}
+.hero .urgent{font-size:13px;color:var(--bad);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.hero .q{font-size:17px;color:var(--text);margin-top:14px;font-style:italic;opacity:.9}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* CONCEPT ROWS */
+.concept-row{display:grid;grid-template-columns:80px 1fr auto;gap:16px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.concept-row:last-child{border-bottom:0}
+.concept-row:hover{background:var(--panel2)}
+.prob{font-weight:700;font-size:15px;text-align:center;padding:4px 8px;border-radius:6px;color:#0e1016}
+.prob.p100{background:var(--p100)}
+.prob.p80{background:var(--p80)}
+.prob.p60{background:var(--p60)}
+.prob.p40{background:var(--p40)}
+.prob.p20{background:var(--p20)}
+.concept-desc{color:var(--text)}
+.concept-desc .note{display:block;font-size:12px;color:var(--dim);margin-top:3px}
+.tema-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
+.tema-tag.t1{background:rgba(255,156,107,.18);color:var(--t1)}
+.tema-tag.t2{background:rgba(90,215,163,.18);color:var(--t2)}
+.tema-tag.t3{background:rgba(122,162,255,.18);color:var(--t3)}
+.tema-tag.t4{background:rgba(200,122,255,.18);color:var(--t4)}
+.tema-tag.t7{background:rgba(255,216,107,.18);color:var(--t7)}
+.tema-tag.t8{background:rgba(255,122,163,.18);color:var(--t8)}
+.tema-tag.corr{background:rgba(255,90,167,.18);color:var(--corr)}
+
+/* TRAP BOX */
+.trap{background:linear-gradient(135deg,rgba(255,156,107,.08),rgba(255,122,163,.05));border:1px solid var(--trap);border-radius:10px;padding:16px 20px;margin:12px 0}
+.trap .tlabel{color:var(--trap);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.trap .twhy{font-size:13px;color:var(--dim);margin-top:8px}
+
+/* FORMULA BOX */
+.fml{background:#0a0d13;border-left:3px solid var(--info);padding:12px 16px;border-radius:6px;font-family:'JetBrains Mono','Consolas',monospace;font-size:14px;margin:8px 0}
+
+/* CHECKLIST */
+.checklist{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:22px 28px}
+.check-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--border);align-items:flex-start}
+.check-item:last-child{border-bottom:0}
+.check-box{width:22px;height:22px;border:2px solid var(--dim);border-radius:5px;flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:transparent;transition:all .15s}
+.check-box.done{background:var(--ok);border-color:var(--ok);color:#0e1016}
+.check-body{flex:1;font-size:14px}
+.check-body .ctitle{font-weight:600;color:var(--text)}
+.check-body .cdetail{font-size:12px;color:var(--dim);margin-top:3px}
+
+/* BIG SURE STUFF */
+.sure{display:grid;grid-template-columns:1fr;gap:12px}
+.sure-item{background:var(--panel);border:1px solid var(--ok);border-radius:10px;padding:16px 20px;position:relative}
+.sure-item .pct{position:absolute;top:12px;right:16px;background:var(--ok);color:#0e1016;font-weight:900;font-size:14px;padding:3px 10px;border-radius:6px}
+.sure-item h4{margin:0 0 6px;font-size:15px;color:var(--ok)}
+.sure-item p{font-size:13px;color:var(--dim);margin:4px 0 0}
+
+/* CORROSIÓ slots */
+.slot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+@media (max-width:780px){.slot-grid{grid-template-columns:1fr}}
+.slot{background:var(--panel2);border:1px solid var(--corr);border-radius:10px;padding:14px 18px}
+.slot .snum{font-size:11px;font-weight:700;color:var(--corr);letter-spacing:1px}
+.slot .sconcept{font-weight:600;font-size:14px;margin:4px 0}
+.slot .sprob{font-size:12px;color:var(--dim)}
+
+/* PROBLEM PREDICTION */
+.problem-card{background:linear-gradient(135deg,#1a2033,#141826);border:2px solid var(--info);border-radius:12px;padding:20px 24px;margin:12px 0}
+.problem-card h4{color:var(--info);margin:0 0 8px;font-size:16px}
+.prob-scenario{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--border)}
+.prob-scenario:last-child{border-bottom:0}
+.prob-scenario .pprob{font-weight:700;color:var(--accent)}
+
+/* LEGEND */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0;font-size:13px}
+.legend-item{display:flex;gap:6px;align-items:center}
+.legend-item .prob{font-size:11px;padding:2px 6px}
+
+/* TIPS */
+.tip{background:rgba(122,162,255,.06);border:1px solid var(--info);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:13px}
+.tip b{color:var(--info)}
+
+/* EXAM STRUCTURE */
+.structure{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+@media (max-width:780px){.structure{grid-template-columns:repeat(2,1fr)}}
+.struct-cell{background:var(--panel2);padding:12px;border-radius:8px;border:1px solid var(--border);text-align:center}
+.struct-cell .big{font-size:22px;font-weight:700;color:var(--accent)}
+.struct-cell .sm{font-size:11px;color:var(--dim);margin-top:2px}
+
+footer{color:var(--dim);text-align:center;margin-top:60px;font-size:13px;opacity:.7}
+
+/* SECTION JUMP */
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.toc a{background:var(--panel);color:var(--dim);padding:6px 12px;border-radius:999px;font-size:12px;text-decoration:none;border:1px solid var(--border)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- NAVIGATION MENU -->
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-title">⚡ CTM — Parcial 1</span>
+    <a href="sessio-01-enllacos.html">T1 · Enllaços</a>
+    <a href="sessio-02-cristalografia.html">T2 · Cristalografia</a>
+    <a href="sessio-03-difusio.html">T3 · Difusió</a>
+    <a href="sessio-05-mecaniques.html">T7 · Mecàniques</a>
+    <a href="cacador-preguntes.html" class="active hunt">🎯 Caçador</a>
+    <a href="simulador-test.html" class="test">🧪 Test</a>
+  </div>
+</nav>
+
+<h1>Caçador de Preguntes
+  <small>Què caurà al parcial del 21 d'abril · Basat en 17 exàmens reals (2018–2025)</small>
+</h1>
+
+<div class="hero">
+  <span class="urgent">🎯 Objectiu</small></span>
+  <p class="q">"El que sempre cau, què cau a vegades, i què són les trampes que els professors repeteixen. Si domines aquesta pàgina, domines el 90% del parcial."</p>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <a href="#segur">🔒 El que cau SEGUR</a>
+  <a href="#estructura">📋 Estructura examen</a>
+  <a href="#t1">T1 Enllaços</a>
+  <a href="#t2a">T2A Cristalografia</a>
+  <a href="#t2b">T2B Defectes</a>
+  <a href="#t3">T3 Difusió</a>
+  <a href="#t4">T4 Polímers</a>
+  <a href="#t7">T7 Mecàniques</a>
+  <a href="#t8a">T8A Deformació</a>
+  <a href="#corrosio">Corrosió</a>
+  <a href="#trampes">⚠ Trampes</a>
+  <a href="#problemes">📐 Problemes</a>
+  <a href="#checklist">✅ Checklist 15</a>
+  <a href="#estrategia">🎲 Estratègia -0,5</a>
+</div>
+
+<!-- LEGEND -->
+<div class="card soft">
+  <div class="legend">
+    <b style="color:var(--text)">Llegenda probabilitats:</b>
+    <span class="legend-item"><span class="prob p100">≥90%</span>Cau segur</span>
+    <span class="legend-item"><span class="prob p80">70-90%</span>Molt probable</span>
+    <span class="legend-item"><span class="prob p60">50-70%</span>Probable</span>
+    <span class="legend-item"><span class="prob p40">30-50%</span>Possible</span>
+    <span class="legend-item"><span class="prob p20">&lt;30%</span>Menys</span>
+  </div>
+</div>
+
+<!-- ============ EL QUE CAU SEGUR ============ -->
+<h2 id="segur">🔒 El que cau SEGUR (≥90%)</h2>
+<div class="sure">
+  <div class="sure-item">
+    <span class="pct">92%</span>
+    <h4>📐 Problema 1 — DIFUSIÓ (Fick 2a + Arrhenius)</h4>
+    <p>12 de 13 parcials analitzats tenen problema de difusió. Tipus dominant: carburació/nitruració amb erf i selecció (D₀, Q) de taula. Multi-apartat, 30 min, és el problema "pesat".</p>
+  </div>
+  <div class="sure-item">
+    <span class="pct">100%</span>
+    <h4>🧪 4 preguntes de corrosió</h4>
+    <p>Apareixen en TOTS els exàmens des de 2021. Conceptes clau: intergranular inox, Zn sacrifici, picadures, SCC. Vegeu secció dedicada més avall.</p>
+  </div>
+  <div class="sure-item">
+    <span class="pct">90%</span>
+    <h4>🔷 FCC vs BCC — direcció de compacitat + APF + Z</h4>
+    <p>Trampa MOLT recurrent. FCC: 4r=a√2 (diagonal cara), APF 0,74, Z=4. BCC: 4r=a√3 (diagonal cub), APF 0,68, Z=2. Confondre-ho val una pregunta segura.</p>
+  </div>
+  <div class="sure-item">
+    <span class="pct">80%</span>
+    <h4>⚗️ Al·lotropia (Fe o Ti)</h4>
+    <p>Fe: α (BCC &lt;912°C) ↔ γ (FCC 912-1394°C) ↔ δ (BCC &gt;1394°C). Ti: HCP &lt;882°C ↔ BCC &gt;882°C. Grafit/diamant = C. "Al·lotropia" és la resposta.</p>
+  </div>
+  <div class="sure-item">
+    <span class="pct">78%</span>
+    <h4>🧬 Estat polímer segons T (Tg / Tm)</h4>
+    <p>T &lt; Tg = vitri/rígid. Tg &lt; T &lt; Tm = gomós/flexible. T &gt; Tm = fos. Amorfs: només Tg. Semicristal·lins: ambdues. Termoestables: ni Tg ni Tm útils.</p>
+  </div>
+  <div class="sure-item">
+    <span class="pct">65%</span>
+    <h4>📐 Problema 2 — MECÀNIQUES (corba σ-ε) + DENSITAT</h4>
+    <p>Nou patró del 25-26 Q1 (nov 2025). Llegir corba σ-ε per calcular E, σ_y, σ_m, σ_r, %EL, Ur + determinar si cable suporta càrrega + càlcul Poisson + densitat d'aliatge.</p>
+  </div>
+</div>
+
+<!-- ============ ESTRUCTURA ============ -->
+<h2 id="estructura">📋 Estructura de l'examen</h2>
+<div class="card">
+  <div class="structure">
+    <div class="struct-cell"><div class="big">90</div><div class="sm">minuts totals</div></div>
+    <div class="struct-cell"><div class="big">19</div><div class="sm">preguntes test (5/10 punts)</div></div>
+    <div class="struct-cell"><div class="big">2</div><div class="sm">problemes (5/10 punts)</div></div>
+    <div class="struct-cell"><div class="big">-0,5</div><div class="sm">penalització per errada</div></div>
+  </div>
+  <h3>Distribució predita de test (basada en 25-26 Q1)</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:10px">
+    <tr style="border-bottom:2px solid var(--border);font-weight:700">
+      <td style="padding:8px">Tema</td><td style="padding:8px">Predicció nº preg.</td><td style="padding:8px">Probabilitat ≥1</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t1">T1</span> Enllaços</td><td style="padding:8px">2-3</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t2">T2A</span> Cristalografia</td><td style="padding:8px">2-3</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t2">T2B</span> Defectes</td><td style="padding:8px">1-2</td><td style="padding:8px"><span class="prob p80">85%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t3">T3</span> Difusió</td><td style="padding:8px">2</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t4">T4</span> Polímers</td><td style="padding:8px">2-3</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t7">T7</span> Mecàniques</td><td style="padding:8px">3-4</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><span class="tema-tag t8">T8A</span> Deformació</td><td style="padding:8px">1-2</td><td style="padding:8px"><span class="prob p80">80%</span></td></tr>
+    <tr><td style="padding:8px"><span class="tema-tag corr">Corrosió</span></td><td style="padding:8px">4 (fixes)</td><td style="padding:8px"><span class="prob p100">100%</span></td></tr>
+  </table>
+</div>
+
+<!-- ============ TEMA 1 ============ -->
+<h2 id="t1">🔗 TEMA 1 — Enllaços (mitjana 2,4 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">23 preguntes agregades de T1 en 9 exàmens primary. Ordenades per freqüència d'aparició.</p>
+  <div class="concept-row"><span class="prob p80">89%</span><span class="concept-desc"><b>Ceràmics = fràgils, aïllants, T fusió alta</b><span class="note">Apareix a 8/9 exàmens. Pregunta fàcil "quin material per propietats X". Memoritza: ceràmic = dur+fràgil+aïllant; metall = dúctil+conductor; polímer = flexible+lleuger.</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>Enllaç iònic = EN molt diferent</b><span class="note">Metall (EN baixa) + no-metall (EN alta). El de EN alta accepta electrons (anió). ΔEN &gt; 1,7 aprox.</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>Enllaç covalent = direccional</b><span class="note">Compartició d'electrons en orbitals específics. Exemple: diamant (sp³, tetraedre 109,5°). Direccionalitat = fragilitat.</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Enllaç metàl·lic = electrons lliures (núvol)</b><span class="note">No direccional. Explica conductivitat elèctrica/tèrmica + ductilitat. Els electrons fan de 'cola' deslocalitzada.</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>"Quin material segons propietats X"</b><span class="note">Pregunta directa de classificació. Llegir: conductor elèctric = metall; dur+fràgil+aïllant = ceràmic; flexible+lleuger = polímer.</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>"Frase incorrecta" sobre enllaços per tipus de material</b><span class="note">Trampa típica: "polímers només tenen enllaços secundaris" → FALS (tenen covalent primari dins la cadena).</span></span><span class="tema-tag t1">T1</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Distància d'enllaç = mínim E_potencial = F_atracció + F_repulsió = 0</b><span class="note">Corba F-r i E-r. A la distància d'equilibri: F neta = 0, E en mínim (pou de potencial). Són equivalents.</span></span><span class="tema-tag t1">T1</span></div>
+</div>
+
+<!-- ============ TEMA 2A ============ -->
+<h2 id="t2a">🔷 TEMA 2A — Estructura cristal·lina (mitjana 2,8 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">26 preguntes agregades. <b style="color:var(--trap)">El tema amb MÉS trampes.</b></p>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>⚠ Direcció compacitat: FCC = diagonal CARA, BCC = diagonal CUB</b><span class="note">Trampa recurrentíssima. Memoritza: FCC (4r=a√2, cara), BCC (4r=a√3, cub). Confondre-ho = -0,5 segur.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>APF: FCC=HCP=0,74 · BCC=0,68 · CS=0,52</b><span class="note">"Frase incorrecta" típica posa 0,68 a FCC. Memoritza aquests 3 números literalment.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>Al·lotropia (Fe, Ti, C)</b><span class="note">Fe 3 formes (α-γ-δ). Ti 2 (HCP↔BCC a 882°C). C: grafit/diamant. ≠ anisotropia (≠ propietats per direcció).</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Nº àtoms/cel·la: BCC=2 · FCC=4 · HCP=6 · CS=1</b><span class="note">Necessari per càlcul densitat. 8 vèrtexs×1/8 + 6 cares×1/2 + 1 centre. Memoritza.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Nº coordinació: BCC=8, FCC=HCP=12, CS=6</b><span class="note">Més compacte = més coordinació. FCC i HCP són apilaments compactes.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Relació a-r: BCC 4r=a√3 · FCC 4r=a√2</b><span class="note">De les diagonals. Clau per a problemes numèrics de densitat.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Apilament: FCC ABCABC · HCP ABAB</b><span class="note">BCC no té apilament compacte. ABC = 3 posicions, AB = 2.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>⚠ APF depèn de l'estructura, NO del radi atòmic</b><span class="note">Trampa subtil. El radi es cancel·la (r³ a dalt i a baix). L'APF és 0,74 per FCC sigui de Cu o de Al.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>⚠⚠ APF del PLA (0,906) vs APF cel·la (0,74)</b><span class="note">Singular trampa de 3 punts. El pla compacte 2D té APF 0,906 (=π/(2√3)). La cel·la 3D té 0,74. NO confondre.</span></span><span class="tema-tag t2">T2A</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Isotropia d'un policristal·lí</b><span class="note">Molts grans orientats aleatoriàment → propietats mitjanes iguals en totes direccions = ISOTRÒPIC. Monocristall = ANISOTRÒPIC.</span></span><span class="tema-tag t2">T2A</span></div>
+</div>
+
+<!-- ============ TEMA 2B ============ -->
+<h2 id="t2b">🔬 TEMA 2B — Defectes (mitjana 1,3 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">12 preguntes agregades. Poca quantitat però previsibles.</p>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>Defectes puntuals (vacants, intersticials, substitucionals)</b><span class="note">Apareix a 7/9 exàmens. C en Fe = intersticial puntual. Ni en Cu = substitucional. Límit de gra = superficial (no puntual!).</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Dislocació = defecte LINEAL (1D)</b><span class="note">Aresta (b⊥línia), helicoidal (b∥línia), mixta. TOTES són lineals, no puntuals ni superficials.</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Impureses intersticials: radi solut &lt;&lt; matriu</b><span class="note">C (0,077) en Fe (0,126) → intersticial. Ni (0,135) en Cu (0,128) → substitucional. Regla: r_solut/r_matriu &lt; 0,59 per intersticial.</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>N_v/N = exp(-Q_v/kT) — vacants creix amb T</b><span class="note">Arrhenius de vacants. A més T, més vacants (exponencial). Fórmula que pot aparèixer a problema.</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Límit de gra = defecte SUPERFICIAL (2D)</b><span class="note">No lineal, no puntual. Mobilitat àtoms ALLÍ és MÉS ALTA (zona desordenada, menys coordinació) → difusió més ràpida.</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>⚠ Impureses substitucionals de menor PA → ρ_teòrica &gt; ρ_real</b><span class="note">Singular. Fórmula teòrica usa PA gran (matriu), real té àtoms lleugers → pes real menor → ρ real menor.</span></span><span class="tema-tag t2">T2B</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Hume-Rothery (solucions sòlides substitucionals)</b><span class="note">4 regles: Δr &lt; 15%, mateixa estructura, EN similar, valència igual. Cu-Ni les compleix totes (solubilitat total).</span></span><span class="tema-tag t2">T2B</span></div>
+</div>
+
+<!-- ============ TEMA 3 ============ -->
+<h2 id="t3">🌊 TEMA 3 — Difusió (mitjana 2,3 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">21 preguntes agregades. <b style="color:var(--ok)">Tema del Problema 1 en 92% dels parcials.</b></p>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>Fick 1a: J = -D·ΔC/Δx — flux ↑ si gruix ↓ o ΔC ↑</b><span class="note">Signe menys: flux va de més a menys concentració. J [kg/(m²·s)]. D [m²/s].</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>⚠ D = D₀·exp(-Q/RT) — D₀ NO depèn de T</b><span class="note">Trampa recurrent. D canvia amb T; D₀ és CONSTANT del sistema. Confondre-ho = -0,5.</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Carburació: C_s &gt; C₀ per fer pujar C</b><span class="note">L'atmosfera rica en C (C_s superficial) cedeix C al material (C₀ inicial baix). Si C_s &lt; C₀, no hi ha carburació.</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>⚠ Intersticial MÉS RÀPID que vacants (Q menor)</b><span class="note">Contradicció entre exàmens però: intersticial té forats sempre disponibles (Q baixa). Vacants necessiten esperar vacàncies. <b>Respon "intersticial més ràpida".</b></span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>N en Fe-α (BCC) vs Fe-γ (FCC): BCC més obert → més ràpid</b><span class="note">Contra-intuïtiu: BCC (APF 0,68) té intersticis relativament MÉS GRANS. N i C difonen més ràpid en Fe-α.</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Q gran → D petit → difusió LENTA</b><span class="note">Q és "l'alçada del mur". Més alt, més difícil saltar-lo. Fórmula: D = D₀·exp(-Q/RT).</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>D depèn de: T, estructura, parell solut-matriu. NO depèn de t ni x.</b><span class="note">D és propietat del sistema. El temps no modifica D — el que modifica és la concentració.</span></span><span class="tema-tag t3">T3</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Condicions Fick 2a erf: C_s const, C₀ uniforme, semi-infinit</b><span class="note">Si falla alguna, erf no val. Semi-infinit = front de difusió no arriba a l'altra cara.</span></span><span class="tema-tag t3">T3</span></div>
+
+  <h3>Fórmules clau per al problema T3</h3>
+  <div class="fml">
+    <b>Fick 1a (estacionari):</b><br>
+    J = -D·(ΔC / Δx) &nbsp; [J en kg/(m²·s)]<br><br>
+    <b>Fick 2a (no estacionari):</b><br>
+    (C_x − C₀) / (C_s − C₀) = 1 − erf(z) &nbsp; amb &nbsp; z = x / (2·√(D·t))<br><br>
+    <b>Arrhenius:</b><br>
+    D = D₀ · exp(−Q / R·T) &nbsp; [T en Kelvin, R = 8,314 J/(mol·K)]<br><br>
+    <b>Taula erf (memòria):</b><br>
+    erf(0)=0 · erf(0,25)=0,276 · erf(0,5)=0,521 · erf(0,75)=0,711 · erf(1)=0,843 · erf(1,5)=0,966 · erf(2)=0,995
+  </div>
+</div>
+
+<!-- ============ TEMA 4 ============ -->
+<h2 id="t4">🧬 TEMA 4 — Polímers (mitjana 2,9 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">26 preguntes agregades. Tema amb més preguntes recurrents.</p>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>Estat segons T: T&lt;Tg vitri · Tg&lt;T&lt;Tm gomós · T&gt;Tm fos</b><span class="note">Pregunta estàndard. Te donen Tg i Tm + una T → identifica zona. Memoritza els 3 estats literalment.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>Termoplàstics (lineals) vs termoestables (reticulats)</b><span class="note">Termoplàstics: cadenes independents amb VdW → poden fondre i reformar. Termoestables: xarxa covalent 3D → irreversibles.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>⚠ Termoestables NO es poden estovar</b><span class="note">Trampa. Xarxa 3D covalent = irreversible. Es degraden abans de fluir. Termoplàstics sí es poden estovar.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Refredament ràpid → menys cristal·linitat (amorf)</b><span class="note">Cadenes no tenen temps d'ordenar-se → es queden desordenades. Refredar LENT → més cristal·linitat.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Enllaços a polímer: COVALENT dins cadena + SECUNDARIS entre</b><span class="note">Dins: C-C, C-H (primaris forts). Entre cadenes: VdW, pont H (secundaris febles). Per això fonen sense degradar.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Copolímers (aleatori, alternat, bloc, injert)</b><span class="note">2+ monòmers diferents. ABS (3), SBR (pneumàtics). Aporta propietats combinades.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Elastòmers = entrecreuament LLEUGER (no reticulació alta)</b><span class="note">Distinció fina: termoestable = reticulació alta (rígid). Elastòmer = entrecreuament lleu (cautxú vulcanitzat). Ambdós tenen enllaços covalents entre cadenes, però en densitats diferents.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Ramificacions dificulten empaquetament → menys cristal·linitat</b><span class="note">HDPE (lineal) cristal·linitzà molt. LDPE (ramificat) menys. Per això HDPE és més rígid i opac.</span></span><span class="tema-tag t4">T4</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>⚠ Polímers AMORFS no tenen Tm clara</b><span class="note">Tm només ho tenen semicristal·lins (la part cristal·lina fon). Amorfs s'estoven gradualment (només tenen Tg).</span></span><span class="tema-tag t4">T4</span></div>
+</div>
+
+<!-- ============ TEMA 7 ============ -->
+<h2 id="t7">🔧 TEMA 7 — Propietats mecàniques (mitjana 2,1 preg/examen ↑↑)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">13 preguntes agregades. <b style="color:var(--ok)">Tema NOU al parcial 1 (2025) — probabilitat a l'alça, esp. com a problema 2.</b></p>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Mòdul de Young E = rigidesa</b><span class="note">E = pendent zona lineal σ-ε. Més E = més rígid. Acer 200 GPa, Al 70 GPa, polímers 0,1-5 GPa.</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Ductilitat = deformar-se plàsticament abans de fracturar</b><span class="note">Mesura: %EL (elongació) o %RA (reducció d'àrea). Oposat: fràgil (trenca sense avís).</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Tenacitat = ÀREA total sota corba σ-ε</b><span class="note">Mateix σ_y + més %EL = més tenaç (més àrea). Fràgil alta resistència no és tenaç (poca àrea).</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>⚠ Recuperació elàstica 100% per sota σ_y</b><span class="note">Singular. Si σ &lt; σ_y → zona elàstica → en retirar càrrega, lf = l₀. Et poden donar Δl "durant" la càrrega per confondre.</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Estricció (%RA) i elongació (%EL)</b><span class="note">%RA = (A₀-Af)/A₀·100. %EL = (lf-l₀)/l₀·100. Indicadors de ductilitat.</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>σ_y per mètode 0,2% offset</b><span class="note">Paral·lela a recta elàstica desplaçada 0,002 en ε. On talla la corba = σ_y. Convenció ISO/ASTM.</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Resiliència U_r = σ_y² / (2·E) = àrea triangle elàstic</b><span class="note">Energia màxima ELÀSTICA per unitat de volum. Fórmula clau per problema 2.</span></span><span class="tema-tag t7">T7</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Fatiga (σ &lt; σ_y amb cicles, corba S-N)</b><span class="note">Material falla a σ inferior a σ_y per repetició → perill. Esquerda creix fins mida crítica (KIC).</span></span><span class="tema-tag t7">T7</span></div>
+
+  <h3>Fórmules clau per al problema T7</h3>
+  <div class="fml">
+    σ = F / A₀ &nbsp; (tensió enginyeril)<br>
+    σ = E · ε &nbsp; (zona elàstica, Hooke)<br>
+    ν = -ε_transversal / ε_axial &nbsp; (Poisson, ~0,3 per metalls)<br>
+    ε_real = ln(1 + ε) · · · σ_real = σ·(1 + ε)<br>
+    U_r = σ_y² / (2·E) &nbsp; (resiliència)<br>
+    %EL = (lf − l₀) / l₀ · 100 &nbsp; · &nbsp; %RA = (A₀ − Af) / A₀ · 100
+  </div>
+</div>
+
+<!-- ============ TEMA 8A ============ -->
+<h2 id="t8a">⛏️ TEMA 8A — Deformació plàstica (1-2 preg/examen)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">4 preguntes agregades. Tema NOU al scope, predicció 1-2 al parcial.</p>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Deformació plàstica metalls = moviment DISLOCACIONS + maclatge</b><span class="note">Dislocacions: mecanisme principal. Maclatge: secundari (sobretot HCP amb pocs sistemes lliscament).</span></span><span class="tema-tag t8">T8A</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>HCP (Ti, Mg, Zn) són FRÀGILS: només 3 sistemes lliscament</b><span class="note">FCC/BCC: 12 sistemes → dúctils. HCP: 3 (basal) → limitada plasticitat → fràgil relatiu. Per això Mg es trenca.</span></span><span class="tema-tag t8">T8A</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>4 mecanismes d'enduriment (cal memoritzar)</b><span class="note">(1) Solució sòlida · (2) Mida de gra (Hall-Petch) · (3) Treball en fred · (4) Precipitació. Tots frenen dislocacions.</span></span><span class="tema-tag t8">T8A</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Hall-Petch: σ_y = σ₀ + k/√D · D petit → σ_y gran</b><span class="note">Grans petits → més contorns → més barreres dislocacions → més dur. Mecanisme d'enduriment industrial.</span></span><span class="tema-tag t8">T8A</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Sòlids iònics no deformen plàsticament (repulsió)</b><span class="note">Lliscar plans ajuntaria ions del mateix signe → repulsió → trenca. Per això ceràmics iònics són fràgils.</span></span><span class="tema-tag t8">T8A</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Vector de Burgers: aresta b⊥línia · helicoidal b∥línia</b><span class="note">Desplaçament que causa la dislocació. Mixta: angle intermedi.</span></span><span class="tema-tag t8">T8A</span></div>
+</div>
+
+<!-- ============ CORROSIÓ ============ -->
+<h2 id="corrosio">🧪 CORROSIÓ — 4 preguntes FIXES (autoaprenentatge)</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:16px">28 preguntes agregades. <b style="color:var(--ok)">Apareixen en el 100% dels exàmens des de 2021.</b> Predicció de quines sortiran:</p>
+  <div class="slot-grid">
+    <div class="slot">
+      <div class="snum">SLOT 1 · ~78%</div>
+      <div class="sconcept">Intergranular soldadura inox (sensibilització)</div>
+      <div class="sprob">A 500-800°C precipita Cr₂₃C₆ als límits de gra → empobreix Cr → perd passivitat. Solució: inox 304L (baix C) o estabilitzat (321 Ti, 347 Nb).</div>
+    </div>
+    <div class="slot">
+      <div class="snum">SLOT 2 · ~85%</div>
+      <div class="sconcept">Protecció catòdica · Zn sacrifici · galvanitzat</div>
+      <div class="sprob">Zn (actiu) sobre acer (menys actiu) → Zn és ÀNODE (es corroeix) → Fe és CÀTODE (protegit). Mg també com ànode sacrifici. Galvanitzat = protecció catòdica per ànode sacrifici.</div>
+    </div>
+    <div class="slot">
+      <div class="snum">SLOT 3 · ~65%</div>
+      <div class="sconcept">Picadures (pitting) · Galvànica · Erosió</div>
+      <div class="sprob">Picadures: forats rodons (xapa cotxe, Cl⁻). Galvànica: 2 metalls diferents + electròlit. Erosió: atac químic + abrasió mecànica.</div>
+    </div>
+    <div class="slot">
+      <div class="snum">SLOT 4 · ~55%</div>
+      <div class="sconcept">SCC · Aireació diferencial · Inhibidors · Passivació</div>
+      <div class="sprob">SCC: esquerdes PERPENDICULARS a tensió (tensió+ambient+material). Aireació dif: diferent O₂ (ànode = poc O₂). Inhibidors: radiador cotxe. Passivació: problema per erosió.</div>
+    </div>
+  </div>
+
+  <h3>Tots els conceptes de corrosió per freqüència</h3>
+  <div class="concept-row"><span class="prob p80">78%</span><span class="concept-desc"><b>Intergranular en soldadura d'acers inoxidables (FIXA)</b><span class="note">"Cas típic d'intergranular" → soldadura inox. Sensibilització per precipitació Cr₂₃C₆.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p60">67%</span><span class="concept-desc"><b>Protecció catòdica = convertir material en càtode</b><span class="note">NO el convertim en ànode (seria el contrari). Si és càtode, no es corroeix. 2 mètodes: ànode sacrifici o corrent imposada.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Picadures (pitting) = forats petits xapa cotxe</b><span class="note">Creixen cap avall per gravetat (productes densos cauen). Difícils de detectar però perilloses.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p60">56%</span><span class="concept-desc"><b>Corrosió galvànica = 2 metalls + electròlit + contacte</b><span class="note">El MÉS ACTIU = ànode (es corroeix). Més noble = càtode (protegit).</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p40">44%</span><span class="concept-desc"><b>Erosió-corrosió = atac químic + abrasió mecànica</b><span class="note">Típic en colzes de canonades, hèlixs, turbines. Fluid que desgasta la capa passiva.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Ànodes de sacrifici = Mg i Zn (més actius)</b><span class="note">NO Cu ni llautó (massa nobles). NO Fe sol (massa poc actiu comparat amb Mg). Recorda: Mg i Zn.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p40">33%</span><span class="concept-desc"><b>Galvanitzat = Zn sobre acer = protecció catòdica</b><span class="note">Zn s'oxida abans que l'acer. Fins i tot si es ratlla, el Zn del voltant continua protegint.</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>SCC = esquerdes perpendiculars a la tensió</b><span class="note">Signatura visual. Necessita: tensió + ambient corrosiu específic + material susceptible (simultanis).</span></span><span class="tema-tag corr">CORR</span></div>
+  <div class="concept-row"><span class="prob p20">22%</span><span class="concept-desc"><b>Aireació diferencial = diferència O₂ (cargols, juntes)</b><span class="note">Zona amb poc O₂ = ànode. Per això cargols i juntes són punts febles (manca d'O₂ sota).</span></span><span class="tema-tag corr">CORR</span></div>
+</div>
+
+<!-- ============ TRAMPES ============ -->
+<h2 id="trampes">⚠ Top 10 TRAMPES a vigilar</h2>
+<div class="grid grid-2">
+  <div class="trap"><div class="tlabel">Trampa · T2A</div><b>APF pla vs cel·la</b><p style="font-size:13px">APF d'un pla compacte (2D) = 0,906. APF de la cel·la (3D) = 0,74. Preguntes posen 0,74 al PLA (incorrecte) per confondre.</p><p class="twhy">Aparició: QP 23-24, 16/11/2022</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T1</div><b>Polímers tenen covalent primari</b><p style="font-size:13px">"Polímers només tenen enllaços secundaris" = FALS. Dins la cadena són covalents (C-C, C-H). Entre cadenes sí, són secundaris.</p><p class="twhy">Aparició: QP 23-24, 23/04/2024</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T3</div><b>D₀ NO depèn de T</b><p style="font-size:13px">D = D₀·exp(-Q/RT) — el que depèn de T és D, no D₀. D₀ és CONSTANT del sistema.</p><p class="twhy">Aparició: 24-25 QP, molts exàmens</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T7</div><b>Recuperació elàstica 100%</b><p style="font-size:13px">Si σ &lt; σ_y, en retirar càrrega, lf = l₀. NO quedem amb la deformació Δl que hem mesurat durant la càrrega.</p><p class="twhy">Aparició: 25-26 Q1 (novembre 2025)</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T4</div><b>Termoestables NO s'estoven</b><p style="font-size:13px">Xarxa covalent 3D = irreversible. Abans de fluir, es degraden. Només termoplàstics poden estovar-se.</p><p class="twhy">Aparició: 25-26 Q1</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T4</div><b>Amorfs no tenen Tm clara</b><p style="font-size:13px">Tm només ho té la fase cristal·lina. Amorfs s'estoven gradualment (només tenen Tg).</p><p class="twhy">Aparició: 25-26 Q1</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T2A</div><b>FCC cara, BCC cub</b><p style="font-size:13px">FCC: 4r = a√2 (diagonal CARA). BCC: 4r = a√3 (diagonal CUB). Confondre-ho = -0,5 segur.</p><p class="twhy">Aparició: 78% dels exàmens</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T2B</div><b>Impureses subst menor PA → ρ_teo &gt; ρ_real</b><p style="font-size:13px">Càlcul teòric usa PA matriu (gran). Real té àtoms lleugers. Pes real menor → ρ real menor.</p><p class="twhy">Aparició: QP 23-24, 23/04/2024</p></div>
+  <div class="trap"><div class="tlabel">Trampa · T3</div><b>Intersticial més ràpida (no vacants)</b><p style="font-size:13px">2 exàmens donen respostes oposades, però <b>intersticial és més ràpida</b> físicament. Q menor per intersticial.</p><p class="twhy">Contradicció 09/11/2023 vs 07/11/2024</p></div>
+  <div class="trap"><div class="tlabel">Trampa · corrosió</div><b>Ambigüitat "actiu" vs "noble" (25-26 Q1)</b><p style="font-size:13px">Alguna pregunta de Q16/Q17 del 25-26 Q1 té clau contra-intuïtiva. Si dubtes entre 2 opcions de galvànica/catòdica, DEIXA EN BLANC.</p><p class="twhy">25-26 Q1 Q16-Q17</p></div>
+</div>
+
+<!-- ============ PROBLEMES ============ -->
+<h2 id="problemes">📐 Predicció dels 2 problemes</h2>
+
+<div class="problem-card">
+  <h4>PROBLEMA 1 — DIFUSIÓ · probabilitat 92%+</h4>
+  <div class="prob-scenario"><span>Escenari A: Fick 2a + Arrhenius (carburació/nitruració)</span><span class="pprob">~70%</span></div>
+  <div class="prob-scenario"><span>Escenari B: Fick 1a estacionari (làmina/tub/esfera)</span><span class="pprob">~20%</span></div>
+  <div class="prob-scenario"><span>Escenari C: Combinat Fick 1a + 2a</span><span class="pprob">~5%</span></div>
+  <p style="margin-top:12px;font-size:13px;color:var(--dim)"><b>Trampes recurrents:</b></p>
+  <ul style="font-size:13px;color:var(--dim);margin:4px 0 0 20px">
+    <li>Seleccionar (D₀, Q) correctes segons rang T o estructura (Fe-α vs Fe-γ)</li>
+    <li>Interpolació d'erf (taula a 2 decimals)</li>
+    <li>Conversió d'unitats (% pes → kg/m³; temps hores/setmanes → segons)</li>
+    <li>Canvi de fase Fe a 912°C (α BCC → γ FCC) — diferents D₀, Q</li>
+    <li>Les 2 formes: (C_x-C₀)/(C_s-C₀) = 1-erf(z) i (C_s-C_x)/(C_s-C₀) = erf(z) són equivalents</li>
+  </ul>
+</div>
+
+<div class="problem-card">
+  <h4>PROBLEMA 2 — MECÀNIQUES + DENSITAT CRISTAL·LOGRÀFICA · 65%</h4>
+  <div class="prob-scenario"><span>Escenari A: Lectura corba σ-ε + càlcul E, σ_y, σ_m, Ur + Poisson</span><span class="pprob">~40%</span></div>
+  <div class="prob-scenario"><span>Escenari B: Densitat cristal·lina + aliatge (substitucional o intersticial)</span><span class="pprob">~28%</span></div>
+  <div class="prob-scenario"><span>Escenari C: Combinat σ-ε + densitat aliatge</span><span class="pprob">~25%</span></div>
+  <div class="prob-scenario"><span>Escenari D: Estructura cristal·lina + vacants (Li, Co, Ti)</span><span class="pprob">~15%</span></div>
+  <p style="margin-top:12px;font-size:13px;color:var(--dim)"><b>Trampes recurrents:</b></p>
+  <ul style="font-size:13px;color:var(--dim);margin:4px 0 0 20px">
+    <li>E (mòdul Young) no depèn significativament de T → 3 tramsos lineals iguals</li>
+    <li>U_r = σ_y²/(2E) = àrea triangle → mètode geomètric</li>
+    <li>Aliatge SUBSTITUCIONAL manté n àtoms/cel·la (BCC = 2 tant pur com aliatge)</li>
+    <li>%w ponderat amb 2 pesos atòmics (1,8·PA_A + 0,2·PA_B)</li>
+    <li>Càrrega vs σ_y → "suporta sense deformar?" = σ &lt; σ_y</li>
+    <li>Poisson: Δd radial a partir d'ε axial (ε_trans = -ν·ε_axial)</li>
+  </ul>
+</div>
+
+<!-- ============ CHECKLIST ============ -->
+<h2 id="checklist">✅ Checklist dels 15 conceptes ASSEGURATS abans d'examen</h2>
+<p style="color:var(--dim);margin-bottom:16px">Clica cada casella quan sàpigues explicar-ho sense consultar. Objectiu: TOTS verds abans de dormir.</p>
+
+<div class="checklist" id="checklist">
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">1. Corba F-r i E-r</div><div class="cdetail">Distància d'enllaç = mínim d'energia potencial = punt on F_atracció + F_repulsió = 0</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">2. Classificació metall / ceràmic / polímer</div><div class="cdetail">Metall: conductor, dúctil, densitat mitjana. Ceràmic: aïllant, fràgil, alta Tf. Polímer: aïllant, flexible, baixa densitat.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">3. Electronegativitat</div><div class="cdetail">EN↓+EN↑ = iònic. EN↑+EN↑ = covalent. EN↓+EN↓ = metàl·lic. ΔEN gran = iònic.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">4. FCC vs BCC vs HCP</div><div class="cdetail">FCC: 4r=a√2 (cara), Z=4, APF=0,74. BCC: 4r=a√3 (cub), Z=2, APF=0,68. HCP: Z=6, APF=0,74.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">5. Densitat cristal·logràfica</div><div class="cdetail">ρ = n·PA / (V_cel·N_A). Aplicació per aliatge subst o intersticial.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">6. Al·lotropia Fe i Ti</div><div class="cdetail">Fe: BCC α → FCC γ a 912°C. Ti: HCP → BCC a 882°C. Mateix element, diferents estructures.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">7. Defectes puntuals i vacants</div><div class="cdetail">Puntual: vacants, intersticial, substitucional. N_v/N = exp(-Q_v/kT) — creix amb T.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">8. Fick 1a i 2a + Arrhenius</div><div class="cdetail">1a: J = -D·ΔC/Δx. 2a: (C_x-C₀)/(C_s-C₀) = 1-erf(z), z = x/(2√Dt). D = D₀·exp(-Q/RT).</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">9. Taula erf de memòria</div><div class="cdetail">erf(0)=0, erf(0,5)=0,52, erf(1)=0,84, erf(1,5)=0,97, erf(2)=0,995. Saber interpolar.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">10. Tg vs Tm i estats polímer</div><div class="cdetail">T&lt;Tg vitri · Tg&lt;T&lt;Tm gomós · T&gt;Tm fos. Termoestables no s'estoven. Elastòmer = entrecreuament lleuger.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">11. Fórmules mecàniques</div><div class="cdetail">σ=F/A, σ=E·ε, ν=-ε_trans/ε_axial, U_r=σ_y²/(2E), %EL=ΔL/L₀·100.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">12. Recuperació elàstica 100%</div><div class="cdetail">Per sota σ_y: lf = l₀ en retirar càrrega. Zona elàstica = reversible total.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">13. Hall-Petch i enduriment</div><div class="cdetail">σ_y = σ₀ + k/√D. Gran petit → més dur. 4 mecanismes: gra, solució sòlida, treball fred, precipitació.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">14. Sistemes de lliscament</div><div class="cdetail">FCC 12, BCC 12, HCP 3 (basal). HCP més fràgil per això.</div></div></div>
+  <div class="check-item"><div class="check-box" onclick="this.classList.toggle('done')">✓</div><div class="check-body"><div class="ctitle">15. Corrosió 4 slots</div><div class="cdetail">Intergranular inox · Zn ànode sacrifici · Picadures · SCC perpendicular. Erosió ataca passiva.</div></div></div>
+</div>
+
+<!-- ============ ESTRATÈGIA ============ -->
+<h2 id="estrategia">🎲 Estratègia davant del -0,5</h2>
+<div class="card">
+  <p style="font-size:15px;margin-bottom:14px">Penalització: <b style="color:var(--bad)">+1 correcta / 0 blanca / -0,5 errada</b>. Regla d'or d'esperança matemàtica:</p>
+  <div class="fml">
+    E[contestar 3 opcions a l'atzar] = (1/3)·(+1) + (2/3)·(-0,5) = 1/3 − 1/3 = <b>0</b><br>
+    E[contestar amb 2 opcions eliminades (1 opció vàlida)] = 1·(+1) = <b>+1</b><br>
+    E[contestar amb 1 opció eliminada (2 opcions viables)] = (1/2)·(+1) + (1/2)·(-0,5) = <b>+0,25</b><br>
+    E[contestar sense eliminar res (pura sort)] = <b>0</b>
+  </div>
+  <div class="tip"><b>Regla pràctica:</b> contesta si has pogut eliminar AL MENYS una opció (E &gt; 0). Si dubtes entre les 3, deixa en BLANC. Mai contestis a la babalà.</div>
+
+  <h3>Gestió del temps (90 min)</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:8px">
+    <tr style="border-bottom:2px solid var(--border);font-weight:700"><td style="padding:8px">Secció</td><td style="padding:8px">Temps</td><td style="padding:8px">Velocitat</td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">Test (19 preg)</td><td style="padding:8px">~20 min</td><td style="padding:8px">1 min/pregunta</td></tr>
+    <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">Problema 1 (difusió)</td><td style="padding:8px">~30-35 min</td><td style="padding:8px">5-7 min/apartat</td></tr>
+    <tr><td style="padding:8px">Problema 2 (mecàniques/densitat)</td><td style="padding:8px">~30-35 min</td><td style="padding:8px">5-7 min/apartat</td></tr>
+  </table>
+
+  <div class="tip" style="margin-top:14px"><b>Si quedes atrapat:</b> salta i torna al final. No perdis 10 min en un apartat de 2 punts — pot costar-te 8 punts d'altres apartats.</div>
+</div>
+
+<!-- ============ RED FLAGS ============ -->
+<h2 id="red-flags">🚩 Red Flags finals</h2>
+<div class="card">
+  <ul style="font-size:14px;line-height:1.7">
+    <li><b>Diagrames de fase (T5) estan FORA SCOPE.</b> No perdis temps amb Fe-C, Pb-Sn, eutèctics, perlita, martensita. Els exàmens QP antics els tenien però ja no.</li>
+    <li><b>Nou patró problema 2:</b> el 25-26 Q1 va introduir mecàniques + densitat cristal·logràfica en comptes del clàssic diagrama Fe-C. Alta probabilitat repetició a l'abril.</li>
+    <li><b>Permutacions A/B:</b> mateixes preguntes reordenades. Si parlar amb company, la seva pregunta 5 pot ser la teva 13.</li>
+    <li><b>Calculadora no programable.</b> Practica erf, logs, arrels a mà.</li>
+    <li><b>Formulari oficial:</b> comprova que porta erf, Arrhenius, Hall-Petch, Poisson. Si falta algo, porta'l al cap.</li>
+  </ul>
+</div>
+
+<footer>
+  <p>Planck · CTM Parcial 1 · 21 d'abril 2026 · <b>10/10 o res</b></p>
+  <p>Anàlisi basat en 17 exàmens reals · 280+ preguntes corpus · últim update 2026-04-20</p>
+</footer>
+
+</div>
+
+<script>
+// Persistir checkbox state amb localStorage
+document.querySelectorAll('#checklist .check-box').forEach((box, i) => {
+  const key = 'ctm-check-' + i;
+  if (localStorage.getItem(key) === '1') box.classList.add('done');
+  box.addEventListener('click', () => {
+    localStorage.setItem(key, box.classList.contains('done') ? '1' : '0');
+  });
+});
+</script>
+
+</body>
+</html>

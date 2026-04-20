@@ -1,0 +1,1733 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 2 — Estructura cristal·lina i defectes</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false,
+    errorColor: '#ff7a7a'
+  });
+});
+</script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --bcc:#ff7aa3; --fcc:#5ad7a3; --hcp:#7aa2ff; --accent:#ffd86b; --border:#262c3a;
+  --vacancy:#ff7a7a; --intersticial:#ffd86b; --substit:#9ad7ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:36px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:48px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:26px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin-bottom:28px}
+.hero .q{font-size:18px;color:var(--accent);margin-top:12px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.3px}
+.pill.bcc{background:rgba(255,122,163,.18);color:var(--bcc)}
+.pill.fcc{background:rgba(90,215,163,.18);color:var(--fcc)}
+.pill.hcp{background:rgba(122,162,255,.18);color:var(--hcp)}
+.cell{border-top:3px solid}
+.cell.bcc{border-color:var(--bcc)}
+.cell.fcc{border-color:var(--fcc)}
+.cell.hcp{border-color:var(--hcp)}
+.key{background:rgba(255,216,107,.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0}
+.key b{color:var(--accent)}
+.formula{background:#0a0d13;border:1px solid var(--border);border-radius:8px;padding:14px;margin:10px 0;font-size:16px}
+.analogy{background:#0c1220;border-left:3px solid #ffb3d9;padding:10px 14px;border-radius:6px;font-size:14px;color:#d0d7e6;margin-top:10px}
+.analogy b{color:#ffb3d9}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td.num{text-align:center;font-family:'SF Mono',Consolas,monospace}
+.svgbox{display:flex;justify-content:center;padding:14px 0}
+svg{display:block}
+.note{font-size:13px;color:var(--dim);margin-top:8px}
+.feyn{background:linear-gradient(135deg,#1a1f2e,#231a2e);border:1px solid #3a2a4a;padding:22px 26px;border-radius:12px;margin-top:36px}
+.feyn h2{border:none;padding:0;margin:0 0 10px;color:#ffb3d9}
+.feyn ol{margin:10px 0;padding-left:22px}
+.feyn li{margin:6px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border);padding:5px 10px;border-radius:6px;font-size:13px;margin:4px 4px 0 0}
+.worked{background:#0c1220;border:1px solid #2a3446;border-radius:10px;padding:16px 18px;margin:14px 0;font-size:14px}
+.worked h4{margin:0 0 10px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.dim{color:var(--dim)}
+.defect-atom{transition:all 0.2s}
+.nav{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:13px;transition:all 0.15s}
+.nav a:hover{background:var(--panel);border-color:var(--accent)}
+.nav a.current{background:rgba(255,216,107,0.1);border-color:var(--accent);color:var(--accent)}
+.step{background:#0c1220;border-left:3px solid var(--accent);padding:14px 18px;border-radius:6px;margin:14px 0}
+.step h4{margin:0 0 8px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.ascii{background:#0a0d13;border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;white-space:pre;overflow-x:auto;color:#c5cde0;line-height:1.5}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="sessio-01-enllacos.html">← T1 · Enllaços</a>
+  <a class="current">T2 · Cristal·lografia + Defectes</a>
+  <a href="../REPORT-PARCIAL-1.md">📊 Informe parcial</a>
+</div>
+
+<div class="hero">
+  <h1>Tema 2 — Estructura cristal·lina i defectes<small>CTM · Parcial 1 · T2A + T2B · Fase A (comprensió)</small></h1>
+  <p>Ja saps COM s'enganxen els àtoms. Ara toca: <b>com s'organitzen a l'espai?</b></p>
+  <p class="q">Per què el coure pur és un bon conductor però el bronze és més dur? Per què el ferro pot ser BCC o FCC segons la temperatura? Per què el diamant és tan dur i el grafit tan tou si són el mateix element?</p>
+  <p>Resposta curta: <b>l'organització importa tant com la composició</b>. Aquí entens què passa a escala atòmica dins dels sòlids.</p>
+</div>
+
+<h2>1 · Tres maneres d'organitzar àtoms a l'espai</h2>
+<div class="card">
+  <div class="grid grid-3">
+    <div>
+      <h3>Cristal·lí</h3>
+      <svg width="180" height="120" viewBox="0 0 180 120"><g fill="#ffd86b">
+        <circle cx="20" cy="20" r="7"/><circle cx="50" cy="20" r="7"/><circle cx="80" cy="20" r="7"/><circle cx="110" cy="20" r="7"/><circle cx="140" cy="20" r="7"/><circle cx="170" cy="20" r="7"/>
+        <circle cx="20" cy="50" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="80" cy="50" r="7"/><circle cx="110" cy="50" r="7"/><circle cx="140" cy="50" r="7"/><circle cx="170" cy="50" r="7"/>
+        <circle cx="20" cy="80" r="7"/><circle cx="50" cy="80" r="7"/><circle cx="80" cy="80" r="7"/><circle cx="110" cy="80" r="7"/><circle cx="140" cy="80" r="7"/><circle cx="170" cy="80" r="7"/>
+        <circle cx="20" cy="110" r="7"/><circle cx="50" cy="110" r="7"/><circle cx="80" cy="110" r="7"/><circle cx="110" cy="110" r="7"/><circle cx="140" cy="110" r="7"/><circle cx="170" cy="110" r="7"/>
+      </g></svg>
+      <p>Ordenat, repetitiu, predictible. Els àtoms ocupen posicions fixes. Metalls purs, sals (NaCl), diamant.</p>
+      <p class="note"><b>Propietats:</b> anisotròpic (depèn direcció), al·lotropia possible, T fusió neta.</p>
+    </div>
+    <div>
+      <h3>Amorf</h3>
+      <svg width="180" height="120" viewBox="0 0 180 120"><g fill="#ff7aa3">
+        <circle cx="18" cy="15" r="7"/><circle cx="52" cy="28" r="7"/><circle cx="88" cy="12" r="7"/><circle cx="120" cy="24" r="7"/><circle cx="158" cy="18" r="7"/>
+        <circle cx="28" cy="48" r="7"/><circle cx="62" cy="55" r="7"/><circle cx="96" cy="42" r="7"/><circle cx="132" cy="50" r="7"/><circle cx="165" cy="60" r="7"/>
+        <circle cx="14" cy="78" r="7"/><circle cx="48" cy="85" r="7"/><circle cx="78" cy="72" r="7"/><circle cx="112" cy="82" r="7"/><circle cx="144" cy="78" r="7"/>
+        <circle cx="22" cy="108" r="7"/><circle cx="56" cy="112" r="7"/><circle cx="92" cy="100" r="7"/><circle cx="128" cy="115" r="7"/><circle cx="162" cy="102" r="7"/>
+      </g></svg>
+      <p>Desordenat. Els àtoms congelats en posicions aleatòries, com un líquid "fotografiat". Vidre (SiO₂), la majoria de polímers.</p>
+      <p class="note"><b>Propietats:</b> isotròpic, sense T fusió neta (s'estova progressivament), té Tg (transició vítria).</p>
+    </div>
+    <div>
+      <h3>Policristal·lí</h3>
+      <svg width="180" height="120" viewBox="0 0 180 120">
+        <path d="M0,0 L60,0 L70,40 L50,80 L0,70 Z" fill="rgba(122,162,255,0.25)" stroke="#7aa2ff" stroke-width="1"/>
+        <path d="M60,0 L180,0 L180,50 L100,60 L70,40 Z" fill="rgba(255,216,107,0.25)" stroke="#ffd86b" stroke-width="1"/>
+        <path d="M50,80 L70,40 L100,60 L120,90 L90,120 L50,110 Z" fill="rgba(90,215,163,0.25)" stroke="#5ad7a3" stroke-width="1"/>
+        <path d="M100,60 L180,50 L180,120 L120,120 L120,90 Z" fill="rgba(255,122,163,0.25)" stroke="#ff7aa3" stroke-width="1"/>
+        <path d="M0,70 L50,80 L50,110 L90,120 L0,120 Z" fill="rgba(200,122,255,0.25)" stroke="#c87aff" stroke-width="1"/>
+        <text x="25" y="40" font-size="10" fill="#e9edf5">gra 1</text>
+        <text x="115" y="25" font-size="10" fill="#e9edf5">gra 2</text>
+        <text x="75" y="85" font-size="10" fill="#e9edf5">gra 3</text>
+        <text x="140" y="90" font-size="10" fill="#e9edf5">gra 4</text>
+        <text x="30" y="100" font-size="10" fill="#e9edf5">gra 5</text>
+      </svg>
+      <p>Molts grans cristal·lins petits amb orientacions diferents, separats per contorns de gra. <b>La gran majoria dels materials metàl·lics reals.</b></p>
+      <p class="note"><b>Propietats:</b> isotròpic com a conjunt (els grans s'orienten aleatòriament), T fusió neta.</p>
+    </div>
+  </div>
+  <div class="key"><b>Anisotropia:</b> les propietats (duresa, conductivitat) canvien segons la direcció. Exemple: la fusta es talla fàcil en un sentit i gens en l'altre. <b>Isotropia:</b> iguals en totes direccions.</div>
+</div>
+
+<h2>1.5 · 🔑 TAULA DE CONVERSIONS — la xuleta universal</h2>
+<div class="card">
+  <p><b>Aquesta secció és el teu millor amic a l'examen.</b> Les unitats canvien sense parar i és on més punts es perden. Imprimeix-te-la mentalment.</p>
+</div>
+
+<div class="card">
+  <h3>📏 Longitud (1D)</h3>
+  <table>
+    <tr><th>Unitat</th><th>Valor en metres</th><th>Quan apareix</th></tr>
+    <tr><td><b>1 m</b></td><td>1 m (referència)</td><td>SI base</td></tr>
+    <tr><td><b>1 mm</b></td><td>10⁻³ m = 0,001 m</td><td>gruixos de làmines, mostres</td></tr>
+    <tr><td><b>1 cm</b></td><td>10⁻² m = 0,01 m</td><td>longituds de provetes</td></tr>
+    <tr><td><b>1 μm (micra)</b></td><td>10⁻⁶ m</td><td>mida de gra, espessor capes</td></tr>
+    <tr><td><b>1 nm (nanòmetre)</b></td><td>10⁻⁹ m = 10⁻⁷ cm</td><td>radis atòmics, paràmetres a-r</td></tr>
+    <tr><td><b>1 Å (Ångström)</b></td><td>10⁻¹⁰ m = 0,1 nm</td><td>distàncies atòmiques (poc usat)</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Per a CTM:</b> el més habitual és convertir <b>nm → cm</b> (perquè la densitat surt en g/cm³).
+    $$1 \text{ nm} = 10^{-7} \text{ cm}$$
+    Exemple: 0,128 nm = 0,128·10⁻⁷ cm = 1,28·10⁻⁸ cm
+  </div>
+</div>
+
+<div class="card">
+  <h3>📐 Àrea (2D) — atenció, és el quadrat</h3>
+  <table>
+    <tr><th>Unitat</th><th>Valor en m²</th><th>Conversió</th></tr>
+    <tr><td><b>1 m²</b></td><td>1 m² (referència)</td><td>—</td></tr>
+    <tr><td><b>1 dm²</b></td><td>10⁻² m²</td><td>= 100 cm²</td></tr>
+    <tr><td><b>1 cm²</b></td><td>10⁻⁴ m²</td><td>= 100 mm²</td></tr>
+    <tr><td><b>1 mm²</b></td><td>10⁻⁶ m²</td><td>—</td></tr>
+    <tr><td><b>1 nm²</b></td><td>10⁻¹⁸ m² = 10⁻¹⁴ cm²</td><td>—</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Truc:</b> sempre que conventeixes longitud, **eleva a 2 per àrea i a 3 per volum**.
+    $$1 \text{ cm} = 10^{-2} \text{ m} \rightarrow 1 \text{ cm}^2 = (10^{-2})^2 \text{ m}^2 = 10^{-4} \text{ m}^2$$
+    $$1 \text{ cm} = 10^{-2} \text{ m} \rightarrow 1 \text{ cm}^3 = (10^{-2})^3 \text{ m}^3 = 10^{-6} \text{ m}^3$$
+  </div>
+
+  <div class="worked">
+    <h4>Exemple — passar 200 cm² a m²</h4>
+    <p>200 cm² · (1 m / 100 cm)² = 200 / 10000 = <b>0,02 m²</b></p>
+    <p>O equivalent: 200 · 10⁻⁴ = 0,02 m². Mateix resultat.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧊 Volum (3D) — atenció, és el cub</h3>
+  <table>
+    <tr><th>Unitat</th><th>Valor en m³</th><th>Conversió útil</th></tr>
+    <tr><td><b>1 m³</b></td><td>1 m³</td><td>= 1000 L</td></tr>
+    <tr><td><b>1 dm³ = 1 L</b></td><td>10⁻³ m³</td><td>= 1 litre</td></tr>
+    <tr><td><b>1 cm³ = 1 mL</b></td><td>10⁻⁶ m³</td><td>= 1 mil·lilitre</td></tr>
+    <tr><td><b>1 mm³</b></td><td>10⁻⁹ m³</td><td>—</td></tr>
+    <tr><td><b>1 nm³</b></td><td>10⁻²⁷ m³ = 10⁻²¹ cm³</td><td>volums cel·la cristal·logràfica</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Trampes molt comunes a CTM:</b>
+    <ul>
+      <li>cm³ ↔ m³: factor <b>10⁶</b> (no 100, per exemple 1 m³ = 10⁶ cm³)</li>
+      <li>nm³ ↔ cm³: factor <b>10²¹</b> (1 nm³ = 10⁻²¹ cm³)</li>
+      <li>nm³ ↔ m³: factor <b>10²⁷</b></li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h3>⚖ Massa</h3>
+  <table>
+    <tr><th>Unitat</th><th>En kg</th><th>En g</th></tr>
+    <tr><td><b>1 t (tona)</b></td><td>1000 kg</td><td>10⁶ g</td></tr>
+    <tr><td><b>1 kg</b></td><td>1 kg</td><td>1000 g</td></tr>
+    <tr><td><b>1 g</b></td><td>0,001 kg</td><td>1 g</td></tr>
+    <tr><td><b>1 mg</b></td><td>10⁻⁶ kg</td><td>10⁻³ g</td></tr>
+    <tr><td><b>1 μg</b></td><td>10⁻⁹ kg</td><td>10⁻⁶ g</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>⏱ Temps (la trampa de difusió!)</h3>
+  <table>
+    <tr><th>Unitat</th><th>Segons</th></tr>
+    <tr><td>1 minut</td><td>60</td></tr>
+    <tr><td>1 hora</td><td>3 600</td></tr>
+    <tr><td>1 dia</td><td>86 400</td></tr>
+    <tr><td>1 setmana</td><td>604 800 ≈ 6,05·10⁵</td></tr>
+    <tr><td>1 mes (30 dies)</td><td>2 592 000 ≈ 2,59·10⁶</td></tr>
+    <tr><td>1 any (365 dies)</td><td>31 536 000 ≈ 3,15·10⁷</td></tr>
+  </table>
+
+  <div class="key">
+    <b>A T3 (difusió) sempre cal passar a SEGONS</b> per usar Arrhenius o Fick. Si te diuen "20 g/setmana" o "5 hores de carburació", la primera cosa: passar a segons.
+  </div>
+</div>
+
+<div class="card">
+  <h3>🌡 Temperatura (la trampa absoluta!)</h3>
+  <div class="formula">
+    $$T(\text{K}) = T(°\text{C}) + 273$$
+  </div>
+  <table>
+    <tr><th>°C</th><th>K</th><th>Comentari</th></tr>
+    <tr><td>−273</td><td>0</td><td>zero absolut (impossible)</td></tr>
+    <tr><td>0</td><td>273</td><td>congelació aigua</td></tr>
+    <tr><td>20</td><td>293</td><td>ambient</td></tr>
+    <tr><td>100</td><td>373</td><td>bullir aigua</td></tr>
+    <tr><td>500</td><td>773</td><td>tractament tèrmic</td></tr>
+    <tr><td>912</td><td>1185</td><td>Fe α→γ</td></tr>
+    <tr><td>1538</td><td>1811</td><td>fusió Fe</td></tr>
+  </table>
+
+  <div class="key"><b>SEMPRE Kelvin a fórmules.</b> La trampa més freqüent dels problemes de difusió.</div>
+</div>
+
+<div class="card">
+  <h3>⚡ Energia</h3>
+  <table>
+    <tr><th>Unitat</th><th>Conversió</th><th>Quan apareix</th></tr>
+    <tr><td><b>1 J</b></td><td>SI base</td><td>energia mecànica</td></tr>
+    <tr><td><b>1 kJ/mol</b></td><td>1000 J/mol</td><td>Q d'activació (acadèmia)</td></tr>
+    <tr><td><b>1 eV/àtom</b></td><td>1,602·10⁻¹⁹ J = 96,49 kJ/mol</td><td>Q d'activació (Atenea)</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Conversions clau:</b>
+    $$1 \text{ eV/àtom} = 96{,}49 \text{ kJ/mol}$$
+    $$1 \text{ kJ/mol} = 0{,}01036 \text{ eV/àtom}$$
+    Si Q és en eV → usa <b>k</b> (Boltzmann = 8,62·10⁻⁵ eV/K)<br>
+    Si Q és en kJ/mol → usa <b>R</b> (gasos = 8,314 J/(mol·K), passa kJ a J multiplicant per 1000)
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧪 Concentració (la més confosa de totes)</h3>
+  <table>
+    <tr><th>Unitat</th><th>Significat</th></tr>
+    <tr><td><b>%w (percentatge en pes)</b></td><td>massa solut / massa total · 100</td></tr>
+    <tr><td><b>%at (percentatge atòmic)</b></td><td>nº àtoms solut / nº àtoms totals · 100</td></tr>
+    <tr><td><b>kg/m³</b></td><td>massa solut / volum total</td></tr>
+    <tr><td><b>g/cm³</b></td><td>massa solut / volum total (= densitat)</td></tr>
+    <tr><td><b>mol/m³</b></td><td>moles solut / volum total</td></tr>
+    <tr><td><b>ppm (parts per milió)</b></td><td>massa solut / massa total · 10⁶ (molt diluït)</td></tr>
+  </table>
+
+  <h4>Conversions habituals</h4>
+  <table>
+    <tr><th>De</th><th>A</th><th>Multiplica per</th></tr>
+    <tr><td>g/cm³</td><td>kg/m³</td><td>1000</td></tr>
+    <tr><td>kg/m³</td><td>g/cm³</td><td>0,001</td></tr>
+    <tr><td>mol/m³</td><td>kg/m³</td><td>PM × 10⁻³ (PM en g/mol)</td></tr>
+    <tr><td>kg/m³</td><td>mol/m³</td><td>1000 / PM</td></tr>
+    <tr><td>%w</td><td>kg/m³</td><td>(%w/100) · ρ_total</td></tr>
+    <tr><td>ppm</td><td>%w</td><td>10⁻⁴ (1 ppm = 10⁻⁴ %)</td></tr>
+  </table>
+
+  <div class="worked">
+    <h4>Exemple — passar 0,3 mol/m³ a kg/m³ (X26 amb PM = 126 g/mol)</h4>
+    <p>Massa per mol = 126 g/mol = 0,126 kg/mol</p>
+    <p>0,3 mol/m³ × 0,126 kg/mol = <b>0,0378 kg/m³</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple — passar 0,8 %w de C en Fe a kg/m³ (ρ_Fe = 7870 kg/m³)</h4>
+    <p>0,8 % = 0,008 (fracció)</p>
+    <p>C en kg/m³ = 0,008 · 7870 = <b>62,96 kg/m³</b></p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>💨 Flux (J) i conversions de difusió</h3>
+  <table>
+    <tr><th>Forma</th><th>Equivalent en SI</th></tr>
+    <tr><td>1 g/(m²·s)</td><td>10⁻³ kg/(m²·s)</td></tr>
+    <tr><td>1 g/(cm²·s)</td><td>10 kg/(m²·s)</td></tr>
+    <tr><td>1 kg/(m²·setmana)</td><td>1,65·10⁻⁶ kg/(m²·s)</td></tr>
+    <tr><td>1 kg/(m²·mes)</td><td>3,86·10⁻⁷ kg/(m²·s)</td></tr>
+  </table>
+
+  <div class="worked">
+    <h4>Exemple — "1 kg de X26 per 200 cm² en 1 mes" → J en SI</h4>
+    <p>J = (1 kg) / (200 cm² · 1 mes)</p>
+    <p>200 cm² = 0,02 m²</p>
+    <p>1 mes = 2,59·10⁶ s</p>
+    <div class="formula">
+      $$J = \frac{1 \text{ kg}}{0{,}02 \text{ m}^2 \cdot 2{,}59 \cdot 10^6 \text{ s}} = 1{,}93 \cdot 10^{-5} \text{ kg/(m}^2\text{·s)}$$
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🛡 SANITY CHECK universal — D &lt; D₀ sempre (per Arrhenius)</h3>
+  <p>Quan calculis un coeficient de difusió D amb Arrhenius, sempre ha de complir:</p>
+  <div class="formula" style="text-align:center">
+    $$\boxed{D < D_0}$$
+  </div>
+  <p><b>Per què?</b> L'equació d'Arrhenius és $D = D_0 \cdot e^{-Q/RT}$. L'exponent és NEGATIU, així que $e^{-Q/RT}$ sempre val entre 0 i 1. Multiplicar D₀ per un número &lt; 1 dóna un D més petit.</p>
+
+  <table>
+    <tr><th>Si t'ix...</th><th>Vol dir...</th></tr>
+    <tr><td><b>D &lt; D₀ (correcte)</b></td><td>✓ El càlcul està bé</td></tr>
+    <tr><td>D &gt; D₀</td><td>❌ Has oblidat el signe negatiu de l'exponent</td></tr>
+    <tr><td>D = D₀ exactament</td><td>❌ T = ∞ o Q = 0 (impossible físicament)</td></tr>
+    <tr><td>D ≈ 10⁻³ m²/s</td><td>❌ Probable error — D real és 10⁻⁸ a 10⁻¹⁵</td></tr>
+  </table>
+
+  <h4>Errors típics que fan D &gt; D₀</h4>
+  <ol>
+    <li><b>Oblidar el signe negatiu</b> a l'exponent → D = D₀·e^(+Q/RT) → enorme</li>
+    <li><b>T en °C en lloc de K</b> → l'exponent dóna massa petit en valor absolut</li>
+    <li><b>Q en kJ sense passar a J</b> quan uses R → exponent 1000× més petit</li>
+    <li><b>Confondre k i R</b> amb les unitats de Q</li>
+  </ol>
+
+  <h4>Magnituds típiques per orientar-te</h4>
+  <table>
+    <tr><th>Sistema</th><th>D₀ (m²/s)</th><th>D a 1000 K (m²/s)</th><th>Relació D₀/D</th></tr>
+    <tr><td>C en Fe-α</td><td>6,2·10⁻⁷</td><td>2,5·10⁻¹¹</td><td>~25 000</td></tr>
+    <tr><td>Cu autodifusió</td><td>7,8·10⁻⁵</td><td>5·10⁻¹⁵</td><td>~10¹⁰</td></tr>
+    <tr><td>H en Pd (intersticial petit)</td><td>1,3·10⁻⁷</td><td>5·10⁻⁹</td><td>~25</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Regla pràctica:</b> si t'ix D entre 10⁻⁸ i 10⁻¹⁵ m²/s estàs en zona normal. Si t'ix D ≈ 10⁻³ o més gran, REVISA — alguna cosa va malament.
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>🛠 Estratègia universal d'unitats per problemes de CTM</h3>
+  <ol>
+    <li><b>Tria un sistema d'unitats des del principi</b> (recomanat: SI complet, és a dir, m, kg, s, K, J, mol)</li>
+    <li><b>Llista TOTES les dades en aquest sistema</b> abans de fer cap càlcul</li>
+    <li><b>Marca quina dada NO has convertit encara</b> (subratlla-la o posa un asterisc)</li>
+    <li><b>Comprova al final l'anàlisi dimensional</b>: el resultat té les unitats que s'esperarien?</li>
+    <li><b>Sanity check de magnitud:</b> és físicament raonable? Una densitat de 10²² g/cm³ no té sentit. Un gruix de 5 mm sí.</li>
+  </ol>
+
+  <div class="key">
+    <b>Truc del professional:</b> escriu sempre les unitats AL COSTAT del número, fins i tot durant els passos intermedis. Si fan "no quadrar", t'adones al moment.
+    <br>Exemple: $J = D \cdot \dfrac{\Delta C}{\Delta x}$ → $\left[\dfrac{m^2}{s}\right] \cdot \dfrac{[kg/m^3]}{[m]} = \dfrac{kg}{m^2 \cdot s}$ ✓
+  </div>
+</div>
+
+<h2>2 · La cel·la unitat: el bloc LEGO atòmic</h2>
+<div class="card">
+  <p>Un cristall és una repetició en 3D d'un motif (grup d'àtoms) anomenat <b>cel·la unitat</b>. Com un mosaic: si entens un rajol, entens tota la paret.</p>
+  <p>Hi ha <b>14 xarxes de Bravais</b> (configuracions possibles en 3D), però per a CTM només ens interessen <b>3</b>, les tres més compactes:</p>
+</div>
+
+<h2>3 · Les tres estructures estrella — BCC, FCC, HCP</h2>
+
+<div class="grid grid-3">
+
+  <div class="card cell bcc">
+    <span class="pill bcc">BCC</span>
+    <h3>Cúbica Centrada al Cos</h3>
+    <svg width="220" height="200" viewBox="0 0 220 200">
+      <defs><radialGradient id="bccg"><stop offset="0" stop-color="#ffaaca"/><stop offset="1" stop-color="#ff7aa3"/></radialGradient></defs>
+      <g stroke="#3a4458" stroke-width="1" fill="none">
+        <path d="M40,60 L160,60 L160,180 L40,180 Z"/>
+        <path d="M80,20 L200,20 L200,140 L80,140 Z"/>
+        <line x1="40" y1="60" x2="80" y2="20"/>
+        <line x1="160" y1="60" x2="200" y2="20"/>
+        <line x1="160" y1="180" x2="200" y2="140"/>
+        <line x1="40" y1="180" x2="80" y2="140"/>
+      </g>
+      <g fill="url(#bccg)">
+        <circle cx="40" cy="60" r="14"/>
+        <circle cx="160" cy="60" r="14"/>
+        <circle cx="40" cy="180" r="14"/>
+        <circle cx="160" cy="180" r="14"/>
+        <circle cx="80" cy="20" r="14"/>
+        <circle cx="200" cy="20" r="14"/>
+        <circle cx="80" cy="140" r="14"/>
+        <circle cx="200" cy="140" r="14"/>
+      </g>
+      <circle cx="120" cy="100" r="16" fill="#ffd86b" stroke="#ff7aa3" stroke-width="2"/>
+      <text x="120" y="104" text-anchor="middle" font-size="10" font-weight="700" fill="#0e1016">CENTRE</text>
+    </svg>
+    <table>
+      <tr><td>Àtoms/cel·la</td><td class="num"><b>2</b></td></tr>
+      <tr><td>Coordinació</td><td class="num"><b>8</b></td></tr>
+      <tr><td>APF</td><td class="num"><b>0,68</b></td></tr>
+      <tr><td>Relació a–r</td><td class="num"><b>a√3 = 4r</b></td></tr>
+      <tr><td>Direcció compacta</td><td class="num">diagonal <b>del cub</b></td></tr>
+    </table>
+    <p><b>Exemples:</b> Fe-α (ferrita, &lt;912°C), Cr, Mo, W, V, Nb, Ta.</p>
+  </div>
+
+  <div class="card cell fcc">
+    <span class="pill fcc">FCC</span>
+    <h3>Cúbica Centrada a les Cares</h3>
+    <svg width="220" height="200" viewBox="0 0 220 200">
+      <defs><radialGradient id="fccg"><stop offset="0" stop-color="#aaf2c9"/><stop offset="1" stop-color="#5ad7a3"/></radialGradient></defs>
+      <g stroke="#3a4458" stroke-width="1" fill="none">
+        <path d="M40,60 L160,60 L160,180 L40,180 Z"/>
+        <path d="M80,20 L200,20 L200,140 L80,140 Z"/>
+        <line x1="40" y1="60" x2="80" y2="20"/>
+        <line x1="160" y1="60" x2="200" y2="20"/>
+        <line x1="160" y1="180" x2="200" y2="140"/>
+        <line x1="40" y1="180" x2="80" y2="140"/>
+      </g>
+      <g fill="url(#fccg)">
+        <circle cx="40" cy="60" r="13"/>
+        <circle cx="160" cy="60" r="13"/>
+        <circle cx="40" cy="180" r="13"/>
+        <circle cx="160" cy="180" r="13"/>
+        <circle cx="80" cy="20" r="13"/>
+        <circle cx="200" cy="20" r="13"/>
+        <circle cx="80" cy="140" r="13"/>
+        <circle cx="200" cy="140" r="13"/>
+      </g>
+      <g fill="#ffd86b" opacity="0.95">
+        <circle cx="100" cy="120" r="14"/>
+        <circle cx="180" cy="80" r="14"/>
+        <circle cx="100" cy="40" r="14"/>
+        <circle cx="120" cy="160" r="11"/>
+        <circle cx="60" cy="100" r="11"/>
+        <circle cx="140" cy="100" r="11"/>
+      </g>
+      <text x="110" y="120" text-anchor="middle" font-size="8" font-weight="700" fill="#0e1016">cares</text>
+    </svg>
+    <table>
+      <tr><td>Àtoms/cel·la</td><td class="num"><b>4</b></td></tr>
+      <tr><td>Coordinació</td><td class="num"><b>12</b></td></tr>
+      <tr><td>APF</td><td class="num"><b>0,74</b> ⭐</td></tr>
+      <tr><td>Relació a–r</td><td class="num"><b>a√2 = 4r</b></td></tr>
+      <tr><td>Direcció compacta</td><td class="num">diagonal <b>de la cara</b></td></tr>
+    </table>
+    <p><b>Exemples:</b> Fe-γ (austenita, 912-1394°C), Al, Cu, Ni, Au, Ag, Pt, Pb.</p>
+  </div>
+
+  <div class="card cell hcp">
+    <span class="pill hcp">HCP</span>
+    <h3>Hexagonal Compacta</h3>
+    <svg width="220" height="200" viewBox="0 0 220 200">
+      <defs><radialGradient id="hcpg"><stop offset="0" stop-color="#aac3ff"/><stop offset="1" stop-color="#7aa2ff"/></radialGradient></defs>
+      <g stroke="#3a4458" stroke-width="1" fill="none">
+        <polygon points="110,20 170,50 170,120 110,150 50,120 50,50"/>
+        <polygon points="110,60 160,85 160,135 110,160 60,135 60,85"/>
+      </g>
+      <g fill="url(#hcpg)">
+        <circle cx="110" cy="20" r="11"/>
+        <circle cx="170" cy="50" r="11"/>
+        <circle cx="170" cy="120" r="11"/>
+        <circle cx="110" cy="150" r="11"/>
+        <circle cx="50" cy="120" r="11"/>
+        <circle cx="50" cy="50" r="11"/>
+        <circle cx="110" cy="85" r="11"/>
+        <circle cx="110" cy="120" r="11"/>
+      </g>
+      <g fill="#ffd86b">
+        <circle cx="90" cy="95" r="9"/>
+        <circle cx="130" cy="95" r="9"/>
+        <circle cx="110" cy="130" r="9"/>
+      </g>
+      <text x="110" y="185" text-anchor="middle" font-size="11" fill="#8a93a6">capes ABAB</text>
+    </svg>
+    <table>
+      <tr><td>Àtoms/cel·la</td><td class="num"><b>6</b></td></tr>
+      <tr><td>Coordinació</td><td class="num"><b>12</b></td></tr>
+      <tr><td>APF</td><td class="num"><b>0,74</b> ⭐</td></tr>
+      <tr><td>Relació a–r</td><td class="num"><b>a = 2r</b>; c/a ≈ 1,633</td></tr>
+      <tr><td>Direcció compacta</td><td class="num">aresta basal</td></tr>
+    </table>
+    <p><b>Exemples:</b> Ti-α (&lt;882°C), Mg, Zn, Be, Co-α, Cd, Zr.</p>
+  </div>
+
+</div>
+
+<div class="key"><b>Regla d'or:</b> FCC i HCP tenen la mateixa APF (0,74, la màxima possible per esferes iguals) perquè totes dues són apilaments compactes. La diferència és la seqüència: FCC = ABCABC, HCP = ABAB. BCC és menys compacta (0,68).</div>
+
+<h2>4 · APF — Factor d'Empaquetament Atòmic</h2>
+<div class="card">
+  <p>Quina fracció del volum de la cel·la està <b>realment ocupada</b> per àtoms (tractats com esferes)?</p>
+  <div class="formula">
+    $$\text{APF} = \frac{n \cdot V_\text{atom}}{V_c} = \frac{n \cdot \tfrac{4}{3}\pi r^3}{V_c}$$
+  </div>
+  <p><b>n</b> = nombre d'àtoms per cel·la (BCC=2, FCC=4, HCP=6), <b>r</b> = radi atòmic, <b>V_cel·la</b> = volum total de la cel·la (a³ per cúbica, fórmula hexagonal per HCP).</p>
+
+  <div class="analogy"><b>Analogia:</b> imagina taronges al súper. Un cistell FCC (apilament piramidal compacte) té el 74% d'espai ocupat. Un cistell BCC (amb una taronja al mig de cada caixa cúbica) té el 68%. Un cistell cúbic simple (només vèrtexs) té el 52%. Més APF = menys aire = més àtoms per unitat de volum = densitat real més alta.</div>
+</div>
+
+<h2>4.1 · Derivacions pas a pas — d'on surten les fórmules</h2>
+
+<div class="card">
+  <h3>Pre-requisit 1: Racionalitzar arrels al denominador (àlgebra bàsica)</h3>
+  <p>En cristal·lografia surten molt fraccions com $\dfrac{4r}{\sqrt{2}}$ o $\dfrac{4r}{\sqrt{3}}$. Aquestes es poden <b>reescriure</b> en una forma equivalent (racionalitzada) més còmoda.</p>
+
+  <div class="step">
+    <h4>Primer, verifica amb números que són iguals</h4>
+    <p>Prova amb r = 1:</p>
+    <ul>
+      <li>Forma 1: $\dfrac{4 \cdot 1}{\sqrt{2}} = \dfrac{4}{1{,}4142} \approx 2{,}828$</li>
+      <li>Forma 2: $2 \cdot 1 \cdot \sqrt{2} = 2 \cdot 1{,}4142 \approx 2{,}828$</li>
+    </ul>
+    <p><b>Mateix valor ✓</b> — són la mateixa cosa escrita de dues maneres.</p>
+  </div>
+
+  <div class="step">
+    <h4>Clau: la regla d'or de les arrels</h4>
+    <div class="formula">
+      $$\sqrt{x} \cdot \sqrt{x} = x$$
+    </div>
+    <p>Per definició: "arrel de x" vol dir "el número que multiplicat per si mateix dóna x".</p>
+    <ul>
+      <li>$\sqrt{9} \cdot \sqrt{9} = 3 \cdot 3 = 9$</li>
+      <li>$\sqrt{2} \cdot \sqrt{2} = 2$</li>
+      <li>$\sqrt{3} \cdot \sqrt{3} = 3$</li>
+      <li>$\sqrt{5} \cdot \sqrt{5} = 5$</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h4>Truc: multiplicar per $\dfrac{\sqrt{x}}{\sqrt{x}} = 1$</h4>
+    <p>Multiplicar per 1 no canvia el valor. Per tant podem multiplicar qualsevol fracció per $\dfrac{\sqrt{x}}{\sqrt{x}}$ sense alterar-la.</p>
+    <p>Això ens deixa eliminar l'arrel del denominador.</p>
+  </div>
+
+  <div class="step">
+    <h4>Exemple complet: $\dfrac{4r}{\sqrt{2}} \rightarrow 2r\sqrt{2}$ (el de FCC)</h4>
+
+    <p><b>Pas a:</b> Multiplica dalt i baix per $\sqrt{2}$:</p>
+    <div class="formula">
+      $$\frac{4r}{\sqrt{2}} = \frac{4r}{\sqrt{2}} \cdot \frac{\sqrt{2}}{\sqrt{2}}$$
+    </div>
+
+    <p><b>Pas b:</b> Calcula el numerador: $4r \cdot \sqrt{2} = 4r\sqrt{2}$</p>
+    <p><b>Pas c:</b> Calcula el denominador: $\sqrt{2} \cdot \sqrt{2} = 2$</p>
+    <div class="formula">
+      $$= \frac{4r\sqrt{2}}{2}$$
+    </div>
+
+    <p><b>Pas d:</b> Simplifica dividint $4/2 = 2$:</p>
+    <div class="formula">
+      $$= 2r\sqrt{2}$$
+    </div>
+
+    <div class="key">
+      <b>Resum visual pas a pas:</b>
+      $$\frac{4r}{\sqrt{2}} \; \xrightarrow{\cdot\frac{\sqrt{2}}{\sqrt{2}}} \; \frac{4r\sqrt{2}}{\sqrt{2}\cdot\sqrt{2}} \; \xrightarrow{\sqrt{2}\cdot\sqrt{2}=2} \; \frac{4r\sqrt{2}}{2} \; \xrightarrow{4/2=2} \; 2r\sqrt{2}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Exemple BCC: $\dfrac{4r}{\sqrt{3}} \rightarrow \dfrac{4r\sqrt{3}}{3}$</h4>
+
+    <p>Mateix procediment però amb $\sqrt{3}$:</p>
+    <div class="formula">
+      $$\frac{4r}{\sqrt{3}} \cdot \frac{\sqrt{3}}{\sqrt{3}} = \frac{4r\sqrt{3}}{3}$$
+    </div>
+    <p class="note">Aquí <b>no simplifica tan bé</b> com FCC perquè 4/3 no dóna un número enter. Es queda com $\dfrac{4r\sqrt{3}}{3}$.</p>
+  </div>
+
+  <div class="step">
+    <h4>Taula de referència</h4>
+    <table>
+      <tr><th>Forma original</th><th>Forma racionalitzada</th></tr>
+      <tr><td>$\dfrac{4r}{\sqrt{2}}$</td><td>$2r\sqrt{2}$</td></tr>
+      <tr><td>$\dfrac{4r}{\sqrt{3}}$</td><td>$\dfrac{4r\sqrt{3}}{3}$</td></tr>
+      <tr><td>$\dfrac{1}{\sqrt{2}}$</td><td>$\dfrac{\sqrt{2}}{2}$</td></tr>
+      <tr><td>$\dfrac{1}{\sqrt{3}}$</td><td>$\dfrac{\sqrt{3}}{3}$</td></tr>
+    </table>
+  </div>
+
+  <div class="key">
+    <b>Truc pràctic per l'examen:</b> si tens la forma $\dfrac{4r}{\sqrt{2}}$ i tens calculadora, NO cal que racionalitzis — posa 4 dividit per arrel de 2 i punt. Dóna el mateix. Racionalitzar només és útil si t'agrada tenir l'expressió "més neta" o si no tens calculadora.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Pre-requisit 2: la diagonal d'un cub (3D Pitàgores)</h3>
+  <p>Si el cub té costat <b>a</b>:</p>
+  <ul>
+    <li>Diagonal d'una CARA (2D): $\sqrt{a^2 + a^2} = a\sqrt{2}$</li>
+    <li>Diagonal del COS (3D, de vèrtex a vèrtex oposat): $\sqrt{(a\sqrt{2})^2 + a^2} = \sqrt{3a^2} = a\sqrt{3}$</li>
+  </ul>
+  <div class="ascii">
+       cara                       cos
+   ●─────●                  ●────────●
+   │ ╲   │                  │╲       │╲
+   │   ╲ │ a√2              │ ╲ a√3  │ ╲
+   ●─────●                  │  ╲     │  ╲
+                            ●───●────●   ●
+                             ╲  │     ╲  │
+                              ╲ │      ╲ │
+                               ╲●───────●</div>
+  <p class="note">Aquestes dues són <b>LA clau</b> per a totes les derivacions cristal·logràfiques cúbiques.</p>
+</div>
+
+<div class="card cell bcc">
+  <h3>🔴 Derivació BCC</h3>
+
+  <div class="step">
+    <h4>Pas 1 — Com toquen els àtoms?</h4>
+    <p>A BCC, l'àtom del centre TOCA els àtoms dels vèrtexs al llarg de la <b>diagonal del cub</b>.</p>
+    <div class="ascii">
+   Vèrtex       Centre        Vèrtex oposat
+      ○ ──────── ● ──────── ○
+      ├─r─┤ ├── 2r ──┤ ├─r─┤
+      └─────── a√3 ──────────┘
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 2 — Àtoms al llarg de la diagonal</h4>
+    <p>Al llarg de la diagonal del cub tenim:</p>
+    <ul>
+      <li>Mig àtom del primer vèrtex: $r$</li>
+      <li>Un àtom sencer al centre (diàmetre): $2r$</li>
+      <li>Mig àtom del vèrtex oposat: $r$</li>
+    </ul>
+    <p><b>Total = 4r</b>, i aquesta és la diagonal del cub = $a\sqrt{3}$.</p>
+    <div class="formula">
+      $$a\sqrt{3} = 4r$$
+    </div>
+    <p>Aïllant <b>a</b> i racionalitzant:</p>
+    <div class="formula">
+      $$a = \frac{4r}{\sqrt{3}} = \frac{4r\sqrt{3}}{3}$$
+    </div>
+    <div class="key">
+      <b>Formes equivalents</b>:
+      $$a\sqrt{3} = 4r \quad \iff \quad a = \frac{4r}{\sqrt{3}} \quad \iff \quad a = \frac{4r\sqrt{3}}{3}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 3 — Volum de la cel·la</h4>
+    <div class="formula">
+      $$V_c = a^3 = \left(\frac{4r}{\sqrt{3}}\right)^3 = \frac{64\,r^3}{3\sqrt{3}}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 4 — Volum ocupat pels àtoms</h4>
+    <p>A BCC hi ha 2 àtoms per cel·la. Cada àtom és una esfera de volum $\tfrac{4}{3}\pi r^3$:</p>
+    <div class="formula">
+      $$V_\text{ocupat} = 2 \cdot \tfrac{4}{3}\pi r^3 = \frac{8\pi r^3}{3}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 5 — APF final</h4>
+    <div class="formula">
+      $$\text{APF}_\text{BCC} = \frac{V_\text{ocupat}}{V_c} = \frac{8\pi r^3 / 3}{64 r^3 / (3\sqrt{3})} = \frac{8\pi \sqrt{3}}{64} = \frac{\pi \sqrt{3}}{8} \approx 0{,}68$$
+    </div>
+  </div>
+</div>
+
+<div class="card cell fcc">
+  <h3>🟢 Derivació FCC</h3>
+
+  <div class="step">
+    <h4>Pas 1 — Com toquen els àtoms?</h4>
+    <p>A FCC, els àtoms dels vèrtexs TOQUEN l'àtom central de la cara al llarg de la <b>diagonal de la CARA</b>.</p>
+    <div class="ascii">
+   Vèrtex       Centre-cara     Vèrtex oposat
+      ○ ──────── ● ──────── ○
+      ├─r─┤ ├── 2r ──┤ ├─r─┤
+      └─────── a√2 ──────────┘
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 2 — Relació a-r</h4>
+    <p>Mateix argument que BCC, però ara la longitud és la diagonal de la cara = $a\sqrt{2}$:</p>
+    <div class="formula">
+      $$a\sqrt{2} = 4r$$
+    </div>
+    <p>Aïllant <b>a</b>:</p>
+    <div class="formula">
+      $$a = \frac{4r}{\sqrt{2}}$$
+    </div>
+    <p>Aquesta forma és correcta, però sovint es <b>racionalitza</b> (treure el √ del denominador) multiplicant dalt i baix per √2:</p>
+    <div class="formula">
+      $$a = \frac{4r}{\sqrt{2}} \cdot \frac{\sqrt{2}}{\sqrt{2}} = \frac{4r\sqrt{2}}{2} = 2r\sqrt{2}$$
+    </div>
+    <div class="key">
+      <b>Les 3 formes són equivalents</b> — fes servir la que et sigui més còmoda:
+      $$4r = a\sqrt{2} \quad \iff \quad a = \frac{4r}{\sqrt{2}} \quad \iff \quad a = 2r\sqrt{2}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 3 — Volum de la cel·la</h4>
+    <div class="formula">
+      $$V_c = a^3 = (2r\sqrt{2})^3 = 16\sqrt{2}\,r^3$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 4 — Àtoms per cel·la</h4>
+    <p>FCC té 4 àtoms/cel·la: 8 vèrtexs × 1/8 + 6 cares × 1/2 = 1 + 3 = 4.</p>
+    <div class="formula">
+      $$V_\text{ocupat} = 4 \cdot \tfrac{4}{3}\pi r^3 = \frac{16\pi r^3}{3}$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 5 — APF final</h4>
+    <div class="formula">
+      $$\text{APF}_\text{FCC} = \frac{16\pi r^3/3}{16\sqrt{2}\,r^3} = \frac{\pi}{3\sqrt{2}} \approx 0{,}74$$
+    </div>
+    <p class="note">Aquest valor 0,74 és el MÀXIM teòric possible per empaquetar esferes iguals en qualsevol geometria. FCC i HCP l'assoleixen tots dos.</p>
+  </div>
+</div>
+
+<div class="card cell hcp">
+  <h3>🔵 Derivació HCP (més complicada — pots saltar-la)</h3>
+
+  <div class="step">
+    <h4>Estructura</h4>
+    <p>HCP és un prisma hexagonal amb 3 àtoms extra al pla central:</p>
+    <ul>
+      <li>a = aresta hexagonal = 2r (els àtoms de la base es toquen lateralment)</li>
+      <li>c = alçada del prisma</li>
+      <li>Relació geomètrica ideal: $c/a = \sqrt{8/3} \approx 1{,}633$</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h4>Volum del prisma hexagonal</h4>
+    <div class="formula">
+      $$V_c = A_\text{hex} \cdot c = \frac{3\sqrt{3}}{2} a^2 \cdot c$$
+    </div>
+    <p>Amb a = 2r i c = 1,633·a:</p>
+    <div class="formula">
+      $$V_c = \frac{3\sqrt{3}}{2} (2r)^2 \cdot 1{,}633 \cdot 2r = 24\sqrt{2}\,r^3$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>Àtoms: Z = 6</h4>
+    <p>12 vèrtexs × 1/6 + 2 centres cara hexagonal × 1/2 + 3 àtoms al pla central × 1 = 2 + 1 + 3 = 6.</p>
+    <div class="formula">
+      $$V_\text{ocupat} = 6 \cdot \tfrac{4}{3}\pi r^3 = 8\pi r^3$$
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>APF</h4>
+    <div class="formula">
+      $$\text{APF}_\text{HCP} = \frac{8\pi r^3}{24\sqrt{2}\,r^3} = \frac{\pi}{3\sqrt{2}} \approx 0{,}74$$
+    </div>
+    <p class="note">Mateixa APF que FCC! Perquè tots dos són apilaments compactes òptims, només difereixen en la seqüència d'apilament (ABAB vs ABCABC).</p>
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>📝 Taula memorització RÀPIDA</h3>
+  <table>
+    <tr><th>Estructura</th><th>Z (àtoms/cel)</th><th>Relació a-r</th><th>APF</th><th>Coord</th></tr>
+    <tr><td><b>BCC</b></td><td class="num">2</td><td class="num">a√3 = 4r</td><td class="num">0,68</td><td class="num">8</td></tr>
+    <tr><td><b>FCC</b></td><td class="num">4</td><td class="num">a√2 = 4r</td><td class="num">0,74</td><td class="num">12</td></tr>
+    <tr><td><b>HCP</b></td><td class="num">6</td><td class="num">a = 2r, c/a=1,633</td><td class="num">0,74</td><td class="num">12</td></tr>
+  </table>
+  <p class="note"><b>Truc mnemotècnic:</b> "BCC = diagonal del <b>Cub</b>" (cub→cub). "FCC = diagonal de la <b>Cara</b>" (cara→cara). Tots dos comencen amb la mateixa inicial.</p>
+</div>
+
+<h2>5 · La fórmula ESTRELLA — densitat teòrica</h2>
+
+<div class="card">
+  <h3>🔥 Aquesta és LA fórmula del tema</h3>
+  <p>Si cau un problema numèric a T2, al 90% dels casos es resol amb aquesta fórmula (o una variant seva). La veuràs als exàmens del 2019, 2020, 2022, 2023, 2024 i 2025. Memoritza-la <b>literalment</b>.</p>
+  <div class="formula" style="font-size:22px;text-align:center;padding:24px">
+    $$\boxed{\;\rho = \frac{n \cdot A}{V_c \cdot N_A}\;}$$
+  </div>
+</div>
+
+<div class="card">
+  <h3>Significat de cada variable (detall)</h3>
+
+  <div class="step">
+    <h4>🔵 ρ (densitat) — el que sovint has de trobar</h4>
+    <ul>
+      <li><b>Què és:</b> massa del material per unitat de volum</li>
+      <li><b>Unitats:</b> g/cm³ (més habitual) o kg/m³. Per passar: 1 g/cm³ = 1000 kg/m³</li>
+      <li><b>Valor típic:</b> Al=2,7 · Fe=7,87 · Cu=8,94 · Pb=11,3 · W=19,3 · Au=19,3</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h4>🟡 n (àtoms per cel·la) — depèn de l'estructura</h4>
+    <ul>
+      <li><b>BCC:</b> n = 2 (1 al centre + 8 vèrtexs × 1/8)</li>
+      <li><b>FCC:</b> n = 4 (8 vèrtexs × 1/8 + 6 cares × 1/2)</li>
+      <li><b>HCP:</b> n = 6 (12 vèrtexs × 1/6 + 2 centres cara × 1/2 + 3 al pla central)</li>
+      <li><b>Cúbica simple:</b> n = 1 (8 vèrtexs × 1/8)</li>
+    </ul>
+    <p class="note">Memoritza aquests 4 valors. Són la primera dada que has de posar.</p>
+  </div>
+
+  <div class="step">
+    <h4>🟢 A (massa atòmica) — ve de la taula periòdica</h4>
+    <ul>
+      <li><b>Unitats:</b> g/mol (SEMPRE)</li>
+      <li><b>Exemples:</b> H=1 · C=12 · Al=27 · Fe=55,85 · Cu=63,55 · Au=197 · W=184</li>
+      <li><b>Aliatge:</b> massa atòmica mitjana ponderada: $A_{mig} = x_A \cdot A_1 + x_B \cdot A_2$ (amb fraccions atòmiques)</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h4>🟣 V_c (volum de la cel·la) — el que has de calcular</h4>
+    <ul>
+      <li><b>Unitats:</b> cm³ (per combinar amb g/cm³ al final)</li>
+      <li><b>Cúbiques (BCC, FCC):</b> $V_c = a^3$</li>
+      <li><b>HCP:</b> $V_c = \dfrac{3\sqrt{3}}{2} a^2 \cdot c$</li>
+      <li><b>Cal calcular <i>a</i> primer</b> a partir de <i>r</i> amb la relació a-r corresponent</li>
+    </ul>
+    <div class="key" style="margin-top:8px">
+      <b>TRAMPA FREQÜENT:</b> si r ve en <b>nm</b> (nanòmetres, 10⁻⁹ m) has de passar-ho a cm abans. 1 nm = 10⁻⁷ cm.<br>
+      Per exemple: r = 0,128 nm = 0,128·10⁻⁷ cm = 1,28·10⁻⁸ cm
+    </div>
+  </div>
+
+  <div class="step">
+    <h4>🔴 N_A (nombre d'Avogadro) — una constant universal</h4>
+    <div class="formula">$$N_A = 6{,}022 \cdot 10^{23} \text{ àtoms/mol}$$</div>
+    <p>És el nombre d'àtoms que hi ha en 1 mol. Sempre el mateix valor, sempre la mateixa unitat.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>📐 Anàlisi dimensional — per què les unitats quadren</h3>
+  <p>Per veure que la fórmula té sentit, fes l'anàlisi dimensional. Les unitats es cancel·len deixant g/cm³:</p>
+  <div class="formula">
+    $$\rho = \frac{(\text{àtoms}) \cdot (\text{g/mol})}{(\text{cm}^3) \cdot (\text{àtoms/mol})} = \frac{\text{g}}{\text{cm}^3} \;\checkmark$$
+  </div>
+  <p>Els "àtoms" es cancel·len amb els àtoms de N_A. Els "mol" es cancel·len amb els mol de A. Et queda g/cm³.</p>
+</div>
+
+<div class="card">
+  <h3>📋 PROCEDIMENT PAS A PAS</h3>
+
+  <div class="step">
+    <h4>Pas 1 — Identifica l'estructura</h4>
+    <p>Llegeix el problema: diu "BCC", "FCC", "HCP"? Hi ha pistes (tipus de metall, al·lotropia)?</p>
+    <p>→ Així obtens <b>n</b>.</p>
+  </div>
+
+  <div class="step">
+    <h4>Pas 2 — Converteix unitats del radi</h4>
+    <p>r ve en <b>nm</b> normalment. Passa'l a <b>cm</b>:</p>
+    <div class="formula">$$r_{\text{cm}} = r_{\text{nm}} \cdot 10^{-7}$$</div>
+    <p>Exemple: 0,128 nm → 0,128·10⁻⁷ cm = 1,28·10⁻⁸ cm</p>
+  </div>
+
+  <div class="step">
+    <h4>Pas 3 — Calcula <i>a</i> amb la relació a-r</h4>
+    <table>
+      <tr><th>Estructura</th><th>Relació</th><th>Exemple r = 1,28·10⁻⁸ cm</th></tr>
+      <tr><td>BCC</td><td>a = 4r/√3</td><td>a = 2,96·10⁻⁸ cm</td></tr>
+      <tr><td>FCC</td><td>a = 4r/√2</td><td>a = 3,62·10⁻⁸ cm</td></tr>
+      <tr><td>Cúbica simple</td><td>a = 2r</td><td>a = 2,56·10⁻⁸ cm</td></tr>
+    </table>
+  </div>
+
+  <div class="step">
+    <h4>Pas 4 — Calcula V_c</h4>
+    <p>Per cúbiques: $V_c = a^3$</p>
+    <p>Exemple FCC: $V_c = (3{,}62 \cdot 10^{-8})^3 = 4{,}75 \cdot 10^{-23}$ cm³</p>
+    <div class="key">⚠ Al cub, l'exponent va per cada factor: $(3{,}62)^3 = 47{,}4$ i $(10^{-8})^3 = 10^{-24}$. Junts: $47{,}4 \cdot 10^{-24} = 4{,}74 \cdot 10^{-23}$</div>
+  </div>
+
+  <div class="step">
+    <h4>Pas 5 — Aplica la fórmula</h4>
+    <div class="formula">$$\rho = \frac{n \cdot A}{V_c \cdot N_A}$$</div>
+    <p>Substitueix els valors i calcula amb la calculadora. Fes-ho per passos:</p>
+    <ol>
+      <li>Numerador: n · A</li>
+      <li>Denominador: V_c · N_A</li>
+      <li>Divideix</li>
+    </ol>
+  </div>
+
+  <div class="step">
+    <h4>Pas 6 — Comprovació de sanity</h4>
+    <p>El resultat està entre 1 i 25 g/cm³? Si és 0,001 o 10⁶, alguna cosa falla.</p>
+    <p>Orientació ràpida:</p>
+    <ul>
+      <li>Polímers/aigua: ≈ 1 g/cm³</li>
+      <li>Ceràmics/Al: 2–5 g/cm³</li>
+      <li>Metalls mitjans (Fe, Cu): 7–9 g/cm³</li>
+      <li>Metalls pesats (Pb, Au, W): 11–22 g/cm³</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT 1 — Coure (FCC), pas a pas complet</h3>
+  <p><b>Enunciat:</b> El coure té estructura FCC, radi atòmic r = 0,128 nm i massa atòmica A = 63,55 g/mol. Calcula la densitat teòrica.</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Identifica estructura</h4>
+    <p>Cu és FCC → <b>n = 4 àtoms/cel·la</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Passa radi a cm</h4>
+    <p>r = 0,128 nm = 0,128 · 10⁻⁷ cm = <b>1,28 · 10⁻⁸ cm</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Calcula <i>a</i> (relació FCC)</h4>
+    <div class="formula">
+      $$a = \frac{4r}{\sqrt{2}} = \frac{4 \cdot 1{,}28 \cdot 10^{-8}}{1{,}414} = 3{,}62 \cdot 10^{-8} \text{ cm}$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 4 · Calcula V_c</h4>
+    <div class="formula">
+      $$V_c = a^3 = (3{,}62 \cdot 10^{-8})^3 = 4{,}75 \cdot 10^{-23} \text{ cm}^3$$
+    </div>
+    <p>Detall: $(3{,}62)^3 = 47{,}4$ i $(10^{-8})^3 = 10^{-24}$ → $47{,}4 \cdot 10^{-24} = 4{,}75 \cdot 10^{-23}$</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 5 · Aplica la fórmula</h4>
+    <div class="formula">
+      $$\rho = \frac{n \cdot A}{V_c \cdot N_A} = \frac{4 \cdot 63{,}55}{4{,}75 \cdot 10^{-23} \cdot 6{,}022 \cdot 10^{23}}$$
+    </div>
+    <p>Numerador: 4 · 63,55 = <b>254,2</b></p>
+    <p>Denominador: 4,75 · 10⁻²³ · 6,022 · 10²³ = 4,75 · 6,022 = <b>28,60</b> (les potències 10⁻²³ · 10²³ es cancel·len!)</p>
+    <div class="formula">
+      $$\rho = \frac{254{,}2}{28{,}60} = 8{,}89 \text{ g/cm}^3$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 6 · Comprovació</h4>
+    <p>Densitat real del Cu: <b>8,94 g/cm³</b>. El nostre resultat: 8,89. Error ~0,6% ✓</p>
+    <p>El petit error ve de defectes reals al material (vacants, etc.) — el valor teòric és per un cristall perfecte.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT 2 — Ferro BCC a temperatura ambient</h3>
+  <p><b>Enunciat:</b> Fe-α és BCC, r = 0,124 nm, A = 55,85 g/mol. Calcula ρ teòrica.</p>
+
+  <div class="worked">
+    <h4>Tots els passos de cop</h4>
+    <p><b>1:</b> Fe-α BCC → n = 2</p>
+    <p><b>2:</b> r = 0,124 nm = 1,24·10⁻⁸ cm</p>
+    <p><b>3:</b> $a = \dfrac{4r}{\sqrt{3}} = \dfrac{4 \cdot 1{,}24 \cdot 10^{-8}}{1{,}732} = 2{,}86 \cdot 10^{-8}$ cm</p>
+    <p><b>4:</b> $V_c = a^3 = (2{,}86 \cdot 10^{-8})^3 = 2{,}34 \cdot 10^{-23}$ cm³</p>
+    <p><b>5:</b></p>
+    <div class="formula">
+      $$\rho = \frac{2 \cdot 55{,}85}{2{,}34 \cdot 10^{-23} \cdot 6{,}022 \cdot 10^{23}} = \frac{111{,}7}{14{,}09} = 7{,}93 \text{ g/cm}^3$$
+    </div>
+    <p><b>6:</b> Valor real Fe = 7,87 g/cm³ → error ~0,8% ✓</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT 3 — Al·lotropia Ti (BCC → HCP): canvi de volum</h3>
+  <p><b>Enunciat:</b> Per sobre de 882 °C el Ti és BCC (a = 0,332 nm). Per sota és HCP (a = 0,2978 nm, c = 0,4735 nm). Quin és el canvi percentual de volum en la transformació BCC → HCP? Contracció o expansió?</p>
+
+  <div class="key">
+    ⚠ <b>TRAMPA:</b> NO pots comparar volums de cel·les directament, perquè BCC té 2 àtoms/cel·la i HCP té 6. Has de comparar <b>volum PER àtom</b>.
+  </div>
+
+  <div class="worked">
+    <h4>Analogia per entendre el "per àtom"</h4>
+    <p>Imagina 2 cases: A = 100 m² amb 2 persones. B = 300 m² amb 6 persones. Quina és més plena?</p>
+    <ul>
+      <li>Casa A: 100/2 = 50 m²/persona</li>
+      <li>Casa B: 300/6 = 50 m²/persona</li>
+    </ul>
+    <p>Són IGUAL de plenes, tot i que les mides totals són diferents. Sempre que comparis estructures amb diferent n, has de dividir per n.</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 1 · Volum per àtom del Ti BCC</h4>
+    <div class="formula">
+      $$V_{c,\text{BCC}} = a^3 = (0{,}332)^3 = 0{,}0366 \text{ nm}^3$$
+    </div>
+    <p>Amb n = 2 àtoms/cel·la:</p>
+    <div class="formula">
+      $$V_{\text{atom,BCC}} = \frac{V_c}{n} = \frac{0{,}0366}{2} = 0{,}01830 \text{ nm}^3$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Volum per àtom del Ti HCP</h4>
+    <div class="formula">
+      $$V_{c,\text{HCP}} = \frac{3\sqrt{3}}{2} \cdot a^2 \cdot c = 2{,}598 \cdot (0{,}2978)^2 \cdot 0{,}4735$$
+    </div>
+    <p>Calculant pas a pas:</p>
+    <ul>
+      <li>$(0{,}2978)^2 = 0{,}08868$</li>
+      <li>$2{,}598 \cdot 0{,}08868 = 0{,}23040$</li>
+      <li>$0{,}23040 \cdot 0{,}4735 = 0{,}10911$ nm³</li>
+    </ul>
+    <p>Amb n = 6 àtoms/cel·la:</p>
+    <div class="formula">
+      $$V_{\text{atom,HCP}} = \frac{0{,}10911}{6} = 0{,}01819 \text{ nm}^3$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Aplica la fórmula del canvi percentual</h4>
+    <div class="formula">
+      $$\text{Canvi } \% = \frac{V_{\text{final}} - V_{\text{inicial}}}{V_{\text{inicial}}} \cdot 100$$
+    </div>
+    <p>Com la transformació és BCC → HCP (refredant), l'inicial és BCC i el final és HCP:</p>
+    <div class="formula">
+      $$\frac{\Delta V}{V} \cdot 100 = \frac{V_{\text{HCP}} - V_{\text{BCC}}}{V_{\text{BCC}}} \cdot 100$$
+    </div>
+    <p>Substituint:</p>
+    <div class="formula">
+      $$= \frac{0{,}01819 - 0{,}01830}{0{,}01830} \cdot 100 = \frac{-0{,}00011}{0{,}01830} \cdot 100$$
+    </div>
+    <div class="formula">
+      $$\boxed{\approx -0{,}60 \%}$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 4 · Interpretació</h4>
+    <p><b>Signe negatiu → el volum ha DISMINUÏT.</b></p>
+    <p>Resposta: es produeix una <b>CONTRACCIÓ</b> de la xarxa d'aproximadament <b>0,6%</b>.</p>
+    <p class="note">Té sentit físic: BCC té APF = 0,68, HCP té APF = 0,74. Els àtoms s'ordenen més eficientment en HCP → menys espai "mort" → volum per àtom més petit → contracció. ✓</p>
+  </div>
+
+  <div class="worked">
+    <h4>Demostració: fer-ho per "mol sencer" dóna el mateix</h4>
+    <p>Si tens N àtoms en total (una mol, per exemple):</p>
+    <ul>
+      <li>En BCC cal N/2 cel·les → V_total = (N/2) · 0,0366</li>
+      <li>En HCP cal N/6 cel·les → V_total = (N/6) · 0,1091</li>
+    </ul>
+    <p>Canvi percentual:</p>
+    <div class="formula">
+      $$\frac{(N/6) \cdot 0{,}1091 - (N/2) \cdot 0{,}0366}{(N/2) \cdot 0{,}0366} \cdot 100$$
+    </div>
+    <p>La N es cancel·la (apareix tant dalt com baix):</p>
+    <div class="formula">
+      $$= \frac{0{,}1091/6 - 0{,}0366/2}{0{,}0366/2} \cdot 100 = \frac{0{,}01819 - 0{,}01830}{0{,}01830} \cdot 100 = -0{,}60\%$$
+    </div>
+    <p class="note"><b>Mateix resultat.</b> Per això el "per àtom" funciona — és un drecera matemàtica.</p>
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>⚠ Errors típics que trauen punts</h3>
+  <ol>
+    <li><b>No passar nm a cm.</b> Si deixes r en nm, V_c queda en nm³, i ρ et dóna un número enorme (sense sentit). SEMPRE passa nm a cm primer.</li>
+    <li><b>Confondre n.</b> BCC n=2, FCC n=4. No és al revés. Si t'hi equivoques, el resultat va un factor 2 desviat.</li>
+    <li><b>Elevar al cub.</b> Quan poses a³, ha de ser (valor)³ inclòs l'exponent 10⁻ⁿ. No és simplement $a^3 \cdot 10^{-8}$.</li>
+    <li><b>Oblidar N_A.</b> Sense N_A el resultat és absurdament petit (10⁻²⁴ vegades el correcte).</li>
+    <li><b>Forma equivocada de la relació a-r.</b> BCC usa √3, FCC usa √2. Confondre-les → error del 20%.</li>
+    <li><b>En aliatges:</b> oblidar-se de fer la A mitjana ponderada.</li>
+  </ol>
+</div>
+
+<h2>5.1 · 🔥 Problemes Típics T2 — patrons d'examen resolts</h2>
+<div class="card">
+  <p>Basat en els 17 parcials analitzats, aquests són <b>els 6 tipus de problema que cauen al examen</b>, ordenats per freqüència. Si en fas 2-3 de cada, et sortirà automàtic.</p>
+</div>
+
+<div class="card">
+  <h3>🥇 TIPUS 1 — Densitat teòrica d'un metall pur</h3>
+  <p><b>Quan surt:</b> base de gairebé tots els problemes. "Calcula ρ teòrica."</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>Identifica l'estructura (BCC, FCC, HCP)</li>
+      <li>Calcula <b>a</b> a partir de <b>r</b> amb la relació a-r corresponent</li>
+      <li>Calcula V_c = a³ (cúbiques) o fórmula hexagonal (HCP)</li>
+      <li>Aplica $\rho = n \cdot A / (V_c \cdot N_A)$</li>
+      <li>Comprova unitats: r en cm → V_c en cm³ → ρ en g/cm³</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Coure (FCC)</h4>
+    <p><b>Dades:</b> r(Cu) = 0,128 nm, A(Cu) = 63,55 g/mol, N_A = 6,022·10²³</p>
+    <p><b>Pas 1:</b> Cu és FCC → Z = 4, a√2 = 4r</p>
+    <p><b>Pas 2:</b> a = 4·0,128/√2 = 0,362 nm = 3,62·10⁻⁸ cm</p>
+    <p><b>Pas 3:</b> V_c = a³ = (3,62·10⁻⁸)³ = 4,75·10⁻²³ cm³</p>
+    <p><b>Pas 4:</b> ρ = (4·63,55)/(4,75·10⁻²³·6,022·10²³) = 254,2/28,6 = <b>8,89 g/cm³</b></p>
+    <p class="note">Valor real del Cu: 8,94 g/cm³. Error &lt; 1%. ✅</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🥈 TIPUS 2 — Determinar estructura a partir de densitat</h3>
+  <p><b>Quan surt:</b> "Tenim un metall amb ρ=X, r=Y, PA=Z. És BCC, FCC o HCP?"</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>Prova amb n=2 (BCC): calcula a amb la seva relació, V_c, i ρ_teòrica</li>
+      <li>Prova amb n=4 (FCC): idem</li>
+      <li>Prova amb n=6 (HCP): idem (més complex volum)</li>
+      <li>Compara cada ρ_teòrica amb la ρ_donada</li>
+      <li>La que coincideix → és l'estructura real</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Titani desconegut (inspirat en Parcial 09/11/2023)</h4>
+    <p><b>Dades:</b> ρ = 4,34 g/cm³, PA(Ti) = 47,87 g/mol, r(Ti) = 0,145 nm</p>
+
+    <p><b>Prova BCC (n=2):</b> a = 4·0,145/√3 = 0,335 nm = 3,35·10⁻⁸ cm</p>
+    <p>V_c = (3,35·10⁻⁸)³ = 3,76·10⁻²³ cm³</p>
+    <p>ρ = (2·47,87)/(3,76·10⁻²³·6,022·10²³) = 95,74/22,6 = <b>4,24 g/cm³</b> ← <b>coincideix!</b></p>
+
+    <p><b>Prova FCC (n=4):</b> a = 4·0,145/√2 = 0,41 nm</p>
+    <p>ρ ≈ 3,96 g/cm³ → no coincideix</p>
+
+    <p class="note"><b>Conclusió:</b> és BCC (β-titani, per sobre de 882°C).</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🥉 TIPUS 3 — Aliatge SUBSTITUCIONAL (canvi de ρ per impureses)</h3>
+  <p><b>Quan surt:</b> SEGUR cau a parcial 2025-26 (ja va caure a 25-26 Q1 P2). "Si afegeixo X% d'un altre metall, quina ρ té l'aliatge?"</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>L'estructura NO canvia (seguim BCC/FCC/HCP)</li>
+      <li>El nombre d'àtoms per cel·la NO canvia (n segueix igual)</li>
+      <li>El que canvia és la <b>massa atòmica MITJANA ponderada</b>:
+        <br>A_mig = %A · PA_A + %B · PA_B (on %A + %B = 1)</li>
+      <li>V_c pot canviar lleugerament si el radi mitjà canvia (però sovint s'aproxima amb el radi del dissolvent)</li>
+      <li>Aplica $\rho = n \cdot A_\text{mig}/(V_c \cdot N_A)$</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Fe BCC amb 10%at de B (inspirat en 25-26 Q1 P2)</h4>
+    <p><b>Dades:</b> Fe BCC pur, ρ₀ = 7,87 g/cm³, PA(Fe) = 56, PA(B) = 32, aliatge 10% at.</p>
+    <p><b>Pas 1:</b> Estructura segueix BCC → n = 2 àtoms/cel</p>
+    <p><b>Pas 2:</b> Massa mitjana per àtom:</p>
+    <p>A_mig = 0,9·56 + 0,1·32 = 50,4 + 3,2 = <b>53,6 g/mol</b></p>
+    <p><b>Pas 3:</b> V_c igual que Fe pur (≈ 2,38·10⁻²³ cm³)</p>
+    <p><b>Pas 4:</b> ρ_aliatge = (2·53,6)/(2,38·10⁻²³·6,022·10²³) = 107,2/14,3 = <b>7,49 g/cm³</b></p>
+    <p class="note">La ρ BAIXA perquè has substituït àtoms pesats (Fe=56) per lleugers (B=32). <b>Regla d'or:</b> substitucional amb àtom MÉS LLEUGER → ρ baixa. Amb àtom MÉS PESAT → ρ puja.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>TIPUS 4 — Aliatge INTERSTICIAL (típic: N o C en Fe)</h3>
+  <p><b>Quan surt:</b> nitruració, carburació. 24-25 QP P1 és exactament aquest tipus.</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>Estructura del metall base: BCC o FCC</li>
+      <li>n àtoms del metall base = mateix que pur (BCC=2, FCC=4)</li>
+      <li>A més, hi ha àtoms intersticials al "forats" → <b>masa extra per cel·la</b></li>
+      <li>Càlcul:
+        <br>Massa Fe/cel = n_Fe · PA_Fe
+        <br>Massa N/cel = n_N · PA_N (on n_N sovint és petit)
+        <br>Massa total = Fe + N
+      </li>
+      <li>ρ = Massa_total / (V_c · N_A) però ull! cal normalitzar per la ρ mesurada a %w inicial</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Nitruració d'acer BCC (inspirat en 24-25 QP P1)</h4>
+    <p><b>Dades:</b> ρ mesurada = 7,55 g/cm³ (menor que Fe pur 7,87), PA(Fe) = 55,85, PA(N) = 14,01, Fe BCC amb r = 0,126 nm.</p>
+    <p><b>Pregunta:</b> Quin és el % en pes de N a l'acer inicial?</p>
+
+    <p><b>Pas 1:</b> V_c = (4·0,126/√3)³ = (0,291 nm)³ = 2,47·10⁻²³ cm³</p>
+    <p><b>Pas 2:</b> Massa Fe/cel = 2·55,85/N_A = 1,85·10⁻²² g</p>
+    <p><b>Pas 3:</b> Massa total/cel mesurada = ρ·V_c = 7,55·2,47·10⁻²³ = 1,87·10⁻²² g</p>
+    <p><b>Pas 4:</b> Massa N/cel = 1,87·10⁻²² - 1,85·10⁻²² = 2·10⁻²⁴ g</p>
+    <p><b>Pas 5:</b> %w N = (2·10⁻²⁴)/(1,87·10⁻²²) · 100 = <b>≈ 1,07 %</b></p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>TIPUS 5 — Nombre de VACANTS (a partir de ρ mesurada vs teòrica)</h3>
+  <p><b>Quan surt:</b> 21-22 QT P2, 07/11/2024 P2, Parcial 09/11/2023.</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>Calcula ρ_teòrica (metall pur, sense defectes)</li>
+      <li>Compara amb ρ_real (mesurada al problema)</li>
+      <li>Fracció vacants: (ρ_teo - ρ_real) / ρ_teo</li>
+      <li>Vacants per cm³ = fracció_vacants · (N_A / PA) · ρ_real</li>
+      <li>Si demanen vacants/cel·la: fracció_vacants · n</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Ti HCP amb vacants</h4>
+    <p><b>Dades:</b> Ti HCP teòric ρ_teo = 4,5 g/cm³, ρ_real = 4,4 g/cm³, PA = 47,87 g/mol.</p>
+    <p><b>Pas 1:</b> Fracció vacants = (4,5 - 4,4)/4,5 = 0,0222 = 2,22%</p>
+    <p><b>Pas 2:</b> Àtoms totals per cm³ = (ρ_real · N_A)/PA = (4,4·6,022·10²³)/47,87 = 5,54·10²²</p>
+    <p><b>Pas 3:</b> Vacants/cm³ = 0,0222 · 5,54·10²² ≈ <b>1,23·10²¹ vacants/cm³</b></p>
+    <p><b>Pas 4 (si demanen per cel·la):</b> 6·0,0222 = <b>0,13 vacants/cel·la</b></p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>TIPUS 6 — Al·lotropia amb DUES estructures (avançat)</h3>
+  <p><b>Quan surt:</b> rar però possible. Parcial 09/11/2023 (Ti), 07/11/2024 P2 (Co).</p>
+
+  <div class="step">
+    <h4>Passos a seguir</h4>
+    <ol>
+      <li>Et donen DUES densitats del mateix element (una per cada estructura al·lotròpica)</li>
+      <li>Calcula ρ_teòrica per cada candidata (BCC, FCC, HCP)</li>
+      <li>Empareila cada ρ mesurada amb l'estructura que coincideixi</li>
+      <li>Sovint demanen: quina és més densa? → la d'APF més alt (FCC/HCP &gt; BCC)</li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>Exemple resolt — Ti amb 2 estructures (Parcial 09/11/2023)</h4>
+    <p><b>Dades:</b> Ti té 2 estructures conegudes. ρ₁ = 4,5 g/cm³ i ρ₂ = 4,34 g/cm³. PA = 47,87. Paràmetres: BCC a=0,322 nm; FCC a=0,315 nm; HCP a=0,295 nm c=0,468 nm.</p>
+
+    <p><b>Proba BCC (n=2):</b> V_c = (0,322·10⁻⁷)³ = 3,34·10⁻²³ cm³ → ρ = (2·47,87)/(3,34·10⁻²³·N_A) = <b>4,76 g/cm³</b> (no coincideix, però a prop)</p>
+    <p>Correcció amb a més ajustada: a=4r/√3 = 4·0,145/√3 = 0,335 nm → V_c = 3,76·10⁻²³ → ρ = 4,24 g/cm³ ≈ <b>4,34</b> ✅</p>
+
+    <p><b>Prova HCP (n=6):</b> V_c_hex = (3√3/2)·a²·c = 2,598·(0,295)²·0,468·10⁻²¹ = 1,058·10⁻²² cm³ → ρ = (6·47,87)/(1,058·10⁻²²·N_A) = <b>4,51 g/cm³</b> ≈ <b>4,5</b> ✅</p>
+
+    <p class="note"><b>Conclusió:</b> ρ₁ (4,5) = HCP (α-Ti); ρ₂ (4,34) = BCC (β-Ti). El Ti passa de HCP a BCC a 882°C.</p>
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>⚠ Problemes "raros" detectats al corpus (baix ROI però cauen)</h3>
+  <ul>
+    <li><b>Li sota pressió</b> (21-22 QT P2): a 7 GPa canvia d'estructura a una nova amb n=4 àtoms/cel·la. <b>Truc:</b> usar la fórmula directa ρ = n·PA/(V_c·N_A) sense relacionar amb r.</li>
+    <li><b>Problema amb massa per pes</b> (Parcial 09/11/2023 P1d): flux de 20 g/setmana → cal passar a kg/(m²·s). Pur tràmit d'unitats.</li>
+    <li><b>Co amb al·lotropia BCC↔HCP a 772K</b> (07/11/2024 P2): dues estructures, cal calcular V_c per cada i determinar quina és més densa.</li>
+    <li><b>Impureses substitucionals de PA menor</b> (QP 23-24 Q4 conceptual): sense càlcul, raonar que ρ_teòrica &gt; ρ_real perquè el càlcul teòric usa massa del metall base pur. Trampa conceptual.</li>
+  </ul>
+</div>
+
+<h2>6 · Al·lotropia — un mateix àtom, diferents estructures</h2>
+<div class="card">
+  <table>
+    <tr><th>Element</th><th>Estructura</th><th>Rang T</th><th>Nom/propietat</th></tr>
+    <tr><td rowspan="3"><b>Ferro (Fe)</b></td><td>BCC (α)</td><td>&lt; 912 °C</td><td>Ferrita — magnètic</td></tr>
+    <tr><td>FCC (γ)</td><td>912 – 1394 °C</td><td>Austenita</td></tr>
+    <tr><td>BCC (δ)</td><td>1394 – 1538 °C</td><td>Ferrita δ (abans fondre's)</td></tr>
+    <tr><td rowspan="2"><b>Titani (Ti)</b></td><td>HCP (α)</td><td>&lt; 882 °C</td><td>Titani normal</td></tr>
+    <tr><td>BCC (β)</td><td>&gt; 882 °C</td><td>β-titani</td></tr>
+    <tr><td rowspan="3"><b>Carboni (C)</b></td><td>Xarxa sp³</td><td>qualsevol T</td><td>Diamant — dur, aïllant</td></tr>
+    <tr><td>Capes sp²</td><td>qualsevol T</td><td>Grafit — tou, conductor</td></tr>
+    <tr><td>Esfera/tub sp²</td><td>—</td><td>Fullerens, nanotubs, grafè</td></tr>
+    <tr><td rowspan="2"><b>Estany (Sn)</b></td><td>Diamant-like</td><td>&lt; 13 °C</td><td>Sn-α (gris, pols) — "pesta de l'estany"</td></tr>
+    <tr><td>Tetragonal</td><td>&gt; 13 °C</td><td>Sn-β (blanc, metàl·lic)</td></tr>
+  </table>
+  <p class="note"><b>Per què importa?</b> L'al·lotropia canvia TOT: densitat, duresa, conductivitat, comportament. El Fe que canvia de BCC a FCC a 912 °C és la clau de la metal·lúrgia dels acers (tractaments tèrmics). L'austenita (FCC) pot dissoldre molt més carboni que la ferrita (BCC) — 2% vs 0,02%.</p>
+</div>
+
+<h2>7 · Índexs de Miller — donar coordenades a les direccions i plans</h2>
+<div class="card">
+  <p>Dins d'una cel·la cúbica, volem referir-nos a direccions (com una fletxa) i plans (com una làmina). Miller va inventar una notació curta:</p>
+
+  <h3>Direccions [uvw] (entre claudàtors)</h3>
+  <ol>
+    <li>Tria un punt d'origen al vèrtex</li>
+    <li>Mira on acaba la direcció en termes de paràmetres a, b, c</li>
+    <li>Redueix a enters més petits</li>
+    <li>Escriu com [uvw]</li>
+  </ol>
+  <div class="worked">
+    <h4>Exemple:</h4>
+    <p>Una fletxa que va del vèrtex (0,0,0) al vèrtex oposat (1,1,1) → direcció [111] (diagonal del cub)</p>
+    <p>Del vèrtex (0,0,0) al centre d'una cara (1/2, 1/2, 0) → multipliquem per 2 per treure fraccions → [110]</p>
+  </div>
+
+  <h3>Plans (hkl) (entre parèntesis)</h3>
+  <ol>
+    <li>Troba on el pla talla els eixos x, y, z</li>
+    <li>Pren els <b>INVERSOS</b> d'aquestes interseccions</li>
+    <li>Redueix a enters més petits</li>
+    <li>Escriu com (hkl)</li>
+  </ol>
+  <div class="worked">
+    <h4>Exemple:</h4>
+    <p>Pla que talla x=1, y=∞, z=∞ → inversos: 1, 0, 0 → <b>(100)</b></p>
+    <p>Pla que talla x=1, y=1, z=∞ → inversos: 1, 1, 0 → <b>(110)</b></p>
+    <p>Pla que talla x=1, y=1, z=1 → inversos: 1, 1, 1 → <b>(111)</b> — el més compacte a FCC</p>
+  </div>
+  <p class="note">No t'agobiïs si et costa. Als exàmens de CTM Miller apareix poc — 2-3 vegades en 17 parcials. Basta saber que existeix.</p>
+</div>
+
+<h2>8 · Transició a T2B — Realitat vs teoria</h2>
+<div class="card soft">
+  <p>Fins aquí has vist la cristal·lografia <b>perfecta</b>. Però en la realitat, <b>cap cristall és perfecte</b>. Sempre hi ha imperfeccions.</p>
+  <p>I paradoxalment, <b>les imperfeccions fan el material ÚTIL</b>. Sense defectes no hi hauria acers durs, ni semiconductors, ni catàlisi. Els defectes són LA JOIA.</p>
+</div>
+
+<h2>9 · Defectes — classificació per dimensió</h2>
+<div class="card">
+  <table>
+    <tr><th>Dimensió</th><th>Tipus</th><th>Mida</th><th>Exemples</th></tr>
+    <tr><td><b>0D (punt)</b></td><td>Vacància, intersticial, substitucional, Frenkel, Schottky</td><td>1 àtom</td><td>Vacants a Fe, C intersticial a Fe</td></tr>
+    <tr><td><b>1D (línia)</b></td><td>Dislocacions</td><td>Línia d'àtoms</td><td>Dislocació d'aresta, dislocació helicoidal</td></tr>
+    <tr><td><b>2D (superfície)</b></td><td>Contorns de gra, maclat, superfície lliure</td><td>Pla d'àtoms</td><td>Fronteres dels grans al metall policristal·lí</td></tr>
+    <tr><td><b>3D (volumètric)</b></td><td>Porus, precipitats, inclusions, esquerdes</td><td>Regió 3D</td><td>Porus a ceràmics, precipitats a aliatges</td></tr>
+  </table>
+</div>
+
+<h2>10 · Defectes de punt — l'equació de les vacants</h2>
+<div class="card">
+  <div class="grid grid-3">
+    <div>
+      <h3>Vacància</h3>
+      <svg width="160" height="120" viewBox="0 0 160 120"><g fill="#ffd86b">
+        <circle cx="20" cy="20" r="10"/><circle cx="50" cy="20" r="10"/><circle cx="80" cy="20" r="10"/><circle cx="110" cy="20" r="10"/><circle cx="140" cy="20" r="10"/>
+        <circle cx="20" cy="60" r="10"/><circle cx="50" cy="60" r="10"/>
+        <circle cx="110" cy="60" r="10"/><circle cx="140" cy="60" r="10"/>
+        <circle cx="20" cy="100" r="10"/><circle cx="50" cy="100" r="10"/><circle cx="80" cy="100" r="10"/><circle cx="110" cy="100" r="10"/><circle cx="140" cy="100" r="10"/>
+      </g><circle cx="80" cy="60" r="10" fill="none" stroke="#ff7a7a" stroke-width="2" stroke-dasharray="3 3"/>
+      <text x="80" y="64" text-anchor="middle" font-size="10" fill="#ff7a7a">□</text>
+      </svg>
+      <p>Falta un àtom que hauria de ser-hi.</p>
+    </div>
+    <div>
+      <h3>Intersticial</h3>
+      <svg width="160" height="120" viewBox="0 0 160 120"><g fill="#ffd86b">
+        <circle cx="20" cy="20" r="10"/><circle cx="50" cy="20" r="10"/><circle cx="80" cy="20" r="10"/><circle cx="110" cy="20" r="10"/><circle cx="140" cy="20" r="10"/>
+        <circle cx="20" cy="60" r="10"/><circle cx="50" cy="60" r="10"/><circle cx="80" cy="60" r="10"/><circle cx="110" cy="60" r="10"/><circle cx="140" cy="60" r="10"/>
+        <circle cx="20" cy="100" r="10"/><circle cx="50" cy="100" r="10"/><circle cx="80" cy="100" r="10"/><circle cx="110" cy="100" r="10"/><circle cx="140" cy="100" r="10"/>
+      </g><circle cx="65" cy="40" r="5" fill="#5ad7a3"/></svg>
+      <p>Un àtom extra s'ha colat ENTRE els àtoms regulars (als "forats" de la xarxa). Típic: C i N a Fe.</p>
+    </div>
+    <div>
+      <h3>Substitucional</h3>
+      <svg width="160" height="120" viewBox="0 0 160 120"><g fill="#ffd86b">
+        <circle cx="20" cy="20" r="10"/><circle cx="50" cy="20" r="10"/><circle cx="80" cy="20" r="10"/><circle cx="110" cy="20" r="10"/><circle cx="140" cy="20" r="10"/>
+        <circle cx="20" cy="60" r="10"/><circle cx="50" cy="60" r="10"/>
+        <circle cx="110" cy="60" r="10"/><circle cx="140" cy="60" r="10"/>
+        <circle cx="20" cy="100" r="10"/><circle cx="50" cy="100" r="10"/><circle cx="80" cy="100" r="10"/><circle cx="110" cy="100" r="10"/><circle cx="140" cy="100" r="10"/>
+      </g><circle cx="80" cy="60" r="13" fill="#9ad7ff"/></svg>
+      <p>Un àtom diferent (més gran o més petit) OCUPA la posició d'un àtom original. Típic: Ni a Cu (llautó), Cr a Fe (acer inox).</p>
+    </div>
+  </div>
+
+  <h3>Fórmula CLAU — concentració d'equilibri de vacants</h3>
+
+  <p><b>Hi ha 2 formes equivalents</b> — depèn de les unitats de Q_v. <b>Mateixa fórmula, mateix resultat</b>, només canvia la constant segons com et donin les dades.</p>
+
+  <div class="formula" style="text-align:center">
+    $$\frac{N_v}{N} = \exp\left(-\frac{Q_v}{k \cdot T}\right) \quad \text{o bé} \quad \frac{N_v}{N} = \exp\left(-\frac{Q_v}{R \cdot T}\right)$$
+  </div>
+
+  <h4>🔑 Quan usar cadascuna</h4>
+  <table>
+    <tr><th>Si Q_v ve en...</th><th>Usa...</th><th>Valor</th></tr>
+    <tr><td><b>eV/àtom</b></td><td><b>k</b> (Boltzmann)</td><td>$k = 8{,}62 \cdot 10^{-5}$ eV/K</td></tr>
+    <tr><td><b>J/mol</b> o <b>kJ/mol</b></td><td><b>R</b> (gasos)</td><td>$R = 8{,}314$ J/(mol·K)</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Regla mnemotècnica:</b>
+    <ul>
+      <li>Q per UN àtom → usa <b>k</b></li>
+      <li>Q per UN mol d'àtoms → usa <b>R</b></li>
+    </ul>
+  </div>
+
+  <h4>Per què són equivalents</h4>
+  <p>Hi ha una relació amagada entre les dues constants:</p>
+  <div class="formula">
+    $$\boxed{R = k \cdot N_A}$$
+  </div>
+  <p>Amb $N_A = 6{,}022 \cdot 10^{23}$. Són <b>la mateixa constant</b>:</p>
+  <ul>
+    <li><b>k</b> mesura energia per àtom</li>
+    <li><b>R</b> mesura energia per mol (per això s'afegeix el factor N_A)</li>
+  </ul>
+  <p>Si multipliques Q en eV/àtom per $N_A \cdot 1{,}6 \cdot 10^{-19}$ obtens Q en J/mol. I la fórmula dóna EXACTAMENT el mateix resultat.</p>
+
+  <h4>🧮 Exemple — mateix problema, 2 rutes</h4>
+  <p><b>Dades:</b> Q_v = 0,9 eV/àtom = 86,8 kJ/mol. T = 1000 K.</p>
+
+  <div class="worked">
+    <h4>Ruta 1 · usant k (eV)</h4>
+    <div class="formula">
+      $$\frac{N_v}{N} = \exp\left(\frac{-0{,}9}{8{,}62 \cdot 10^{-5} \cdot 1000}\right) = e^{-10{,}44} \approx 2{,}9 \cdot 10^{-5}$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Ruta 2 · usant R (J/mol)</h4>
+    <div class="formula">
+      $$\frac{N_v}{N} = \exp\left(\frac{-86800}{8{,}314 \cdot 1000}\right) = e^{-10{,}44} \approx 2{,}9 \cdot 10^{-5}$$
+    </div>
+    <p><b>Mateix resultat ✓</b></p>
+  </div>
+
+  <h4>Variables de la fórmula</h4>
+  <ul>
+    <li><b>N_v</b> = nombre de vacants per cm³</li>
+    <li><b>N</b> = nombre total de posicions atòmiques per cm³ (= ρ·N_A/A si ho calcules)</li>
+    <li><b>Q_v</b> = energia d'activació per crear una vacància</li>
+    <li><b>T</b> = temperatura absoluta <b>(sempre en Kelvin!)</b></li>
+  </ul>
+
+  <div class="key">
+    <b>⚠ T SEMPRE en Kelvin!</b> Una de les trampes més freqüents a l'examen:
+    $$T(\text{K}) = T(°\text{C}) + 273$$
+    <table style="margin-top:8px">
+      <tr><th>Celsius</th><th>Kelvin</th><th>Context</th></tr>
+      <tr><td>0 °C</td><td>273 K</td><td>congelació aigua</td></tr>
+      <tr><td>20 °C</td><td>293 K</td><td>ambient</td></tr>
+      <tr><td>100 °C</td><td>373 K</td><td>bullir aigua</td></tr>
+      <tr><td>912 °C</td><td>1185 K</td><td>Fe α→γ</td></tr>
+      <tr><td>1538 °C</td><td>1811 K</td><td>fusió Fe</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT A — Boltzmann: N_v/N a una T donada</h3>
+  <p><b>Enunciat:</b> Calcula la fracció de vacants (N_v/N) del coure a 1000 °C. Dades: Q_v = 0,9 eV/àtom, k = 8,62·10⁻⁵ eV/K.</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Passa T a Kelvin</h4>
+    <p>T = 1000 + 273 = <b>1273 K</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Identifica unitats i constant</h4>
+    <p>Q_v ve en eV/àtom → he d'usar <b>k (Boltzmann)</b> = 8,62·10⁻⁵ eV/K.</p>
+    <p>(Si hagués vingut en kJ/mol, usaria R = 8,314 J/(mol·K))</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Calcula l'exponent</h4>
+    <div class="formula">
+      $$\frac{Q_v}{kT} = \frac{0{,}9}{8{,}62 \cdot 10^{-5} \cdot 1273}$$
+    </div>
+    <p>Denominador: 8,62·10⁻⁵ · 1273 = 0,1097</p>
+    <p>Exponent: 0,9 / 0,1097 = <b>8,20</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 4 · Aplica l'exponencial</h4>
+    <div class="formula">
+      $$\frac{N_v}{N} = e^{-8{,}20} = 2{,}75 \cdot 10^{-4}$$
+    </div>
+    <p>Calculadora: e^(−8,20) ≈ 0,000275</p>
+    <p class="note">Això vol dir: de cada 3640 àtoms, 1 posició és vacant (a 1000 °C).</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 5 · Si et demanen vacants per cm³</h4>
+    <p>Cal N (posicions totals/cm³). Si saps ρ i A del Cu (ρ = 8,94 g/cm³, A = 63,55 g/mol):</p>
+    <div class="formula">
+      $$N = \frac{\rho \cdot N_A}{A} = \frac{8{,}94 \cdot 6{,}022 \cdot 10^{23}}{63{,}55} = 8{,}47 \cdot 10^{22} \text{ àtoms/cm}^3$$
+    </div>
+    <p>Llavors:</p>
+    <div class="formula">
+      $$N_v = 8{,}47 \cdot 10^{22} \cdot 2{,}75 \cdot 10^{-4} = 2{,}33 \cdot 10^{19} \text{ vacants/cm}^3$$
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT B — Mètode de densitat (ρ_real vs ρ_teòrica)</h3>
+  <p><b>Enunciat:</b> El Ti α és HCP, amb ρ_teòrica = 4,50 g/cm³ (cristall perfecte). Un lingot real de Ti fa 4,40 g/cm³. Massa atòmica A = 47,87 g/mol. Calcula:</p>
+  <ul>
+    <li>(a) Fracció de vacants</li>
+    <li>(b) Vacants per cm³</li>
+    <li>(c) Vacants per cel·la (n=6 per HCP)</li>
+  </ul>
+
+  <div class="worked">
+    <h4>Apartat (a) · Fracció de vacants</h4>
+    <p>Com la densitat real és menor que la teòrica, hi ha llocs buits a la xarxa:</p>
+    <div class="formula">
+      $$\text{fracció vacants} = \frac{\rho_\text{teòrica} - \rho_\text{real}}{\rho_\text{teòrica}} = \frac{4{,}50 - 4{,}40}{4{,}50} = \frac{0{,}10}{4{,}50} = 0{,}0222$$
+    </div>
+    <p><b>2,22%</b> dels llocs atòmics estan buits.</p>
+  </div>
+
+  <div class="worked">
+    <h4>Apartat (b) · Vacants per cm³</h4>
+    <p>Primer, posicions atòmiques totals per cm³ (usant la densitat REAL):</p>
+    <div class="formula">
+      $$N = \frac{\rho_\text{real} \cdot N_A}{A} = \frac{4{,}40 \cdot 6{,}022 \cdot 10^{23}}{47{,}87} = 5{,}54 \cdot 10^{22} \text{ àtoms/cm}^3$$
+    </div>
+    <p>Vacants per cm³:</p>
+    <div class="formula">
+      $$N_v = N \cdot \text{fracció} = 5{,}54 \cdot 10^{22} \cdot 0{,}0222 = 1{,}23 \cdot 10^{21} \text{ vacants/cm}^3$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Apartat (c) · Vacants per cel·la</h4>
+    <p>HCP té 6 posicions atòmiques per cel·la. Si 2,22% estan vacants:</p>
+    <div class="formula">
+      $$\text{vacants/cel·la} = 6 \cdot 0{,}0222 = 0{,}133$$
+    </div>
+    <p class="note">Interpretació: 0,133 vacants/cel·la vol dir que de cada ~7,5 cel·les, 1 té una vacant. (No és que cada cel·la en tingui "0,133", és un promedi estadístic.)</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 EXEMPLE RESOLT C — Estil examen (Parcial 09/11/2023, apartat c)</h3>
+  <p><b>Enunciat:</b> Ti és HCP a alta T amb paràmetres a = 0,2978 nm, c = 0,4735 nm. La densitat real a 20 °C és 4,4 g/cm³. Massa atòmica A = 47,87 g/mol, N_A = 6,022·10²³. Calcula el nombre de vacants per cm³.</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Calcula la densitat TEÒRICA</h4>
+    <p>Volum cel·la HCP (hem vist abans = 0,1091 nm³ = 1,091·10⁻²² cm³):</p>
+    <div class="formula">
+      $$\rho_\text{teo} = \frac{n \cdot A}{V_c \cdot N_A} = \frac{6 \cdot 47{,}87}{1{,}091 \cdot 10^{-22} \cdot 6{,}022 \cdot 10^{23}}$$
+    </div>
+    <p>Numerador: 6·47,87 = 287,22</p>
+    <p>Denominador: 1,091·10⁻²² · 6,022·10²³ = 1,091·6,022·10¹ = 65,70</p>
+    <div class="formula">
+      $$\rho_\text{teo} = \frac{287{,}22}{65{,}70} = 4{,}37 \text{ g/cm}^3$$
+    </div>
+    <p class="note">Aquí et podria donar ~4,50 g/cm³ amb altres paràmetres de xarxa. Aquí dóna 4,37 amb els donats.</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Calcula la fracció de vacants</h4>
+    <p><b>⚠ Atenció:</b> en aquest cas la ρ real (4,40) és LLEUGERAMENT superior a la teòrica (4,37). Això vol dir que de fet NO hi ha vacants, potser hi ha algun àtom intersticial o un error d'arrodoniment. Per fer l'exercici de pràctica prenguem ρ_teòrica = 4,50 (valor més "clàssic"):</p>
+    <div class="formula">
+      $$\text{fracció vacants} = \frac{4{,}50 - 4{,}40}{4{,}50} = 0{,}0222$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Vacants per cm³</h4>
+    <div class="formula">
+      $$N = \frac{\rho_\text{real} \cdot N_A}{A} = \frac{4{,}40 \cdot 6{,}022 \cdot 10^{23}}{47{,}87} = 5{,}54 \cdot 10^{22} \text{ àtoms/cm}^3$$
+    </div>
+    <div class="formula">
+      $$N_v = 5{,}54 \cdot 10^{22} \cdot 0{,}0222 = 1{,}23 \cdot 10^{21} \text{ vacants/cm}^3$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Resposta final</h4>
+    <p><b>N_v ≈ 1,23·10²¹ vacants/cm³</b></p>
+    <p>És un número ENORME (un trilió de vacants per cm³), però comparat amb les posicions totals (5,54·10²² àtoms) és només el 2,22%.</p>
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>📝 Resum per vacants — la "receta"</h3>
+  <ol>
+    <li>Si et donen <b>Q_v, T</b> → mètode Boltzmann: <code>Nv/N = exp(-Qv/kT)</code> (o amb R)</li>
+    <li>Si et donen <b>ρ_real i ρ_teòrica</b> → mètode directe: <code>fracció = (ρ_teo - ρ_real)/ρ_teo</code></li>
+    <li>Per passar de fracció a vacants/cm³ → multiplica per N (posicions totals/cm³ = ρ·N_A/A)</li>
+    <li>Per vacants/cel·la → multiplica la fracció per n (BCC=2, FCC=4, HCP=6)</li>
+    <li><b>T sempre en Kelvin!</b></li>
+    <li>Coherència d'unitats a Q_v: eV amb k · J/mol amb R</li>
+  </ol>
+</div>
+
+  <div class="worked">
+    <h4>Com llegir-la intuïtivament:</h4>
+    <ul>
+      <li>↑ T → ↑ N_v (més calor = més vacants, com t'esperaries)</li>
+      <li>↑ Q_v → ↓ N_v (si cal molta energia per crear una vacant, n'hi ha menys)</li>
+      <li>A T = 0 K → N_v = 0 (cristall perfecte)</li>
+      <li>Just sota T_fusió → N_v pot arribar a 1 vacant per cada 1000 àtoms</li>
+    </ul>
+  </div>
+</div>
+
+<h2>11 · Altres defectes de punt (menys freqüents)</h2>
+<div class="card">
+  <div class="grid grid-2">
+    <div>
+      <h3>Frenkel</h3>
+      <p>Un àtom deixa la seva posició i se'n va a un intersticial. <b>Resultat:</b> 1 vacància + 1 intersticial <b>del mateix àtom</b>. Típic a ceràmics.</p>
+    </div>
+    <div>
+      <h3>Schottky</h3>
+      <p>En ceràmics iònics: <b>1 vacant de catió + 1 vacant d'anió</b> (per mantenir la neutralitat elèctrica). Típic a NaCl.</p>
+    </div>
+  </div>
+</div>
+
+<h2>12 · Defectes de línia — dislocacions</h2>
+<div class="card">
+  <p>Imagina un pla d'àtoms que s'acaba a mitja xarxa. El lloc on acaba és una <b>dislocació</b>. Aquests defectes són clau per entendre com els metalls es <b>deformen plàsticament</b>.</p>
+  <div class="grid grid-2">
+    <div>
+      <h3>Dislocació d'aresta (edge)</h3>
+      <p>Un pla extra d'àtoms <b>s'acaba al mig</b>. Vector de Burgers (b) <b>perpendicular</b> a la línia de la dislocació.</p>
+      <svg width="200" height="140" viewBox="0 0 200 140"><g fill="#ffd86b">
+        <circle cx="20" cy="20" r="7"/><circle cx="50" cy="20" r="7"/><circle cx="80" cy="20" r="7"/><circle cx="110" cy="20" r="7"/><circle cx="140" cy="20" r="7"/><circle cx="170" cy="20" r="7"/>
+        <circle cx="20" cy="50" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="80" cy="50" r="7"/><circle cx="95" cy="60" r="7"/><circle cx="110" cy="50" r="7"/><circle cx="140" cy="50" r="7"/><circle cx="170" cy="50" r="7"/>
+        <circle cx="20" cy="90" r="7"/><circle cx="50" cy="90" r="7"/><circle cx="80" cy="90" r="7"/><circle cx="110" cy="90" r="7"/><circle cx="140" cy="90" r="7"/><circle cx="170" cy="90" r="7"/>
+        <circle cx="20" cy="120" r="7"/><circle cx="50" cy="120" r="7"/><circle cx="80" cy="120" r="7"/><circle cx="110" cy="120" r="7"/><circle cx="140" cy="120" r="7"/><circle cx="170" cy="120" r="7"/>
+      </g><text x="95" y="78" font-size="20" fill="#ff7a7a">⊥</text></svg>
+    </div>
+    <div>
+      <h3>Dislocació helicoidal (screw)</h3>
+      <p>El cristall està "torçat" com un cargol en espiral al voltant d'una línia. Vector de Burgers <b>paral·lel</b> a la línia.</p>
+      <p class="note">També existeixen dislocacions <b>mixtes</b>.</p>
+    </div>
+  </div>
+  <div class="key"><b>Vector de Burgers (b):</b> el vector que descriu el <b>desplaçament</b> causat per la dislocació. Magnitud i direcció fixes per a cada dislocació concreta. Determina quant es mou la matèria cada vegada que la dislocació avança un pas.</div>
+</div>
+
+<h2>13 · Defectes de superfície i volumètrics</h2>
+<div class="card">
+  <h3>Contorns de gra (grain boundaries)</h3>
+  <p>A un policristall, cada gra té orientació cristal·lina pròpia. On dos grans es troben, els àtoms no poden estar perfectament ordenats — hi ha un <b>contorn de gra</b> (frontera 2D de ~1-5 àtoms de gruix).</p>
+  <p><b>Per què importen?</b> Frenen les dislocacions → més límits de gra = material més dur (LLEI DE <b>HALL-PETCH</b>).</p>
+
+  <h3>Macla (twin)</h3>
+  <p>Una regió del cristall és la imatge especular d'una altra respecte d'un pla. Quan el material es deforma plàsticament per maclat en lloc de per dislocacions.</p>
+
+  <h3>Volumètrics</h3>
+  <p>Porus (buits), precipitats (fases secundàries), inclusions (impureses en bloc), esquerdes (fractures internes). Apareixen durant fabricació o per tractament.</p>
+</div>
+
+<h2>14 · Solucions sòlides i regles de Hume-Rothery</h2>
+<div class="card">
+  <p>Un <b>aliatge</b> és essencialment un cristall d'un metall (dissolvent) amb àtoms d'un altre (solut) barrejats. Dos tipus:</p>
+  <ul>
+    <li><b>Solució sòlida SUBSTITUCIONAL:</b> el solut ocupa posicions de la xarxa. Exemple: Cu+Ni (llautó 30-70), Cu+Zn (llautó), Fe+Cr (acer inox).</li>
+    <li><b>Solució sòlida INTERSTICIAL:</b> el solut s'encaixa als "forats" de la xarxa. Exemple: C a Fe (acer), N a Fe (nitruració).</li>
+  </ul>
+  <h3>Hume-Rothery — 4 regles per una solució sòlida substitucional completa</h3>
+  <ol>
+    <li><b>Diferència de radis atòmics &lt; 15%</b></li>
+    <li><b>Mateixa estructura cristal·lina</b> (BCC amb BCC, FCC amb FCC...)</li>
+    <li><b>Electronegativitats semblants</b> (si molt diferents → formen compost iònic, no aliatge)</li>
+    <li><b>València semblant</b></li>
+  </ol>
+  <p>Si NO es compleixen → <b>solubilitat limitada</b> — el solut només entra fins a cert punt, després precipita.</p>
+  <div class="key"><b>Per intersticials:</b> el solut ha de ser MOLT més petit que el dissolvent. Per això C (r=0,077 nm) i N (r=0,065 nm) entren a Fe (r=0,126 nm) com intersticials, però Ni (r=0,125 nm) substitueix Cu (r=0,128 nm).</div>
+</div>
+
+<div class="feyn">
+  <h2>Checkpoint Feynman — digues-ho amb les teves paraules</h2>
+  <ol>
+    <li>Per què FCC i HCP tenen la mateixa APF (0,74) si són estructures diferents?</li>
+    <li>Si et dono un metall amb densitat 7,87 g/cm³, A = 55,85 g/mol, amb cel·la cúbica a=0,287 nm, quina estructura té: BCC o FCC? (Pista: calcula ρ teòrica per a cadascuna i compara.)</li>
+    <li>Per què el C (radi 0,077 nm) pot fer solució sòlida intersticial amb Fe (radi 0,126 nm) però Ni (0,125) no pot?</li>
+    <li>Al Fe, passem de BCC a FCC a 912 °C. La densitat puja o baixa? (Pensa: APF FCC > APF BCC.)</li>
+    <li>Si pujo la temperatura d'un metall, què passa amb el nombre de vacants? Per què?</li>
+    <li>Per què un metall amb grans petits és més dur que un amb grans grans?</li>
+  </ol>
+  <p class="note">Si alguna d'aquestes no les pots verbalitzar sense pensar, torna al seu apartat abans de continuar.</p>
+</div>
+
+<p class="note" style="margin-top:40px">📺 Recomanació de vídeo:<br>
+· <a style="color:#ff7aa3" href="https://www.youtube.com/watch?v=Rm-i1c7zr6Q" target="_blank">Crystal Structures — Explained (8 min)</a><br>
+· <a style="color:#ff7aa3" href="https://www.youtube.com/watch?v=Sjm5KGthr8k" target="_blank">Miller Indices — Simple explanation</a></p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 3 — Difusió</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false,
+    errorColor: '#ff7a7a'
+  });
+});
+</script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --vac:#ff7aa3; --int:#5ad7a3; --gb:#7aa2ff; --border:#262c3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:36px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:48px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.nav{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:13px;transition:all 0.15s}
+.nav a:hover{background:var(--panel);border-color:var(--accent)}
+.nav a.current{background:rgba(255,216,107,0.1);border-color:var(--accent);color:var(--accent)}
+.hero{padding:26px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin-bottom:28px}
+.hero .q{font-size:18px;color:var(--accent);margin-top:12px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.key{background:rgba(255,216,107,.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0}
+.key b{color:var(--accent)}
+.formula{background:#0a0d13;border:1px solid var(--border);border-radius:8px;padding:14px;margin:10px 0;font-size:15px;overflow-x:auto}
+.analogy{background:#0c1220;border-left:3px solid #ffb3d9;padding:10px 14px;border-radius:6px;font-size:14px;color:#d0d7e6;margin-top:10px}
+.analogy b{color:#ffb3d9}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td.num{text-align:center;font-family:'SF Mono',Consolas,monospace}
+.worked{background:#0c1220;border:1px solid #2a3446;border-radius:10px;padding:16px 18px;margin:14px 0;font-size:14px}
+.worked h4{margin:0 0 10px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.step{background:#0c1220;border-left:3px solid var(--accent);padding:14px 18px;border-radius:6px;margin:14px 0}
+.step h4{margin:0 0 8px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.ascii{background:#0a0d13;border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;white-space:pre;overflow-x:auto;color:#c5cde0;line-height:1.5}
+.feyn{background:linear-gradient(135deg,#1a1f2e,#231a2e);border:1px solid #3a2a4a;padding:22px 26px;border-radius:12px;margin-top:36px}
+.feyn h2{border:none;padding:0;margin:0 0 10px;color:#ffb3d9}
+.mech{border-top:3px solid;padding-top:14px}
+.mech.vac{border-color:var(--vac)}
+.mech.int{border-color:var(--int)}
+.mech.gb{border-color:var(--gb)}
+.note{font-size:13px;color:var(--dim);margin-top:8px}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.3px}
+.pill.vac{background:rgba(255,122,163,.18);color:var(--vac)}
+.pill.int{background:rgba(90,215,163,.18);color:var(--int)}
+.pill.gb{background:rgba(122,162,255,.18);color:var(--gb)}
+.erftable{font-family:'SF Mono',Consolas,monospace;font-size:12px}
+.erftable td{padding:4px 8px;text-align:center}
+#fick-curve{height:420px}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="sessio-01-enllacos.html">← T1</a>
+  <a href="sessio-02-cristalografia.html">T2</a>
+  <a class="current">T3 · Difusió</a>
+  <a href="sessio-05-mecaniques.html">T7 →</a>
+  <a href="../REPORT-PARCIAL-1.md">📊 Informe</a>
+</div>
+
+<div class="hero">
+  <h1>Tema 3 — Difusió<small>CTM · Parcial 1 · Problema 1 del examen · 92% probabilitat de caure</small></h1>
+  <p class="q">Per què una barra d'acer exposada a un ambient ric en carboni a 900°C es torna més dura a la superfície? Què fa que els àtoms de carboni "decideixin" entrar al metall?</p>
+  <p>Aquest tema és el que MÉS PUNTS val a l'examen. El problema 1 gairebé sempre és de difusió. <b>Domina-lo i tens mig problema guanyat.</b></p>
+</div>
+
+<h2>0 · Resum del que has de saber</h2>
+<div class="card">
+  <p>Prioritats per l'examen (dels 17 parcials analitzats):</p>
+  <table>
+    <tr><th>Concepte/fórmula</th><th>Probabilitat</th></tr>
+    <tr><td><b>Problema Fick 2a + erf + Arrhenius</b></td><td><b>92% (SEMPRE cau)</b></td></tr>
+    <tr><td>Flux Fick 1a (J = D·ΔC/Δx)</td><td>78% test</td></tr>
+    <tr><td>D = D₀ exp(-Q/RT), D₀ NO depèn de T</td><td>67% test</td></tr>
+    <tr><td>Intersticial &gt; vacants en velocitat</td><td>44% test (⚠ contradicció)</td></tr>
+    <tr><td>Q gran → D lenta</td><td>33% test</td></tr>
+    <tr><td>C en Fe és intersticial</td><td>33% test</td></tr>
+    <tr><td>Força impulsora = gradient concentració</td><td>múltiples</td></tr>
+  </table>
+</div>
+
+<h2>1 · Què és difusió? (intuïció)</h2>
+<div class="card">
+  <p>La <b>difusió</b> és el <b>moviment net de partícules d'una regió amb més concentració cap a una amb menys</b>, causat pel moviment tèrmic aleatori dels àtoms. És <b>espontani</b> — no cal cap força externa per impulsar-lo, només temperatura.</p>
+
+  <div class="analogy"><b>Analogia clàssica:</b> poses una gota de tinta blava en un got d'aigua parada. Al principi la tinta està concentrada en una zona petita. Al cap d'un temps (hores), tota l'aigua s'ha tenyit uniformement. Cap vent ha mogut la tinta. Cap mà. Només temperatura ambient (moviment brownià).</div>
+
+  <h3>Característiques clau</h3>
+  <ul>
+    <li>És <b>espontània</b> — la natura tendeix a la màxima entropia</li>
+    <li><b>Amb T alta és més ràpida</b> (més energia tèrmica → àtoms es mouen més)</li>
+    <li>La <b>força impulsora</b> és el <b>gradient de concentració</b> (ΔC/Δx)</li>
+    <li>Porta a un <b>equilibri homogeni</b> (tot uniforme)</li>
+    <li>Passa en gasos, líquids i sòlids — però en sòlids és MOLT més lenta</li>
+  </ul>
+
+  <div class="key"><b>A CTM només ens interessa la difusió en sòlids.</b> Els gasos són massa ràpids per ser problema industrial. La difusió en sòlids és la que fa possible:
+    <ul>
+      <li>Carburació (C entrant en acer per endurir-lo)</li>
+      <li>Nitruració (N entrant en acer)</li>
+      <li>Semiconductors (dopatge del silici amb B, P)</li>
+      <li>Soldadura</li>
+      <li>Juntes metàl·liques (creixement de la unió)</li>
+    </ul>
+  </div>
+</div>
+
+<h2>2 · Els 3 mecanismes de difusió</h2>
+<div class="card">
+  <p>Hi ha 3 maneres diferents que els àtoms es mouen dins d'un sòlid. Totes tres passen alhora, però una pot dominar segons les condicions.</p>
+
+  <div class="grid grid-3">
+    <div class="card mech vac">
+      <span class="pill vac">1 · VACANTS</span>
+      <h4>Difusió per vacàncies</h4>
+      <p>Un àtom salta a una vacància veïna. La vacància es mou en direcció contrària.</p>
+      <div class="ascii">
+● ● ● ● ●
+● ● ● □ ●   ← vacància □
+● ● ● ● ●
+  ↓
+● ● ● ● ●
+● ● ● ● □   ← àtom salta a □
+● ● ● ● ●
+                                      </div>
+      <ul>
+        <li><b>Velocitat:</b> LENTA</li>
+        <li><b>Q típica:</b> alta (~240 kJ/mol per Fe)</li>
+        <li><b>Qui difon així:</b> àtoms GRANS (substitucionals)</li>
+        <li><b>Exemples:</b> Cu en Ni, autodifusió Fe, Cr en Fe</li>
+      </ul>
+      <div class="analogy"><b>Analogia:</b> aparcament ple. Per moure't cal que un cotxe surti primer per deixar espai.</div>
+    </div>
+
+    <div class="card mech int">
+      <span class="pill int">2 · INTERSTICIALS</span>
+      <h4>Difusió intersticial</h4>
+      <p>Àtoms petits (C, N, H) aprofiten els "forats" entre els àtoms grans. No calen vacàncies.</p>
+      <div class="ascii">
+● ● ● ● ●
+●·● ● ● ●    ← C entre els àtoms
+● ● ● ● ●
+  ↓
+● ● ● ● ●
+● ●·● ● ●    ← C salta a un altre
+● ● ● ● ●    intersticial
+                                      </div>
+      <ul>
+        <li><b>Velocitat:</b> RÀPIDA</li>
+        <li><b>Q típica:</b> baixa (~80 kJ/mol per C en Fe)</li>
+        <li><b>Qui difon així:</b> àtoms PETITS (C, N, H, O)</li>
+        <li><b>Exemples:</b> C en Fe (carburació), N en Fe (nitruració), H en Pd</li>
+      </ul>
+      <div class="analogy"><b>Analogia:</b> moto serpentejant entre cotxes aturats. No necessita fila ni espais buits preexistents.</div>
+    </div>
+
+    <div class="card mech gb">
+      <span class="pill gb">3 · CONTORNS DE GRA</span>
+      <h4>Difusió per contorns</h4>
+      <p>Àtoms es mouen RÀPID pels límits entre grans cristal·lins (zones desordenades).</p>
+      <ul>
+        <li><b>Velocitat:</b> MOLT RÀPIDA</li>
+        <li><b>Q típica:</b> 50-70% de la Q volumètrica</li>
+        <li><b>On importa:</b> materials amb gra petit (més contorns)</li>
+        <li><b>Superfície lliure:</b> encara més ràpida</li>
+      </ul>
+      <div class="analogy"><b>Analogia:</b> els carrerons laterals descongestionats de la ciutat. Més "espai" per moure's perquè els àtoms al contorn estan desordenats.</div>
+    </div>
+  </div>
+
+  <div class="key"><b>Rànquing per velocitat (de més ràpida a més lenta):</b>
+    <div class="ascii">
+Superfície lliure >> Contorn de gra > Intersticial > Vacants
+                                      </div>
+    Regla general: més <b>DESORDRE</b> al voltant d'un àtom → més fàcil moure's.
+  </div>
+
+  <div class="key" style="background:rgba(255,122,163,0.1);border-color:var(--vac)"><b>⚠ Contradicció detectada al corpus:</b>
+    <p>Dos exàmens diuen coses diferents sobre <b>velocitat vacants vs intersticial</b>:</p>
+    <ul>
+      <li>17/11/2021 Q8 i 07/11/2024 Q7: <b>INTERSTICIAL &gt; VACANTS</b> (més ràpida) ✓</li>
+      <li>09/11/2023 Q7: <b>VACANTS &gt; INTERSTICIAL</b> (més probable)</li>
+    </ul>
+    <b>Segueix la resposta majoritària + física correcta:</b> INTERSTICIAL més ràpida. Raó: els intersticials són petits, sempre tenen forats disponibles, Q menor.
+  </div>
+</div>
+
+<h2>3 · 1a Llei de Fick — difusió estacionària</h2>
+<div class="card">
+  <p>Quan la concentració NO canvia amb el temps en cap punt (estat estacionari), la difusió es descriu amb aquesta fórmula:</p>
+
+  <div class="formula" style="text-align:center;font-size:20px">
+    $$\boxed{\;J = -D \cdot \frac{dC}{dx}\;}$$
+  </div>
+
+  <h3>Variables</h3>
+  <table>
+    <tr><th>Símbol</th><th>Què és</th><th>Unitats SI</th></tr>
+    <tr><td><b>J</b></td><td>Flux (massa de solut per unitat d'àrea i temps)</td><td>kg/(m²·s)</td></tr>
+    <tr><td><b>D</b></td><td>Coeficient de difusió</td><td>m²/s</td></tr>
+    <tr><td><b>dC/dx</b></td><td>Gradient de concentració</td><td>(kg/m³)/m = kg/m⁴</td></tr>
+    <tr><td><b>−</b></td><td>Signe: el flux va en sentit contrari al gradient</td><td></td></tr>
+  </table>
+
+  <div class="key"><b>En problemes d'examen</b> es pot simplificar (gradient lineal a través d'una làmina):
+    <div class="formula">$$J = -D \cdot \frac{C_2 - C_1}{\Delta x}$$</div>
+    (amb C₂ - C₁ negatiu si C₂ &lt; C₁, i així el flux neto resulta positiu en la direcció de més→menys concentració)
+  </div>
+
+  <div class="analogy"><b>Analogia:</b> si obres una porta entre una habitació amb perfum i una sense, l'olor es propaga fins que les dues tenen la mateixa concentració. El flux és més gran si:
+    <ul>
+      <li>La diferència d'olor (ΔC) és més gran</li>
+      <li>La porta és més gran/oberta (àrea)</li>
+      <li>La distància entre habitacions és més curta (Δx menor)</li>
+    </ul>
+  </div>
+
+  <h3>Què afecta el flux?</h3>
+  <ul>
+    <li><b>↑ ΔC → ↑ J</b> (més diferència concentració, més flux)</li>
+    <li><b>↓ Δx → ↑ J</b> (menys gruix, més flux) — <b>relació INVERSA</b></li>
+    <li><b>↑ T → ↑ D → ↑ J</b> (via Arrhenius)</li>
+    <li><b>Mateix material</b> = mateix D a la mateixa T</li>
+  </ul>
+
+  <div class="key"><b>Trampa recurrent al test:</b>
+    <p>"Si dupliques ΔC i redueixes Δx a la meitat, el flux augmenta..."</p>
+    <p>J_nou = D · (2·ΔC) / (Δx/2) = <b>4 · J_original</b></p>
+    <p>Respost al test: "4 vegades més gran"</p>
+  </div>
+</div>
+
+<h2>4 · Coeficient de difusió D — Arrhenius</h2>
+<div class="card">
+  <div class="formula" style="text-align:center;font-size:20px">
+    $$\boxed{\;D = D_0 \cdot e^{-Q/(RT)}\;}$$
+  </div>
+
+  <h3>Variables</h3>
+  <table>
+    <tr><th>Símbol</th><th>Què és</th><th>Unitats</th></tr>
+    <tr><td><b>D</b></td><td>Coeficient de difusió a temperatura T</td><td>m²/s</td></tr>
+    <tr><td><b>D₀</b></td><td>Factor pre-exponencial (propietat del sistema)</td><td>m²/s</td></tr>
+    <tr><td><b>Q</b></td><td>Energia d'activació per difusió</td><td>J/mol (o eV/àtom)</td></tr>
+    <tr><td><b>R</b></td><td>Constant dels gasos = 8,314</td><td>J/(mol·K)</td></tr>
+    <tr><td><b>T</b></td><td>Temperatura absoluta</td><td>K (SEMPRE!)</td></tr>
+  </table>
+
+  <div class="key">
+    <b>Forma equivalent:</b> si Q és en eV/àtom, usa k (Boltzmann) = 8,62·10⁻⁵ eV/K:
+    $$D = D_0 \cdot e^{-Q/(kT)}$$
+    Mateix resultat, diferents unitats.
+  </div>
+
+  <h3>Propietats clau d'Arrhenius</h3>
+  <ul>
+    <li><b>D &lt; D₀ SEMPRE</b> (perquè l'exponent és negatiu → factor entre 0 i 1)</li>
+    <li><b>D₀ NO depèn de la temperatura</b> (és una constant del sistema) ⚠ TRAMPA TÍPICA</li>
+    <li><b>Q NO depèn de la temperatura</b> tampoc</li>
+    <li>A <b>T → ∞</b>, D → D₀ (però mai arriba)</li>
+    <li>A <b>T = 0 K</b>, D = 0 (cristall perfecte, no difusió)</li>
+  </ul>
+
+  <h3>Factors que afecten D₀ i Q</h3>
+  <table>
+    <tr><th>Factor</th><th>Efecte</th></tr>
+    <tr><td>Estructura cristal·lina (BCC/FCC/HCP)</td><td>Sí — D₀ i Q canvien</td></tr>
+    <tr><td>Mecanisme (vacants/intersticial)</td><td>Sí — Q més petita per intersticial</td></tr>
+    <tr><td>Temperatura</td><td>NO afecta D₀ ni Q — només afecta D via l'exponencial</td></tr>
+    <tr><td>Mida d'àtom (solut vs matriu)</td><td>Sí — petit=intersticial, gran=vacant</td></tr>
+  </table>
+
+  <div class="key"><b>N en Fe-α (BCC) vs N en Fe-γ (FCC):</b>
+    <p>BCC té APF=0,68 (menys compacte) → més espai entre àtoms → els intersticis són més oberts → N pot difondre més fàcilment. <b>Per tant D(N en BCC) &gt; D(N en FCC)</b>. És una pregunta que apareix a l'examen.</p>
+  </div>
+</div>
+
+<h2>5 · 2a Llei de Fick — difusió NO estacionària</h2>
+<div class="card">
+  <p>Quan la concentració canvia amb el temps (estat transitori), com passa a la carburació d'acer: el C va entrant i el perfil de concentració es modifica.</p>
+
+  <p>La 2a llei en general és una equació diferencial:</p>
+  <div class="formula">
+    $$\frac{\partial C}{\partial t} = D \cdot \frac{\partial^2 C}{\partial x^2}$$
+  </div>
+  <p>Però a l'examen sempre et donen la <b>solució ja integrada</b> per a les condicions de carburació:</p>
+
+  <div class="formula" style="text-align:center;font-size:18px">
+    $$\boxed{\;\frac{C_s - C_x}{C_s - C_0} = \text{erf}\left(\frac{x}{2\sqrt{D \cdot t}}\right)\;}$$
+  </div>
+
+  <p>Forma equivalent:</p>
+  <div class="formula">
+    $$\frac{C_x - C_0}{C_s - C_0} = 1 - \text{erf}\left(\frac{x}{2\sqrt{D \cdot t}}\right)$$
+  </div>
+
+  <h3>Variables</h3>
+  <table>
+    <tr><th>Símbol</th><th>Què és</th></tr>
+    <tr><td><b>C_s</b></td><td>Concentració a la SUPERFÍCIE (constant en el temps)</td></tr>
+    <tr><td><b>C_0</b></td><td>Concentració INICIAL del material (uniforme abans del tractament)</td></tr>
+    <tr><td><b>C_x</b></td><td>Concentració en un punt a profunditat x després d'un temps t</td></tr>
+    <tr><td><b>x</b></td><td>Profunditat mesurada des de la superfície</td></tr>
+    <tr><td><b>D</b></td><td>Coeficient de difusió a la T del tractament</td></tr>
+    <tr><td><b>t</b></td><td>Temps del tractament</td></tr>
+    <tr><td><b>erf(z)</b></td><td>Funció "error", es llegeix d'una taula</td></tr>
+  </table>
+
+  <h3>Condicions d'aplicació (la "letra petita")</h3>
+  <ol>
+    <li><b>C_s constant</b> (ambient sempre manté la concentració a la superfície)</li>
+    <li><b>C_0 uniforme</b> inicialment (tot el material està a la mateixa concentració)</li>
+    <li>El material és <b>semi-infinit</b> (la difusió no arriba a l'altre cantó)</li>
+    <li><b>T constant</b> (mateix D durant tot el procés)</li>
+  </ol>
+
+  <h3>🔑 Taula erf (les més útils, memoritza els valors rodons)</h3>
+  <table class="erftable">
+    <tr><th>z</th><th>erf(z)</th><th>z</th><th>erf(z)</th></tr>
+    <tr><td>0,00</td><td>0,0000</td><td>1,00</td><td>0,8427</td></tr>
+    <tr><td>0,10</td><td>0,1125</td><td>1,10</td><td>0,8802</td></tr>
+    <tr><td>0,20</td><td>0,2227</td><td>1,20</td><td>0,9103</td></tr>
+    <tr><td>0,30</td><td>0,3286</td><td>1,30</td><td>0,9340</td></tr>
+    <tr><td>0,40</td><td>0,4284</td><td>1,40</td><td>0,9523</td></tr>
+    <tr><td>0,50</td><td>0,5205</td><td>1,50</td><td>0,9661</td></tr>
+    <tr><td>0,60</td><td>0,6039</td><td>1,60</td><td>0,9763</td></tr>
+    <tr><td>0,70</td><td>0,6778</td><td>1,80</td><td>0,9891</td></tr>
+    <tr><td>0,80</td><td>0,7421</td><td>2,00</td><td>0,9953</td></tr>
+    <tr><td>0,90</td><td>0,7969</td><td>2,50</td><td>0,9996</td></tr>
+  </table>
+
+  <p><b>Interpolació lineal</b> (si el valor no està a la taula):</p>
+  <div class="formula">
+    $$\text{erf}(z) = \text{erf}(z_1) + \frac{z - z_1}{z_2 - z_1} \cdot [\text{erf}(z_2) - \text{erf}(z_1)]$$
+  </div>
+  <p class="note">Exemple: erf(0,45) = erf(0,40) + (0,45-0,40)/(0,50-0,40) · [erf(0,50)-erf(0,40)] = 0,4284 + 0,5·(0,5205-0,4284) = 0,4745</p>
+</div>
+
+<h2>6 · Problemes tipus resolts</h2>
+
+<div class="card">
+  <h3>🧮 PROBLEMA 1 — Fick 1a (estat estacionari) — tub X26</h3>
+  <p><b>Enunciat resumit:</b> tub d'acer BCC, C_int = 2,7 kg/m³, C_ext = 0,3 mol/m³ (màxim permès), T=100°C, D₀=1,8·10⁻⁴ m²/s, Q=26 kJ/mol, PM_X26=126 g/mol. Flux màxim permès: 1 kg/(200 cm²·mes). Calcula gruix mínim Δx.</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Calcula D amb Arrhenius</h4>
+    <p>T = 100 + 273 = 373 K. R = 8,314 J/(mol·K). Q = 26 000 J/mol (passa kJ→J).</p>
+    <div class="formula">
+      $$D = 1{,}8 \cdot 10^{-4} \cdot e^{-26000/(8{,}314 \cdot 373)}$$
+    </div>
+    <p>Exponent: 26 000 / (8,314 · 373) = 26 000 / 3101 = 8,385</p>
+    <p>e^(-8,385) ≈ 2,28·10⁻⁴</p>
+    <p>D = 1,8·10⁻⁴ · 2,28·10⁻⁴ = <b>4,10·10⁻⁸ m²/s</b></p>
+    <p class="note">Sanity check: D &lt; D₀ ✓, D ≈ 10⁻⁸ (magnitud normal) ✓</p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Converteix C_ext a kg/m³</h4>
+    <p>C_ext = 0,3 mol/m³ × 126 g/mol × 10⁻³ kg/g = <b>0,0378 kg/m³</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Calcula ΔC</h4>
+    <p>ΔC = C_int - C_ext = 2,7 - 0,0378 = <b>2,66 kg/m³</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 4 · Converteix J_max a SI</h4>
+    <p>200 cm² = 0,02 m². 1 mes ≈ 2,59·10⁶ s.</p>
+    <div class="formula">
+      $$J_{max} = \frac{1 \text{ kg}}{0{,}02 \text{ m}^2 \cdot 2{,}59 \cdot 10^6 \text{ s}} = 1{,}93 \cdot 10^{-5} \text{ kg/(m}^2\text{·s)}$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 5 · Aïlla Δx de Fick 1a</h4>
+    <div class="formula">
+      $$\Delta x = \frac{D \cdot \Delta C}{J_{max}} = \frac{4{,}10 \cdot 10^{-8} \cdot 2{,}66}{1{,}93 \cdot 10^{-5}}$$
+    </div>
+    <p>Numerador: 4,10·10⁻⁸ · 2,66 = 1,09·10⁻⁷</p>
+    <p>Δx = 1,09·10⁻⁷ / 1,93·10⁻⁵ = <b>5,66·10⁻³ m = 5,66 mm</b></p>
+    <p class="note">Magnitud raonable per un tub industrial. ✓</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 PROBLEMA 2 — Fick 2a (carburació) — cas clàssic</h3>
+  <p><b>Enunciat:</b> Acer amb C₀ = 0,1% C inicial es carbura a T = 950°C en atmosfera amb C_s = 1,0% C. Calcula el temps necessari perquè a profunditat x = 0,5 mm la concentració arribi a C_x = 0,3% C. Dades: D₀ = 6,2·10⁻⁷ m²/s, Q = 80 000 J/mol.</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Calcula D a 950°C</h4>
+    <p>T = 950 + 273 = 1223 K</p>
+    <div class="formula">
+      $$D = 6{,}2 \cdot 10^{-7} \cdot e^{-80000/(8{,}314 \cdot 1223)}$$
+    </div>
+    <p>Exponent: 80 000 / 10 168 = 7,868</p>
+    <p>e^(-7,868) ≈ 3,83·10⁻⁴</p>
+    <p>D = 6,2·10⁻⁷ · 3,83·10⁻⁴ = <b>2,37·10⁻¹⁰ m²/s</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Calcula el terme erf</h4>
+    <p>Aplica la fórmula de Fick 2a:</p>
+    <div class="formula">
+      $$\frac{C_s - C_x}{C_s - C_0} = \text{erf}(z)$$
+    </div>
+    <p>Substituint: (1,0 - 0,3) / (1,0 - 0,1) = 0,7 / 0,9 = <b>0,778</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Troba z interpolant</h4>
+    <p>Busca a la taula quin z dóna erf(z) = 0,778.</p>
+    <p>Entre erf(0,80) = 0,7421 i erf(0,90) = 0,7969.</p>
+    <div class="formula">
+      $$z = 0{,}80 + \frac{0{,}778 - 0{,}7421}{0{,}7969 - 0{,}7421} \cdot 0{,}10 = 0{,}80 + 0{,}654 \cdot 0{,}10 = 0{,}866$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 4 · Aïlla t de z = x/(2√(Dt))</h4>
+    <div class="formula">
+      $$t = \frac{x^2}{4 \cdot D \cdot z^2}$$
+    </div>
+    <p>x = 0,5 mm = 0,5·10⁻³ m → x² = 2,5·10⁻⁷ m²</p>
+    <p>z² = 0,866² = 0,750</p>
+    <div class="formula">
+      $$t = \frac{2{,}5 \cdot 10^{-7}}{4 \cdot 2{,}37 \cdot 10^{-10} \cdot 0{,}750} = \frac{2{,}5 \cdot 10^{-7}}{7{,}11 \cdot 10^{-10}} = 352 \text{ s}$$
+    </div>
+    <p>Convertir a minuts: 352/60 = <b>5,9 minuts</b> ≈ 6 min</p>
+    <p class="note">A vegades el problema demana hores: ~0,1 h. Revisa què et demanen.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🧮 PROBLEMA 3 — Canvi de temperatura (tipus "error tècnic")</h3>
+  <p><b>Enunciat:</b> Si a 950°C la carburació tarda 6 min per obtenir C_x=0,3% a x=0,5 mm, quant tardaria a 1050°C? (mateix D₀, Q).</p>
+
+  <div class="worked">
+    <h4>Pas 1 · Calcula D a 1050°C</h4>
+    <p>T = 1050 + 273 = 1323 K</p>
+    <p>D₂ = 6,2·10⁻⁷ · e^(-80000/(8,314·1323)) = 6,2·10⁻⁷ · e^(-7,273) = 6,2·10⁻⁷ · 6,94·10⁻⁴ = <b>4,30·10⁻¹⁰ m²/s</b></p>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 2 · Usa la regla: si les condicions (C_s, C_0, C_x, x) són iguals, z és el mateix</h4>
+    <p>Si erf(z) = 0,778 a 950°C → erf(z) = 0,778 també a 1050°C (mateix C's i C_x i x).</p>
+    <p>Per tant z és el mateix (0,866) → x/(2√(D·t)) = constant</p>
+    <div class="formula">
+      $$D_1 \cdot t_1 = D_2 \cdot t_2 \quad \Rightarrow \quad t_2 = t_1 \cdot \frac{D_1}{D_2}$$
+    </div>
+  </div>
+
+  <div class="worked">
+    <h4>Pas 3 · Calcula t₂</h4>
+    <p>t₂ = 352 s · (2,37·10⁻¹⁰ / 4,30·10⁻¹⁰) = 352 · 0,551 = <b>194 s ≈ 3,2 min</b></p>
+    <p class="note">Té sentit físic: a més T, D més gran, per tant el procés tarda menys.</p>
+  </div>
+</div>
+
+<h2>7 · 📋 TOTES les preguntes T3 del corpus (2018-2025)</h2>
+<div class="card">
+  <p>Recull EXHAUSTIU de preguntes de difusió dels 17 parcials analitzats amb resposta i explicació. <b>Estudia-les una per una</b> — són les més probables.</p>
+</div>
+
+<div class="card">
+  <h3>📦 Del EXAM 25-26 Q1 (Nov 2025) — les més rellevants</h3>
+
+  <div class="worked">
+    <h4>Q7 · Fick 1a — canvi de condicions (trampa matemàtica)</h4>
+    <p><b>Enunciat:</b> En un procés de difusió estacionari d'H en Pd, si es duplica la diferència de concentració ΔC i es redueix el gruix a la meitat, el flux:</p>
+    <ul>
+      <li>a) es duplica</li>
+      <li>b) es fa quatre vegades més gran</li>
+      <li>c) no canvia</li>
+    </ul>
+    <p><b>Resposta: b) 4× més gran</b></p>
+    <div class="key"><b>Per què:</b> J = D·ΔC/Δx. Si ΔC×2 i Δx÷2 → J_nou = D·(2ΔC)/(Δx/2) = 4·J_original. És la llei lineal pel numerador i inversament lineal pel denominador.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q8 · Carburació — C_s vs C_0</h4>
+    <p><b>Enunciat:</b> En un procés de carburació, pot C_s ser menor que C_0?</p>
+    <ul>
+      <li>a) NO, mai</li>
+      <li>b) SÍ, sempre que l'atmosfera controli el procés</li>
+      <li>c) SÍ, només si C_x &lt; C_0</li>
+    </ul>
+    <p><b>Resposta: a) NO</b></p>
+    <div class="key"><b>Per què:</b> Carburació per definició = ENTRAR carboni al material. Això només passa si C_s &gt; C_0 (atmosfera més rica que material). Si C_s &lt; C_0 seria <b>descarburació</b> (sortida de C), un procés diferent.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>📦 Del EXAM 24-25 QP (Apr 2025)</h3>
+
+  <div class="worked">
+    <h4>Q7 · D₀ vs temperatura (trampa clàssica)</h4>
+    <p><b>Enunciat:</b> El factor pre-exponencial D₀ de l'equació d'Arrhenius:</p>
+    <ul>
+      <li>a) augmenta amb la temperatura</li>
+      <li>b) NO depèn de la temperatura</li>
+      <li>c) disminueix amb Q</li>
+    </ul>
+    <p><b>Resposta: b) NO depèn de T</b></p>
+    <div class="key"><b>Per què:</b> D₀ és una propietat INTRÍNSECA del sistema (material + mecanisme). Característica fixa de cada combinació de solut/solvent/estructura. NO canvia amb T. El que canvia amb T és D total via l'exponencial.
+    <br><br><b>Trampa típica:</b> confondre D amb D₀. D sí depèn de T; D₀ no.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q8 · De què NO depèn D</h4>
+    <p><b>Enunciat:</b> El coeficient de difusió D NO depèn de:</p>
+    <ul>
+      <li>a) el temps de difusió</li>
+      <li>b) la temperatura</li>
+      <li>c) l'estructura cristal·lina</li>
+    </ul>
+    <p><b>Resposta: a) temps</b></p>
+    <div class="key"><b>Per què:</b> D és propietat d'UN material a UNA temperatura. NO canvia durant el procés si T és constant. Depèn de T (via Arrhenius), de l'estructura cristal·lina (D canvia BCC vs FCC), del mecanisme, del parell solut-matriu. Però NO del temps.
+    <br><br><b>Implicació pel problema Fick 2a:</b> podem treure D del símbol diferencial perquè és constant.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>📦 Del EXAMS ANTICS (2018-2024)</h3>
+
+  <div class="worked">
+    <h4>02/05/2018 Q5 · Força impulsora</h4>
+    <p><b>Enunciat:</b> La força impulsora de la difusió en estat sòlid és:</p>
+    <ul>
+      <li>a) la temperatura</li>
+      <li>b) la pressió</li>
+      <li>c) el gradient de concentracions</li>
+    </ul>
+    <p><b>Resposta: c) gradient</b></p>
+    <div class="key"><b>Per què:</b> La T proporciona l'energia (mou els àtoms) però la direcció del flux ve determinada pel gradient de concentració. Sense gradient, no hi ha difusió NETA (encara que hi hagi agitació tèrmica).</div>
+  </div>
+
+  <div class="worked">
+    <h4>14/11/2018 Q12 · Flux vs T</h4>
+    <p><b>Enunciat:</b> Per a un procés de difusió estacionari a través d'una làmina, si augmentem la temperatura:</p>
+    <ul>
+      <li>a) el flux disminueix</li>
+      <li>b) el flux augmenta</li>
+      <li>c) el flux no canvia</li>
+    </ul>
+    <p><b>Resposta: b) augmenta</b></p>
+    <div class="key"><b>Per què:</b> T↑ → D↑ (via Arrhenius, l'exponent es fa menys negatiu). Amb D més gran i mateix gradient, J = D·ΔC/Δx augmenta.</div>
+  </div>
+
+  <div class="worked">
+    <h4>14/11/2018 Q13 · D Fick 2a depèn de</h4>
+    <p><b>Enunciat:</b> El coeficient de difusió D a la 2a llei de Fick NO depèn de:</p>
+    <ul>
+      <li>a) el temps</li>
+      <li>b) la temperatura</li>
+      <li>c) l'estructura cristal·lina</li>
+    </ul>
+    <p><b>Resposta: a) temps</b></p>
+    <div class="key"><b>Per què:</b> Mateix concepte que 24-25 Q8. D és constant durant el procés. Pot canviar si T canvia, o si el material cristal·litza de diferent manera, però NO amb t.</div>
+  </div>
+
+  <div class="worked">
+    <h4>08/05/2019 Q2 · Afirmació correcta sobre mecanismes</h4>
+    <p><b>Enunciat:</b> Quina afirmació és correcta sobre la difusió?</p>
+    <ul>
+      <li>a) tots els àtoms difonen per vacàncies</li>
+      <li>b) els àtoms intersticials es mouen per vacàncies</li>
+      <li>c) el C en Fe difon per mecanisme intersticial</li>
+    </ul>
+    <p><b>Resposta: c)</b></p>
+    <div class="key"><b>Per què:</b> El C (radi 0,077 nm) és petit comparat amb el Fe (radi 0,124 nm) → cap en els intersticis de la xarxa. No substitueix àtoms de Fe, s'encaixa entre ells. Això és DIFUSIÓ INTERSTICIAL.</div>
+  </div>
+
+  <div class="worked">
+    <h4>08/05/2019 Q3 · Fick 1a què no varia</h4>
+    <p><b>Enunciat:</b> En difusió estacionària a temps infinit:</p>
+    <ul>
+      <li>a) la concentració canvia lentament</li>
+      <li>b) no hi ha flux</li>
+      <li>c) C_s i el gradient són constants</li>
+    </ul>
+    <p><b>Resposta: c)</b></p>
+    <div class="key"><b>Per què:</b> La definició d'estat estacionari és precisament aquesta: la concentració a cada punt NO canvia amb el temps. Per mantenir això, el flux ha de ser constant (el que entra per un costat = el que surt per l'altre). C_s es manté perquè l'ambient en manté.</div>
+  </div>
+
+  <div class="worked">
+    <h4>19/11/2019 Q5 · D depèn de...</h4>
+    <p><b>Enunciat:</b> El coeficient de difusió D en estat estacionari depèn principalment de:</p>
+    <ul>
+      <li>a) la temperatura</li>
+      <li>b) el temps</li>
+      <li>c) el gruix</li>
+    </ul>
+    <p><b>Resposta: a) temperatura</b></p>
+    <div class="key"><b>Per què:</b> Arrhenius D = D₀·exp(-Q/RT). D és funció de T via l'exponencial. Temps i gruix NO afecten D.</div>
+  </div>
+
+  <div class="worked">
+    <h4>17/11/2021 Q7 · Flux augmenta si...</h4>
+    <p><b>Enunciat:</b> El flux estacionari augmentarà si:</p>
+    <ul>
+      <li>a) el gruix disminueix</li>
+      <li>b) la concentració a banda i banda és constant</li>
+      <li>c) la temperatura baixa</li>
+    </ul>
+    <p><b>Resposta: a) gruix disminueix</b></p>
+    <div class="key"><b>Per què:</b> J = D·ΔC/Δx. Relació inversa amb Δx → menys gruix, més flux. La baixada de T disminuiria D (i J). Concentracions constants mantenen el flux, no l'augmenten.</div>
+  </div>
+
+  <div class="worked">
+    <h4>17/11/2021 Q8 · Vacants vs intersticial</h4>
+    <p><b>Enunciat:</b> La difusió per vacàncies és _____ que per intersticials:</p>
+    <ul>
+      <li>a) més LENTA</li>
+      <li>b) igual</li>
+      <li>c) més RÀPIDA</li>
+    </ul>
+    <p><b>Resposta: a) més lenta</b></p>
+    <div class="key"><b>Per què:</b> Intersticials són àtoms petits, sempre tenen "forats" disponibles per saltar, Q d'activació baixa → difonen ràpid. Vacants requereixen que es generi primer una vacància a prop (limitació per Boltzmann) i l'àtom ha de superar una barrera Q més alta. <b>Intersticial més ràpida.</b>
+    <br><br>⚠ <b>Aquesta pregunta té una contradicció al corpus</b> (vegeu 09/11/2023 Q7). Segueix la resposta "intersticial més ràpida" com a majoritària i físicament correcta.</div>
+  </div>
+
+  <div class="worked">
+    <h4>27/04/2022 Q11 · D BCC vs FCC comparat</h4>
+    <p><b>Enunciat:</b> Tenim el mateix D₀ per a 2 sistemes: D(BCC) amb Q=122 kJ/mol i D(FCC) amb Q=142 kJ/mol. A la mateixa T:</p>
+    <ul>
+      <li>a) D(FCC) &gt; D(BCC)</li>
+      <li>b) D(BCC) &gt; D(FCC) perquè Q és menor</li>
+      <li>c) són iguals</li>
+    </ul>
+    <p><b>Resposta: b)</b></p>
+    <div class="key"><b>Per què:</b> A l'Arrhenius D = D₀·exp(-Q/RT), mateix D₀ i mateixa T → el que té Q menor té D més gran (l'exponent és menys negatiu). BCC (Q=122) &gt; FCC (Q=142). Coherent amb el fet que BCC té APF menor (més espais per moure's intersticial).</div>
+  </div>
+
+  <div class="worked">
+    <h4>27/04/2022 Q12 · De què depèn D₀</h4>
+    <p><b>Enunciat:</b> El factor pre-exponencial D₀ depèn de:</p>
+    <ul>
+      <li>a) la temperatura</li>
+      <li>b) el sistema/empaquetament cristal·lí</li>
+      <li>c) el temps</li>
+    </ul>
+    <p><b>Resposta: b) empaquetament</b></p>
+    <div class="key"><b>Per què:</b> D₀ depèn del parell solut-matriu i de l'estructura cristal·lina (BCC vs FCC vs HCP). Diferents empaquetaments → diferents freqüències de salt efectives → diferent D₀. NO depèn de T ni de t.</div>
+  </div>
+
+  <div class="worked">
+    <h4>16/11/2022 Q6 · N en Fe-α vs Fe-γ</h4>
+    <p><b>Enunciat:</b> El coeficient de difusió intersticial D(N en Fe-α) comparat amb D(N en Fe-γ) amb el mateix D₀:</p>
+    <ul>
+      <li>a) D(N en Fe-α) &gt; D(N en Fe-γ) perquè BCC és més obert intersticial</li>
+      <li>b) iguals</li>
+      <li>c) D(N en Fe-γ) &gt; D(N en Fe-α)</li>
+    </ul>
+    <p><b>Resposta: a)</b></p>
+    <div class="key"><b>Per què:</b> Encara que FCC és més compacte en general (APF=0,74 vs 0,68 de BCC), les seves <b>posicions intersticials són més estretes</b>. BCC, amb APF menor, té intersticis més grans. Per això els àtoms petits (N, C) difonen MÉS RÀPID en BCC que en FCC. Pregunta recurrent.</div>
+  </div>
+
+  <div class="worked">
+    <h4>16/11/2022 Q7 · Difusió estacionari a tub</h4>
+    <p><b>Enunciat:</b> En un tub amb C_int = 2,7 kg/m³ a un costat i C_ext = 0,1 kg/m³ a l'altre, en estat estacionari:</p>
+    <ul>
+      <li>a) la concentració baixa al mig del tub amb el temps</li>
+      <li>b) el gradient és constant</li>
+      <li>c) no hi ha flux</li>
+    </ul>
+    <p><b>Resposta: b)</b></p>
+    <div class="key"><b>Per què:</b> Estat estacionari = concentració a cada punt no canvia amb t. Per això el gradient ha de ser constant (sinó l'hi estaria en un canvi temporal). Hi ha flux constant (de més a menys concentració).</div>
+  </div>
+
+  <div class="worked">
+    <h4>16/11/2022 Q8 · Fick 2a condicions</h4>
+    <p><b>Enunciat:</b> Per aplicar la 2a llei de Fick (carburació) cal que:</p>
+    <ul>
+      <li>a) C_s sigui constant</li>
+      <li>b) el material sigui semi-infinit (no arribi al altre costat)</li>
+      <li>c) totes les anteriors</li>
+    </ul>
+    <p><b>Resposta: c) totes</b></p>
+    <div class="key"><b>Per què:</b> Les condicions de contorn de la solució erf requereixen: C_s fixa (l'atmosfera manté), C_0 inicial uniforme, i material semi-infinit (la perturbació no arriba a l'altre cantó). Sense aquestes condicions, la solució analítica erf NO és vàlida.</div>
+  </div>
+
+  <div class="worked">
+    <h4>26/04/2023 Q7 · Q i velocitat</h4>
+    <p><b>Enunciat:</b> La relació entre l'energia d'activació Q i la velocitat de difusió és:</p>
+    <ul>
+      <li>a) Q gran → difusió LENTA</li>
+      <li>b) Q gran → difusió ràpida</li>
+      <li>c) no hi ha relació</li>
+    </ul>
+    <p><b>Resposta: a)</b></p>
+    <div class="key"><b>Per què:</b> A Arrhenius, l'exponent és -Q/RT. Q més gran → l'exponent més negatiu → el factor exp(-Q/RT) més petit → D més petit → difusió LENTA. Q representa la barrera d'energia que l'àtom ha de superar per saltar.</div>
+  </div>
+
+  <div class="worked">
+    <h4>09/11/2023 Q7 · ⚠ La contradicció (vacants vs intersticial)</h4>
+    <p><b>Enunciat:</b> En la majoria de metalls, la probabilitat de difusió per vacàncies comparada amb intersticial és:</p>
+    <ul>
+      <li>a) menor</li>
+      <li>b) major</li>
+      <li>c) igual</li>
+    </ul>
+    <p><b>Resposta oficial: b) major (probabilitat vacants &gt; intersticial)</b></p>
+    <div class="key">⚠ <b>CONTRADICCIÓ amb altres exàmens.</b> Aquesta pregunta s'interpreta com "probabilitat que un àtom QUALSEVOL difongui per vacants", que és cert per àtoms grans (substitucionals). PERÒ per àtoms petits (C, N) l'intersticial és més ràpida.
+    <br><br><b>A l'examen, llegeix bé:</b> si pregunta per la VELOCITAT → intersticial més ràpida. Si pregunta per la PROBABILITAT en un material qualsevol → depèn del solut.</div>
+  </div>
+
+  <div class="worked">
+    <h4>09/11/2023 Q9 · D intersticial FCC vs BCC</h4>
+    <p><b>Enunciat:</b> La difusió intersticial d'un àtom petit (C, N) és generalment més gran en:</p>
+    <ul>
+      <li>a) FCC</li>
+      <li>b) BCC (té intersticis més oberts)</li>
+      <li>c) són iguals</li>
+    </ul>
+    <p><b>Resposta: b) BCC</b></p>
+    <div class="key"><b>Per què:</b> Mateix argument que 16/11/2022 Q6. BCC té APF menor → intersticis més grans → àtom intersticial pot saltar més fàcilment.</div>
+  </div>
+
+  <div class="worked">
+    <h4>23/04/2024 Q7 · Limitar difusió</h4>
+    <p><b>Enunciat:</b> Per limitar la difusió d'un gas a través d'una paret metàl·lica:</p>
+    <ul>
+      <li>a) augmentar el gruix</li>
+      <li>b) pujar la temperatura</li>
+      <li>c) les dues anteriors</li>
+    </ul>
+    <p><b>Resposta: a) augmentar gruix</b></p>
+    <div class="key"><b>Per què:</b> J = D·ΔC/Δx → augmentar Δx redueix J. Pujar T augmenta D i per tant J (empitjora la situació). Si vols frenar la difusió, cal gruix gran I/O T baixa.</div>
+  </div>
+
+  <div class="worked">
+    <h4>07/11/2024 Q6 · Carburació maximitzar</h4>
+    <p><b>Enunciat:</b> Per maximitzar la velocitat de carburació d'una peça:</p>
+    <ul>
+      <li>a) baixar Cs</li>
+      <li>b) baixar T</li>
+      <li>c) augmentar Cs i T</li>
+    </ul>
+    <p><b>Resposta: c)</b></p>
+    <div class="key"><b>Per què:</b> Vols més flux entrant de C → necessites més ΔC (augmenta C_s) i més D (augmenta T). Les dues alhora maximitzen la velocitat de penetració.</div>
+  </div>
+
+  <div class="worked">
+    <h4>07/11/2024 Q7 · Tractament difusió</h4>
+    <p><b>Enunciat:</b> En un tractament de difusió sense defectes, quin és correcte?</p>
+    <ul>
+      <li>a) per vacants és més ràpida</li>
+      <li>b) per intersticials és més ràpida que per vacants</li>
+      <li>c) iguals</li>
+    </ul>
+    <p><b>Resposta: b) intersticial més ràpida</b></p>
+    <div class="key"><b>Per què:</b> Mateix motiu que sempre — intersticials petits, Q baixa, forats disponibles. Coincideix amb 17/11/2021 Q8.</div>
+  </div>
+</div>
+
+<h2>8 · ⚠ RED FLAGS recurrents al test</h2>
+<div class="card soft">
+  <table>
+    <tr><th>Error</th><th>Per evitar-ho</th></tr>
+    <tr><td>T en °C a Arrhenius</td><td>SEMPRE passa a K (+ 273)</td></tr>
+    <tr><td>Confondre D i D₀</td><td>D₀ és la constant; D = D₀·exp(-Q/RT) depèn de T</td></tr>
+    <tr><td>Oblidar signe negatiu en -Q/RT</td><td>Si t'ix D &gt; D₀, has fet aquest error</td></tr>
+    <tr><td>Q en kJ sense passar a J</td><td>Multiplica per 1000 si uses R</td></tr>
+    <tr><td>Interpretar "limitar difusió" com pujar T</td><td>Pujar T = més difusió! Per limitar-la, baixa T o puja gruix</td></tr>
+    <tr><td>Usar erf(z) directament per calcular t</td><td>Cal aïllar z primer, després t = x²/(4Dz²)</td></tr>
+    <tr><td>Escollir (D₀, Q) incorrectes de la taula</td><td>Comprova si és vacant o intersticial, BCC o FCC, rang de T</td></tr>
+  </table>
+</div>
+
+<h2>9 · Gestió d'unitats al problema T3</h2>
+<div class="card">
+  <p>Convencions SI per a difusió:</p>
+  <table>
+    <tr><th>Variable</th><th>Unitat SI</th><th>Alternativa comuna</th></tr>
+    <tr><td>J</td><td>kg/(m²·s)</td><td>—</td></tr>
+    <tr><td>D</td><td>m²/s</td><td>cm²/s (menys comú)</td></tr>
+    <tr><td>C</td><td>kg/m³</td><td>%w, mol/m³, at/m³</td></tr>
+    <tr><td>x, Δx</td><td>m</td><td>mm (pas: ÷1000)</td></tr>
+    <tr><td>t</td><td>s</td><td>h (pas: ×3600), dies (×86400), setmanes (×604800), mesos (×2,59·10⁶)</td></tr>
+    <tr><td>T</td><td>K</td><td>°C (pas: +273)</td></tr>
+    <tr><td>Q</td><td>J/mol</td><td>kJ/mol (×1000), eV/àtom (×96,49 a kJ/mol)</td></tr>
+  </table>
+
+  <div class="key"><b>Regla d'or:</b> abans de fer càlculs, escriu TOTES les dades en SI. Així mai surt "10⁻²⁴ m²/s" o "10²¹ kg/m³" (valors absurds).</div>
+</div>
+
+<div class="feyn">
+  <h2>Checkpoint Feynman — explica amb les teves paraules</h2>
+  <ol>
+    <li>Què és la força impulsora de la difusió en estat sòlid?</li>
+    <li>Per què D₀ no depèn de T però D sí?</li>
+    <li>Si dues fórmules de D tenen el mateix D₀ però diferent Q, quina dóna més difusió a la mateixa T?</li>
+    <li>Per què la difusió és més ràpida en BCC que en FCC per àtoms petits?</li>
+    <li>Què significa "estat estacionari" i què significa "no estacionari"?</li>
+    <li>Si et diuen que ΔC×2 i Δx÷2, quin factor canvia el flux?</li>
+    <li>Per què la 2a llei de Fick necessita la funció erf?</li>
+    <li>Quan s'escalfa un material, com canvia D? Quant aproximadament si es duplica T (mantenint T en K)?</li>
+  </ol>
+  <p class="note">Si pots respondre totes 8 sense mirar, tens T3 dominat.</p>
+</div>
+
+</div>
+</body>
+</html>

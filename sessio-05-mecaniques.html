@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Tema 7 — Propietats Mecàniques</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false,
+    errorColor: '#ff7a7a'
+  });
+});
+</script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --elastic:#5ad7a3; --plastic:#ffd86b; --fracture:#ff7aa3; --accent:#ffd86b; --border:#262c3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:36px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:48px 0 12px;font-weight:600;border-left:3px solid var(--accent);padding-left:12px}
+h3{font-size:17px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.nav{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:13px;transition:all 0.15s}
+.nav a:hover{background:var(--panel);border-color:var(--accent)}
+.nav a.current{background:rgba(255,216,107,0.1);border-color:var(--accent);color:var(--accent)}
+.hero{padding:26px 30px;background:linear-gradient(135deg,#1b2033,#141826);border:1px solid var(--border);border-radius:14px;margin-bottom:28px}
+.hero .q{font-size:18px;color:var(--accent);margin-top:12px;font-style:italic}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0}
+.card.soft{background:var(--panel2)}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:780px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.key{background:rgba(255,216,107,.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0}
+.key b{color:var(--accent)}
+.formula{background:#0a0d13;border:1px solid var(--border);border-radius:8px;padding:14px;margin:10px 0;font-size:15px;overflow-x:auto}
+.analogy{background:#0c1220;border-left:3px solid #ffb3d9;padding:10px 14px;border-radius:6px;font-size:14px;color:#d0d7e6;margin-top:10px}
+.analogy b{color:#ffb3d9}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--dim);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td.num{text-align:center;font-family:'SF Mono',Consolas,monospace}
+.note{font-size:13px;color:var(--dim);margin-top:8px}
+.feyn{background:linear-gradient(135deg,#1a1f2e,#231a2e);border:1px solid #3a2a4a;padding:22px 26px;border-radius:12px;margin-top:36px}
+.feyn h2{border:none;padding:0;margin:0 0 10px;color:#ffb3d9}
+.worked{background:#0c1220;border:1px solid #2a3446;border-radius:10px;padding:16px 18px;margin:14px 0;font-size:14px}
+.worked h4{margin:0 0 10px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.step{background:#0c1220;border-left:3px solid var(--accent);padding:14px 18px;border-radius:6px;margin:14px 0}
+.step h4{margin:0 0 8px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:0.5px}
+.ascii{background:#0a0d13;border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;white-space:pre;overflow-x:auto;color:#c5cde0;line-height:1.5}
+#stress-strain-chart{height:480px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border);padding:5px 10px;border-radius:6px;font-size:13px;margin:4px 4px 0 0}
+.zone{padding:12px;border-radius:8px;margin:6px 0}
+.zone.elastic{background:rgba(90,215,163,0.1);border-left:3px solid var(--elastic)}
+.zone.plastic{background:rgba(255,216,107,0.1);border-left:3px solid var(--plastic)}
+.zone.fracture{background:rgba(255,122,163,0.1);border-left:3px solid var(--fracture)}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.hunt:hover{background:rgba(255,122,163,.12)}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+.ctm-nav a.test:hover{background:rgba(90,215,163,.12)}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html" data-page="sessio-01-enllacos">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html" data-page="sessio-02-cristalografia">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html" data-page="sessio-03-difusio">T3 · Difusió</a>
+  <a href="sessio-05-mecaniques.html" data-page="sessio-05-mecaniques">T7 · Mecàniques</a>
+  <a href="cacador-preguntes.html" class="hunt" data-page="cacador-preguntes">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test" data-page="simulador-test">🧪 Test</a>
+</div>
+<script>
+(function(){
+  var path = window.location.pathname.split('/').pop().replace('.html','');
+  document.querySelectorAll('.ctm-nav a').forEach(function(a){
+    if (a.dataset.page === path) a.classList.add('active');
+  });
+})();
+</script>
+</nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="sessio-01-enllacos.html">← T1</a>
+  <a href="sessio-02-cristalografia.html">T2</a>
+  <a class="current">T7 · Propietats mecàniques</a>
+  <a href="../REPORT-PARCIAL-1.md">📊 Informe</a>
+</div>
+
+<div class="hero">
+  <h1>Tema 7 — Propietats mecàniques<small>CTM · Parcial 1 · Problema 2 del examen · Fase A</small></h1>
+  <p class="q">Quan estiris un material, què passa dins l'àtom? Per què hi ha un punt en què si el deixes torna, i un altre en què es queda "esquinçat" per sempre?</p>
+  <p>Aquest tema és bàsicament <b>un únic gràfic</b> (σ-ε) i entendre tots els paràmetres que se'n treuen. Una vegada domines la corba, ets l'amo de tot T7.</p>
+</div>
+
+<h2>0 · El que hauràs de saber de memòria</h2>
+<div class="card">
+  <p>Abans d'entrar, llista de conceptes crítics per l'examen (dels 17 parcials analitzats):</p>
+  <table>
+    <tr><th>Concepte</th><th>Freqüència</th><th>Format</th></tr>
+    <tr><td>Mòdul de Young = rigidesa</td><td>44%</td><td>Test conceptual</td></tr>
+    <tr><td>Ductilitat = deformar-se plàstica</td><td>33%</td><td>Test conceptual</td></tr>
+    <tr><td>Tenacitat = àrea sota corba</td><td>33%</td><td>Test conceptual</td></tr>
+    <tr><td>Recuperació 100% elàstica sub-σy</td><td>22%</td><td>Test trampa</td></tr>
+    <tr><td>%EL, %RA</td><td>22%</td><td>Càlcul</td></tr>
+    <tr><td>σy mètode 0,2% offset</td><td>22%</td><td>Test conceptual</td></tr>
+    <tr><td>KIC tenacitat fractura</td><td>22%</td><td>Càlcul ocasional</td></tr>
+    <tr><td>Poisson ν</td><td>~30% problema</td><td>Càlcul</td></tr>
+    <tr><td>σ real vs enginyeril</td><td>~10%</td><td>Càlcul ocasional</td></tr>
+    <tr><td>Problema lectura corba σ-ε</td><td>35-40%</td><td>Problema 2</td></tr>
+  </table>
+</div>
+
+<h2>1 · Què és tensió i què és deformació?</h2>
+<div class="card">
+  <h3>Tensió σ — la força normalitzada</h3>
+  <p>Si empenys una barra amb una força F, com de "estressada" està? Depèn de la FORÇA I DE L'ÀREA:</p>
+  <div class="formula">
+    $$\sigma = \frac{F}{A_0}$$
+  </div>
+  <p><b>Unitats:</b> Pa = N/m² · MPa = 10⁶ Pa · GPa = 10⁹ Pa</p>
+
+  <div class="analogy"><b>Analogia:</b> empeny una agulla contra la teva mà amb 1 N — et travessa la pell. Empeny una pilota de tennis amb 1 N — no passa res. Mateixa FORÇA, diferent ÀREA. <b>La tensió σ mesura la "intensitat local" de la força</b>, no la força total.</div>
+
+  <p class="note"><b>A₀</b> (àrea original) significa que usem l'àrea inicial, no la que té durant l'assaig (que canvia). Aquesta és la <b>tensió ENGINYERIL</b>. La tensió REAL useria l'àrea instantània.</p>
+
+  <h3>Deformació ε — l'estirament normalitzat</h3>
+  <div class="formula">
+    $$\varepsilon = \frac{\Delta L}{L_0} = \frac{L_f - L_0}{L_0}$$
+  </div>
+  <p><b>Unitats:</b> adimensional (és una fracció) o en % si ho multipliques per 100</p>
+  <p><b>Interpretació:</b> si ε = 0,01 → el material s'ha estirat un 1% respecte la seva mida inicial.</p>
+
+  <div class="analogy"><b>Analogia:</b> una corda d'1 m que s'estira 2 cm té ε = 0,02 (2%). Una corda de 10 m que s'estira 2 cm té ε = 0,002 (0,2%). <b>La deformació mesura quant relativament s'ha estirat, no quant en valor absolut.</b></div>
+
+  <div class="key"><b>Per què normalitzem?</b> Perquè així les propietats σ-ε són del MATERIAL, no de la mostra concreta. Una barra de ferro de 1 cm o de 10 m té la mateixa corba σ-ε.</div>
+</div>
+
+<h2>2 · La corba σ-ε — el gràfic ESTRELLA del tema</h2>
+<div class="card">
+  <p>Prenem una proveta, l'estirem a poc a poc i mesurem σ vs ε. El resultat és <b>aquesta corba</b>. TOT T7 es resumeix en saber llegir-la.</p>
+  <div id="stress-strain-chart"></div>
+
+  <h3>Els 4 punts crítics (de memòria)</h3>
+  <table>
+    <tr><th>Símbol</th><th>Nom</th><th>Què és</th></tr>
+    <tr><td>σ_p</td><td><b>Límit proporcional</b></td><td>On la recta deixa de ser recta (difícil de mesurar)</td></tr>
+    <tr><td>σ_y</td><td><b>Límit elàstic</b> (yield)</td><td>A partir d'aquí la deformació deixa de ser recuperable (0,2% offset)</td></tr>
+    <tr><td>σ_m o σ_u (UTS)</td><td><b>Tensió màxima</b></td><td>El cim de la corba — màxima tensió abans d'estricció</td></tr>
+    <tr><td>σ_r</td><td><b>Tensió de ruptura</b></td><td>Quan el material trenca físicament</td></tr>
+  </table>
+</div>
+
+<h2>3 · Zona ELÀSTICA — recuperació total</h2>
+<div class="card">
+  <div class="zone elastic">
+    <h3>Característiques clau</h3>
+    <ul>
+      <li>La relació σ-ε és <b>LINEAL</b> (recta)</li>
+      <li>Si retires la càrrega, la proveta <b>torna a la longitud original</b> (100% recuperació)</li>
+      <li>Els àtoms s'han separat lleugerament del seu equilibri però no s'han reorganitzat</li>
+    </ul>
+  </div>
+
+  <h3>🔥 Llei de Hooke (fórmula clau)</h3>
+  <div class="formula">
+    $$\sigma = E \cdot \varepsilon$$
+  </div>
+  <p><b>E = mòdul de Young</b> (o mòdul elàstic). És el <b>pendent de la recta</b> a la zona elàstica.</p>
+
+  <div class="key"><b>E mesura la RIGIDESA del material:</b>
+    <ul>
+      <li>E gran → material rígid (cal molta tensió per estirar-lo una mica). Ex: acer E ≈ 210 GPa, tungstè E ≈ 400 GPa</li>
+      <li>E petit → material flexible. Ex: goma E ≈ 0,01 GPa, PLA E ≈ 3,5 GPa</li>
+      <li>E és una propietat <b>intrínseca</b> del material: no canvia segons mida ni forma</li>
+    </ul>
+  </div>
+
+  <div class="analogy"><b>Analogia:</b> dues molles — una fina (E petit) i una gruixuda (E gran). Amb la mateixa força, la fina s'estira molt (ε gran) i la gruixuda poc (ε petit). <b>E és la "duresa" d'una molla</b>.</div>
+
+  <h3>⚠ Trampa examen: E NO depèn de la temperatura</h3>
+  <p>Als problems de lectura de gràfics σ-ε a diferents T (−200°C, 25°C, 100°C), la <b>part LINEAL inicial és la mateixa</b>. Només canvien σy, σm, %EL. E és constant.</p>
+  <p><b>Per què?</b> E depèn de la força dels enllaços atòmics. La temperatura els agita, però NO els canvia fonamentalment (fins a prop de fondre's).</p>
+</div>
+
+<h2>4 · Coeficient de Poisson — l'efecte "lateral"</h2>
+<div class="card">
+  <p>Quan estires un material, no només s'allarga — també <b>s'estreny lateralment</b>. És com quan ebstires un xiclet: es fa més prim.</p>
+
+  <div class="formula">
+    $$\nu = -\frac{\varepsilon_\text{lateral}}{\varepsilon_\text{axial}}$$
+  </div>
+
+  <p><b>El signe negatiu</b> és perquè una deformació axial positiva (allargament) causa una deformació lateral negativa (aprimament). Així ν queda positiu.</p>
+
+  <table>
+    <tr><th>Material</th><th>ν típic</th></tr>
+    <tr><td>Acer, Fe</td><td>0,28 – 0,30</td></tr>
+    <tr><td>Al, Cu</td><td>0,33 – 0,35</td></tr>
+    <tr><td>Cautxú</td><td>~0,50 (quasi incompressible)</td></tr>
+    <tr><td>Suro</td><td>~0 (no s'estreny lateralment!)</td></tr>
+  </table>
+
+  <div class="key"><b>Com usar-lo al problema:</b>
+    <p>Donat ε_axial (calculable des de σ = E·ε), trobes ε_lateral:</p>
+    $$\varepsilon_\text{lateral} = -\nu \cdot \varepsilon_\text{axial}$$
+    <p>I després el canvi de diàmetre:</p>
+    $$\Delta d = \varepsilon_\text{lateral} \cdot d_0$$
+  </div>
+</div>
+
+<h2>5 · Zona PLÀSTICA — sense retorn</h2>
+<div class="card">
+  <div class="zone plastic">
+    <h3>Característiques</h3>
+    <ul>
+      <li>A partir de σy, la deformació NO és reversible</li>
+      <li>Els àtoms es desplacen permanentment per moviment de dislocacions (T8A!)</li>
+      <li>Si retires la càrrega, el material torna <b>paral·lelament</b> a la pendent elàstica, però no torna a ε=0</li>
+      <li>El material <b>s'endureix</b> (més tensió per deformar més) — fenomen d'<b>strain hardening</b></li>
+    </ul>
+  </div>
+
+  <h3>Punt σy — Mètode del 0,2% offset (memoritza!)</h3>
+  <p>Com el punt on la corba deixa de ser recta és difícil de veure, s'usa la convenció:</p>
+  <ol>
+    <li>Traça una recta paral·lela a la zona elàstica</li>
+    <li>Desplaça-la horitzontalment 0,002 (0,2% de ε)</li>
+    <li>On aquesta recta talla la corba real = σy</li>
+  </ol>
+  <p class="note">Vol dir: σy és la tensió on el material <b>ja s'ha deformat permanentment 0,2%</b>. Convenció estàndard internacional.</p>
+
+  <h3>σm = cim de la corba (UTS)</h3>
+  <p>Punt on la corba arriba al màxim. A partir d'aquí comença l'<b>estricció</b> (necking): la proveta s'estreny localment en una zona concreta, i es trenca allà. Encara que la proveta cedeix, σ (tensió enginyeril) baixa perquè està calculada amb A₀ inicial, no amb la A real que s'ha reduït.</p>
+</div>
+
+<h2>6 · Les 3 "t's" que SEMPRE cauen — Ductilitat, Resiliència, Tenacitat</h2>
+<div class="card">
+  <p>Tres conceptes similars però diferents. Confondre'ls = perdre punts.</p>
+
+  <div class="grid grid-3">
+
+    <div class="zone elastic">
+      <h4>🟢 RESILIÈNCIA (Ur)</h4>
+      <p><b>Energia ABSORBIDA en la zona elàstica.</b> Àrea sota el triangle de la part recta (fins a σy).</p>
+      <div class="formula">$$U_r = \frac{\sigma_y^2}{2E}$$</div>
+      <p><b>Unitats:</b> J/m³</p>
+      <p>Material amb Ur alta = pot absorbir molta energia i tornar al seu estat. <b>Exemples:</b> molla, arc, corda salta.</p>
+    </div>
+
+    <div class="zone plastic">
+      <h4>🟡 DUCTILITAT</h4>
+      <p><b>Capacitat de deformar-se PLÀSTICAMENT abans de trencar.</b> Mida: %EL (allargament) o %RA (reducció àrea).</p>
+      <div class="formula">$$\%EL = \frac{L_f - L_0}{L_0} \cdot 100$$</div>
+      <div class="formula">$$\%RA = \frac{A_0 - A_f}{A_0} \cdot 100$$</div>
+      <p>Material dúctil = es pot estirar o doblegar sense trencar. <b>Exemples:</b> coure, or, acer recuit.</p>
+    </div>
+
+    <div class="zone fracture">
+      <h4>🔴 TENACITAT</h4>
+      <p><b>ENERGIA TOTAL absorbida fins a trencar.</b> Àrea TOTAL sota tota la corba (elàstica + plàstica).</p>
+      <div class="formula">$$\text{tenacitat} \approx \int_0^{\varepsilon_r} \sigma \, d\varepsilon$$</div>
+      <p>Necessita ser <b>fort I dúctil alhora</b>. <b>Exemple:</b> acer modern, no vidre.</p>
+    </div>
+
+  </div>
+
+  <div class="key"><b>⚠ Diferències que cauen a l'examen:</b>
+    <ul>
+      <li><b>Material A i B tenen mateix σy, però B té més %EL → B més TENAÇ</b> (més àrea sota corba)</li>
+      <li><b>Vidre</b> = alta resistència (σ_y alt) però frà gil (poca %EL) → baixa tenacitat</li>
+      <li><b>Cautxú</b> = baixa σy però molt %EL → tenacitat mitjana</li>
+      <li><b>Acer temprat</b> = σy gran + %EL decent → tenacitat alta</li>
+    </ul>
+  </div>
+</div>
+
+<h2>7 · Tensió REAL vs ENGINYERIL</h2>
+<div class="card">
+  <p>Al laboratori mesurem σ amb l'àrea original A₀ (fàcil). Però l'àrea real va canviant. Per això hi ha dues versions:</p>
+
+  <table>
+    <tr><th>Tipus</th><th>Tensió</th><th>Deformació</th></tr>
+    <tr><td><b>Enginyeril</b></td><td>$\sigma = F/A_0$</td><td>$\varepsilon = \Delta L/L_0$</td></tr>
+    <tr><td><b>Real</b></td><td>$\sigma_T = \sigma(1+\varepsilon)$</td><td>$\varepsilon_T = \ln(1+\varepsilon)$</td></tr>
+  </table>
+
+  <div class="key"><b>Per què?</b> La corba enginyeril baixa després de σm perquè calculem amb A₀, però la tensió REAL sobre l'estricció segueix pujant. La corba real no té "cim" — segueix pujant fins a ruptura.</div>
+
+  <p class="note">A l'examen, sovint et poden demanar passar d'un a l'altre. La fórmula és directa — memoritza: "multiplica per (1+ε) i fes log de (1+ε)".</p>
+</div>
+
+<h2>8 · Duresa (menys important però pot caure)</h2>
+<div class="card">
+  <p>Duresa = resistència a la penetració. Tres mètodes:</p>
+
+  <table>
+    <tr><th>Test</th><th>Penetrador</th><th>Aplicació</th></tr>
+    <tr><td><b>Brinell (HB)</b></td><td>Bola acer</td><td>Metalls tous a mitjans</td></tr>
+    <tr><td><b>Vickers (HV)</b></td><td>Piràmide diamant (quadrada)</td><td>Qualsevol metall</td></tr>
+    <tr><td><b>Rockwell (HRC, HRB)</b></td><td>Con diamant o bola</td><td>Més ràpid, ús industrial</td></tr>
+  </table>
+
+  <div class="key"><b>Relació aprox. amb UTS:</b>
+    $$\sigma_u \text{(MPa)} \approx 3{,}45 \cdot \text{HB}$$
+    <p>La duresa correlaciona amb la resistència. Més HB = més σ_u.</p>
+  </div>
+</div>
+
+<h2>9 · Fractura — tenacitat de fractura (KIC)</h2>
+<div class="card">
+  <p>Els materials amb una esquerda interna es trenquen a tensions MÉS BAIXES que sense esquerda. La "gravetat" de l'esquerda es mesura amb <b>KIC</b>.</p>
+
+  <div class="formula">
+    $$K_{IC} = Y \cdot \sigma \cdot \sqrt{\pi \cdot a}$$
+  </div>
+  <p>
+    <b>KIC</b> = tenacitat de fractura (MPa·√m) - PROPIETAT INTRÍNSECA del material <br>
+    <b>σ</b> = tensió aplicada (MPa) <br>
+    <b>a</b> = mida de l'esquerda (m) <br>
+    <b>Y</b> = factor geomètric (sovint ≈ 1)
+  </p>
+
+  <div class="key"><b>Quan es trenca un material amb esquerda?</b>
+    <p>Quan $K$ (calculat) supera $K_{IC}$ (propietat del material).</p>
+    <p>Inversament: la mida d'esquerda CRÍTICA = $a_c = \left(\dfrac{K_{IC}}{Y\sigma}\right)^2 / \pi$</p>
+  </div>
+</div>
+
+<h2>10 · Fatiga (poc freqüent, però apareix)</h2>
+<div class="card">
+  <p>Un material sotmès a <b>càrregues cícliques</b> (contínues anades i tornades) pot trencar-se a tensions inferiors a σy. És el que passa als avions, ponts, engranatges.</p>
+
+  <h3>Corba S-N (Wöhler)</h3>
+  <div class="ascii">
+   σ (tensió)
+      |
+      |●●●●_______
+      |         ●●●●●●●
+      |                ●●●●●●●●●
+      |                         ●●●●●●  ← σe (límit fatiga)
+      |___________________________________
+                                  log N (cicles)
+  </div>
+  <p><b>Límit de fatiga σe:</b> per sota d'aquesta tensió, el material aguanta infinits cicles (típic en acer). Per a molts no-ferrosos (Al, Cu), no existeix límit clar — sempre trenquen si esperes prou.</p>
+</div>
+
+<h2>11 · PROBLEMA TIPUS — lectura de corba σ-ε</h2>
+<div class="card">
+  <p>El típic problema 2 del parcial: donada una corba σ-ε (sovint a 3 temperatures diferents), calcula tot.</p>
+
+  <div class="step">
+    <h4>Dades que et donaran a la gràfica</h4>
+    <p>Et donen 1 o 3 corbes. Per cada corba has de llegir:</p>
+    <ul>
+      <li>Pendent de la recta inicial → <b>E</b></li>
+      <li>On la recta deixa de ser recta (o mètode 0,2% offset) → <b>σy</b></li>
+      <li>Cim de la corba → <b>σm (UTS)</b></li>
+      <li>Últim punt abans de trencar → <b>σr</b></li>
+      <li>ε final → <b>%EL</b></li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h4>Preguntes típiques</h4>
+    <ol>
+      <li>"Calcula E, σy, σm, σr, %EL, Ur a cada temperatura"</li>
+      <li>"Aquest cable de diàmetre d pot suportar una càrrega F sense deformar plàsticament?"
+        <br>→ Calcula σ = F/A i compara amb σy. Si σ &lt; σy → sí.
+      </li>
+      <li>"Quin diàmetre tindrà el cable sota càrrega? (usa Poisson)"
+        <br>→ ε_axial = σ/E; ε_lateral = -ν·ε_axial; Δd = ε_lateral·d₀
+      </li>
+      <li>"Quin material és més dúctil/tenaç?"
+        <br>→ Més %EL = més dúctil. Més àrea sota corba = més tenaç.
+      </li>
+    </ol>
+  </div>
+
+  <div class="worked">
+    <h4>🧮 Exemple inspirat en 25-26 Q1 P2</h4>
+    <p><b>Dades:</b> proveta l₀ = 20 cm, d₀ = 2 mm, cable de test a 25°C. Corba σ-ε dóna: E = 25 GPa, σy = 160 MPa. Càrrega aplicada = 30 N. ν = 0,29.</p>
+
+    <p><b>Pas 1 · Pot suportar la càrrega sense deformar plàsticament?</b></p>
+    <p>Àrea del cable: $A = \pi d^2/4 = \pi (0{,}002)^2/4 = 3{,}14 \cdot 10^{-6}$ m² = 3,14 mm²</p>
+    <p>Tensió aplicada: $\sigma = F/A = 30/3{,}14 \cdot 10^{-6} = 9{,}55 \cdot 10^6$ Pa = 9,55 MPa</p>
+    <p>Com 9,55 &lt; 160 MPa (σy): <b>SÍ, suporta la càrrega sense deformar plàsticament.</b></p>
+
+    <p><b>Pas 2 · Quin és el diàmetre final amb càrrega?</b></p>
+    <p>ε_axial = σ/E = 9,55/25 000 = 3,82·10⁻⁴</p>
+    <p>ε_lateral = -ν·ε_axial = -0,29·3,82·10⁻⁴ = -1,11·10⁻⁴</p>
+    <p>Δd = ε_lateral · d₀ = -1,11·10⁻⁴ · 2 mm = -2,22·10⁻⁴ mm ≈ -0,22 μm</p>
+    <p>d_final = d₀ + Δd = 2,000 mm - 0,00022 mm ≈ <b>1,99978 mm</b></p>
+    <p class="note">El canvi és minúscul — un parell de centenars de nanòmetres. Té sentit físic (estirar poc = canviar diàmetre poc).</p>
+
+    <p><b>Pas 3 · Calcula la resiliència Ur</b></p>
+    <div class="formula">
+      $$U_r = \frac{\sigma_y^2}{2E} = \frac{(160 \cdot 10^6)^2}{2 \cdot 25 \cdot 10^9} = \frac{2{,}56 \cdot 10^{16}}{5 \cdot 10^{10}} = 5{,}12 \cdot 10^5 \text{ J/m}^3 = 0{,}51 \text{ MPa}$$
+    </div>
+  </div>
+</div>
+
+<h2>12 · Fórmules que cal saber de memòria</h2>
+<div class="card soft">
+  <table>
+    <tr><th>Fórmula</th><th>Què fa</th></tr>
+    <tr><td>$\sigma = F/A_0$</td><td>Tensió enginyeril</td></tr>
+    <tr><td>$\varepsilon = \Delta L/L_0$</td><td>Deformació enginyeril</td></tr>
+    <tr><td>$\sigma = E \cdot \varepsilon$</td><td>Llei Hooke (elàstic)</td></tr>
+    <tr><td>$\nu = -\varepsilon_\text{lat}/\varepsilon_\text{axial}$</td><td>Poisson</td></tr>
+    <tr><td>$U_r = \sigma_y^2/(2E)$</td><td>Resiliència</td></tr>
+    <tr><td>$\%EL = (L_f-L_0)/L_0 \cdot 100$</td><td>Ductilitat</td></tr>
+    <tr><td>$\%RA = (A_0-A_f)/A_0 \cdot 100$</td><td>Reducció àrea</td></tr>
+    <tr><td>$\sigma_T = \sigma(1+\varepsilon)$</td><td>Tensió real</td></tr>
+    <tr><td>$\varepsilon_T = \ln(1+\varepsilon)$</td><td>Deformació real</td></tr>
+    <tr><td>$K_{IC} = Y\sigma\sqrt{\pi a}$</td><td>Tenacitat fractura</td></tr>
+  </table>
+</div>
+
+<h2>13 · 📋 TOTES les preguntes T7 dels parcials (2018-2025)</h2>
+<div class="card">
+  <p>Del corpus de 17 exàmens analitzats, aquestes són TOTES les preguntes de Tema 7 amb les respostes correctes i el <b>per què</b>. Estudia-les una per una — són les més probables al teu examen.</p>
+</div>
+
+<div class="card">
+  <h3>EXAM 25-26 Q1 (Nov 2025) — les 4 preguntes més rellevants (mateix scope que tu)</h3>
+
+  <div class="worked">
+    <h4>Q12 · Mòdul elàstic (conceptual)</h4>
+    <p><b>Enunciat:</b> El mòdul d'elasticitat està relacionat amb:</p>
+    <ul>
+      <li>a) la resistència a la deformació elàstica</li>
+      <li>b) la ductilitat del material</li>
+      <li>c) la tenacitat</li>
+    </ul>
+    <p><b>Resposta correcta: a)</b></p>
+    <div class="key"><b>Per què:</b> El mòdul de Young E és el pendent de la zona elàstica. Com més gran E, més tensió cal per produir una deformació elàstica → més "resistència" a deformar-se elàsticament. <b>Trampa:</b> confondre amb σy (la tensió on comença la plasticitat) o amb tenacitat (energia). Rigidesa/resistència a la deformació elàstica = E.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q13 · Recuperació elàstica ⚠ (pregunta trampa)</h4>
+    <p><b>Enunciat:</b> Un cable de coure té una longitud inicial l₀ = 10,00 cm. S'aplica una tracció fins al 75% del límit elàstic i s'observa Δl = 0,3 mm. Després de retirar la càrrega, quina és la longitud final l_f?</p>
+    <ul>
+      <li>a) 10,00 cm</li>
+      <li>b) 10,03 cm</li>
+      <li>c) 10,04 cm</li>
+    </ul>
+    <p><b>Resposta correcta: a) 10,00 cm</b></p>
+    <div class="key"><b>Per què:</b> Com la tracció és NOMÉS al 75% del límit elàstic (σ &lt; σy), el material està dins la <b>zona elàstica</b>. Per tant, en retirar la càrrega, <b>torna al 100% a la longitud original</b>. Δl = 0,3 mm és durant l'aplicació de càrrega, NO després.
+    <br><br><b>Trampa tipus:</b> et fan pensar que perquè s'ha estirat 0,3 mm, l_f ha de ser 10 + 0,03 = 10,03 cm. Fals — la deformació elàstica és reversible. Per sota σy SEMPRE torna al 100%.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q14 · Tenacitat vs resistència</h4>
+    <p><b>Enunciat:</b> Dos materials A i B tenen el mateix límit elàstic (σy), però A té %EL = 10% i B té %EL = 25%. Què es pot afirmar?</p>
+    <ul>
+      <li>a) A és més resistent que B</li>
+      <li>b) A i B tenen la mateixa resiliència</li>
+      <li>c) B és més tenaç que A</li>
+    </ul>
+    <p><b>Resposta correcta: c) B és més tenaç que A</b></p>
+    <div class="key"><b>Per què:</b> Tenacitat = àrea TOTAL sota la corba σ-ε. Si els dos materials tenen el mateix σy (mateixa zona elàstica) però B té més ductilitat (25% vs 10%), B deforma molt més abans de trencar-se → més àrea → <b>més tenaç</b>.
+    <br><br>L'opció (a) "A més resistent" és falsa: si tenen el mateix σy, són igual de resistents a l'inici de la plasticitat. L'opció (b) "mateixa resiliència" podria ser certa (Ur = σy²/2E, depèn de σy i E, no de %EL) però la pregunta demana la diferència més important, que és la tenacitat.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q15 · Definició de ductilitat</h4>
+    <p><b>Enunciat:</b> Un material dúctil es caracteritza per:</p>
+    <ul>
+      <li>a) alt mòdul elàstic</li>
+      <li>b) deformar-se plàsticament abans de fracturar</li>
+      <li>c) trencar-se sense deformació prèvia</li>
+    </ul>
+    <p><b>Resposta correcta: b)</b></p>
+    <div class="key"><b>Per què:</b> Ductilitat = capacitat de deformar-se plàsticament (permanentment) abans de trencar-se. Es mesura amb %EL o %RA. L'opció (a) seria sobre rigidesa (E). L'opció (c) descriu un material FRÀGIL (el contrari de dúctil) — ex: vidre, ceràmic.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>EXAM 14/11/2018 (pack acadèmia) — les 4 preguntes clàssiques</h3>
+
+  <div class="worked">
+    <h4>Q1 · Càlcul d'estricció</h4>
+    <p><b>Enunciat:</b> Una proveta té una àrea inicial A₀ = 8 mm² i després de l'assaig la seva àrea final és A_f = 4 mm². Calcula el percentatge d'estricció (%RA).</p>
+    <ul>
+      <li>a) 25%</li>
+      <li>b) 40%</li>
+      <li>c) 50%</li>
+    </ul>
+    <p><b>Resposta correcta: c) 50%</b></p>
+    <div class="key"><b>Per què:</b> Aplica la fórmula %RA = (A₀ - A_f)/A₀ · 100 = (8-4)/8 · 100 = 50%.
+    <br><br><b>Truc:</b> l'estricció mesura la reducció d'àrea (no de longitud). Si l'àrea s'ha reduït a la meitat, %RA = 50%.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q2 · Tenacitat vs fragilitat</h4>
+    <p><b>Enunciat:</b> La tenacitat d'un material és un concepte oposat a:</p>
+    <ul>
+      <li>a) la fragilitat</li>
+      <li>b) la ductilitat</li>
+      <li>c) la rigidesa</li>
+    </ul>
+    <p><b>Resposta correcta: a) fragilitat</b></p>
+    <div class="key"><b>Per què:</b> Tenacitat = capacitat d'absorbir energia abans de trencar. Un material tenaç (alt àrea sota la corba) és el contrari d'un material fràgil (trenca amb poca deformació prèvia). Ductilitat i tenacitat estan correlacionades (però no són sinònimes). Rigidesa (E) és una altra propietat.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q14 · Mòdul de Young</h4>
+    <p><b>Enunciat:</b> El mòdul de Young mesura:</p>
+    <ul>
+      <li>a) la resistència a la fractura</li>
+      <li>b) la rigidesa del material</li>
+      <li>c) la ductilitat</li>
+    </ul>
+    <p><b>Resposta correcta: b) rigidesa</b></p>
+    <div class="key"><b>Per què:</b> E = σ/ε = pendent de la zona elàstica. Un material rígid (E gran) es deforma poc sota una tensió donada. <b>Rigidesa = resistència a la deformació elàstica = Mòdul de Young</b>. Això NO és el mateix que ser fort (alt σy) ni dur (duresa) ni tenaç.</div>
+  </div>
+
+  <div class="worked">
+    <h4>Q16 · Fatiga — condició de fractura</h4>
+    <p><b>Enunciat:</b> En fatiga, el material es trenca quan:</p>
+    <ul>
+      <li>a) la tensió aplicada supera σy</li>
+      <li>b) la tensió aplicada supera σu (UTS)</li>
+      <li>c) una esquerda arriba a la longitud crítica donada per KIC</li>
+    </ul>
+    <p><b>Resposta correcta: c)</b></p>
+    <div class="key"><b>Per què:</b> La fatiga és diferent del trencament estàtic. El material es trenca per <b>creixement progressiu d'esquerdes</b> en cicles de càrrega, fins que una esquerda arriba a la <b>mida crítica a_c</b> (calculada amb KIC = Y·σ·√(π·a)). En aquest moment, el material trenca de cop encara que la tensió sigui molt inferior a σy.
+    <br><br>Les opcions (a) i (b) són incorrectes perquè la fatiga passa <b>per sota</b> d'aquests límits.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>EXAM 14/11/2018 — Problema 2 (fatiga, per referència)</h3>
+  <div class="worked">
+    <p><b>Enunciat resumit:</b> Comparació de fatiga entre Al 7075-T6 i acer S650MC. Diàmetre 25 mm, L = 1,2 m, càrrega cíclica 0 a 110 kN. Dades de corbes S-N, densitats (2,7 vs 7,8), σy (450 vs 1050 MPa), E (70 vs 205 GPa).</p>
+    <p><b>Preguntes:</b></p>
+    <ol>
+      <li>Cicles de vida per l'Al</li>
+      <li>Pot l'acer (amb el mateix pes) aguantar la fatiga? Deforma plàsticament?</li>
+      <li>Amplitud màxima acceptable</li>
+    </ol>
+    <div class="key"><b>Per què és útil aquest problema:</b> toca selecció de materials + fatiga + propietats mecàniques combinades. És el tipus d'exercici de "solució més complexa" que pot aparèixer com a problema 2. <b>Conceptes clau:</b> mateix pes → diferent diàmetre (ρ·V = m); corba S-N dóna cicles per a cada σ; comparació σ_aplicada vs σy per saber si deforma plàstica.</div>
+  </div>
+</div>
+
+<div class="card soft">
+  <h3>📝 Resum — les 8 preguntes T7 del corpus</h3>
+  <table>
+    <tr><th>Concepte</th><th>Freqüència</th><th>Truc/per què</th></tr>
+    <tr><td>E = rigidesa (pendent elàstic)</td><td>2 exams</td><td>No confondre amb σy ni amb tenacitat</td></tr>
+    <tr><td>Ductilitat = deformar plàsticament abans trencar</td><td>2 exams</td><td>Es mesura amb %EL i %RA</td></tr>
+    <tr><td>Tenacitat = àrea TOTAL sota corba σ-ε</td><td>2 exams</td><td>Alt %EL + σy raonable = més tenaç</td></tr>
+    <tr><td>Recuperació 100% elàstica per sota σy</td><td>1 exam</td><td>⚠ TRAMPA — si σ&lt;σy, l_f = l_0</td></tr>
+    <tr><td>Estricció %RA</td><td>1 exam</td><td>(A₀-A_f)/A₀ · 100</td></tr>
+    <tr><td>Tenacitat oposada a fragilitat</td><td>1 exam</td><td>Fràgil = poca àrea sota corba</td></tr>
+    <tr><td>Fatiga → trencament per creixement esquerda</td><td>1 exam</td><td>KIC = Y·σ·√(πa)</td></tr>
+  </table>
+</div>
+
+<div class="feyn">
+  <h2>Checkpoint Feynman — digues-ho amb les teves paraules</h2>
+  <ol>
+    <li>Per què E no depèn de la temperatura (per metalls, lluny de fondre's)?</li>
+    <li>Diferència visual entre un material dúctil i un fràgil a la corba σ-ε</li>
+    <li>Si dos materials tenen el mateix σy però un té %EL=10% i l'altre %EL=25%, quin és més TENAÇ?</li>
+    <li>Què és l'estricció i per què la corba enginyeril baixa després de σm?</li>
+    <li>Per què un cable de 2 mm que aguanta 30 N amb σ=10 MPa no canvia significativament el diàmetre?</li>
+    <li>Què passa físicament dins del material quan passa σy?</li>
+    <li>Si et dic "el material A té σy=500 MPa i el B té σy=100 MPa", quin és més RÍGID?</li>
+  </ol>
+  <p class="note"><b>Truc:</b> la 7 és trampa — σy no és rigidesa. Rigidesa = E (pendent). Un material pot tenir σy baix però E alt.</p>
+</div>
+
+<script>
+(function(){
+  // Stress-strain curve data
+  const epsilon = [];
+  const sigma = [];
+
+  // Elastic region (linear)
+  for(let e = 0; e <= 0.002; e += 0.0001) {
+    epsilon.push(e);
+    sigma.push(e * 200000); // E = 200 GPa
+  }
+  // Slight deviation near yield
+  for(let e = 0.002; e <= 0.005; e += 0.0001) {
+    epsilon.push(e);
+    sigma.push(400 + (e-0.002)*50000); // curving
+  }
+  // Plastic hardening
+  for(let e = 0.005; e <= 0.15; e += 0.002) {
+    epsilon.push(e);
+    sigma.push(550 + 200*Math.log(1+e*10));
+  }
+  // Near UTS and necking
+  for(let e = 0.15; e <= 0.25; e += 0.002) {
+    epsilon.push(e);
+    sigma.push(900 - 500*(e-0.15));
+  }
+
+  const yieldPoint = {x: 0.002, y: 400};
+  const utsPoint = {x: 0.15, y: 900};
+  const rupturePoint = {x: 0.25, y: 400};
+
+  Plotly.newPlot('stress-strain-chart', [
+    {
+      x: epsilon, y: sigma,
+      name: 'σ enginyeril',
+      line: {color: '#ffd86b', width: 3},
+      mode: 'lines'
+    },
+    {
+      x: [0.002, 0.022], y: [0, 4000],
+      name: 'Recta 0,2% offset',
+      line: {color: '#5ad7a3', width: 2, dash: 'dash'},
+      mode: 'lines',
+      showlegend: true
+    },
+    {
+      x: [yieldPoint.x, utsPoint.x, rupturePoint.x],
+      y: [yieldPoint.y, utsPoint.y, rupturePoint.y],
+      mode: 'markers+text',
+      marker: {size: 12, color: ['#5ad7a3', '#ffd86b', '#ff7aa3']},
+      text: ['σy (límit elàstic)', 'σm (UTS)', 'σr (ruptura)'],
+      textposition: 'top center',
+      textfont: {color: '#e9edf5', size: 13},
+      showlegend: false
+    }
+  ], {
+    paper_bgcolor: '#161a22',
+    plot_bgcolor: '#161a22',
+    font: {color: '#e9edf5', family: 'Inter, sans-serif', size: 13},
+    margin: {t: 50, r: 40, b: 60, l: 80},
+    xaxis: {
+      title: {text: 'Deformació ε (ΔL/L₀)', font: {size: 14}},
+      gridcolor: '#262c3a',
+      zerolinecolor: '#3a4458',
+      range: [0, 0.3]
+    },
+    yaxis: {
+      title: {text: 'Tensió σ (MPa)', font: {size: 14}},
+      gridcolor: '#262c3a',
+      zerolinecolor: '#3a4458',
+      range: [0, 1100]
+    },
+    title: {
+      text: 'Corba tensió-deformació típica d\'un metall dúctil',
+      font: {size: 16}
+    },
+    annotations: [
+      {x: 0.0005, y: 100, text: '← Zona<br>elàstica<br>(pendent = E)', showarrow: false,
+        font: {color: '#5ad7a3', size: 12}, align: 'left'},
+      {x: 0.08, y: 780, text: '← Zona plàstica<br>(enduriment)', showarrow: false,
+        font: {color: '#ffd86b', size: 12}, align: 'left'},
+      {x: 0.22, y: 550, text: 'Estricció →<br>(necking)', showarrow: false,
+        font: {color: '#ff7aa3', size: 12}, align: 'right'}
+    ]
+  }, {
+    responsive: true,
+    displaylogo: false
+  });
+})();
+</script>
+
+</div>
+</body>
+</html>
