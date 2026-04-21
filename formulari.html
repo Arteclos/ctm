@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Formulari complet</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff;
+  --border:#262c3a;
+  --t1:#ff9c6b; --t2:#5ad7a3; --t3:#7aa2ff; --t4:#c87aff; --t7:#ffd86b; --t8:#ff7aa3; --corr:#ff5aa7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:36px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:24px;margin:50px 0 16px;font-weight:600;padding-left:14px}
+h2.t1{border-left:4px solid var(--t1);color:var(--t1)}
+h2.t2{border-left:4px solid var(--t2);color:var(--t2)}
+h2.t3{border-left:4px solid var(--t3);color:var(--t3)}
+h2.t4{border-left:4px solid var(--t4);color:var(--t4)}
+h2.t7{border-left:4px solid var(--t7);color:var(--t7)}
+h2.t8{border-left:4px solid var(--t8);color:var(--t8)}
+h2.corr{border-left:4px solid var(--corr);color:var(--corr)}
+h2.const{border-left:4px solid var(--info);color:var(--info)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--accent);font-weight:600}
+p{margin:6px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin:14px 0}
+.formula-block{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:12px 0}
+.formula-block h3{margin-top:0;color:var(--accent)}
+.fml{background:#0a0d13;border-left:3px solid var(--info);padding:14px 18px;border-radius:6px;margin:8px 0;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--panel);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td:first-child{font-family:'JetBrains Mono','Consolas',monospace;color:var(--info);font-weight:600;width:80px}
+td:last-child{font-family:'JetBrains Mono','Consolas',monospace;color:var(--ok);white-space:nowrap}
+.note{background:rgba(122,162,255,.08);border-left:3px solid var(--info);padding:10px 14px;border-radius:6px;margin:10px 0;font-size:13px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0;padding:16px;background:var(--panel);border-radius:12px;border:1px solid var(--border)}
+.toc a{color:var(--dim);padding:6px 12px;border-radius:999px;font-size:12px;text-decoration:none;border:1px solid var(--border);background:var(--bg)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+.toc a.t1{border-color:var(--t1);color:var(--t1)}
+.toc a.t2{border-color:var(--t2);color:var(--t2)}
+.toc a.t3{border-color:var(--t3);color:var(--t3)}
+.toc a.t4{border-color:var(--t4);color:var(--t4)}
+.toc a.t7{border-color:var(--t7);color:var(--t7)}
+.toc a.t8{border-color:var(--t8);color:var(--t8)}
+.toc a.corr{border-color:var(--corr);color:var(--corr)}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html">T1</a>
+  <a href="sessio-02-cristalografia.html">T2</a>
+  <a href="sessio-03-difusio.html">T3</a>
+  <a href="sessio-04-polimers.html">T4</a>
+  <a href="sessio-05-mecaniques.html">T7</a>
+  <a href="sessio-08-deformacio.html">T8A</a>
+  <a href="sessio-09-corrosio.html">Corrosió</a>
+  <a href="conversions-difusio.html">⚙️ Conv</a>
+  <a href="formulari.html" class="active">📋 Formulari</a>
+  <a href="cacador-preguntes.html" class="hunt">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test">🧪 Test</a>
+</div>
+</nav>
+
+<div class="wrap">
+<h1>📋 Formulari complet · CTM Parcial 1
+  <small>Totes les fórmules · símbols · unitats SI · context</small>
+</h1>
+
+<div class="toc">
+  <a href="#const" class="const">🔢 Constants universals</a>
+  <a href="#t1" class="t1">T1 · Enllaços</a>
+  <a href="#t2a" class="t2">T2A · Cristalografia</a>
+  <a href="#t2b" class="t2">T2B · Defectes</a>
+  <a href="#t3" class="t3">T3 · Difusió</a>
+  <a href="#t4" class="t4">T4 · Polímers</a>
+  <a href="#t7" class="t7">T7 · Mecàniques</a>
+  <a href="#t8a" class="t8">T8A · Deformació</a>
+  <a href="#corrosio" class="corr">Corrosió</a>
+  <a href="#conversions">🔄 Conversions</a>
+</div>
+
+<!-- ============ CONSTANTS ============ -->
+<h2 id="const" class="const">🔢 Constants universals</h2>
+<div class="card">
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Valor i unitat</th></tr>
+    <tr><td>$R$</td><td>Constant dels gasos (Arrhenius)</td><td>8,314 J/(mol·K)</td></tr>
+    <tr><td>$k$</td><td>Constant de Boltzmann</td><td>1,38·10⁻²³ J/K</td></tr>
+    <tr><td>$N_A$</td><td>Número d'Avogadro</td><td>6,022·10²³ /mol</td></tr>
+    <tr><td>$F$</td><td>Constant de Faraday</td><td>96 500 C/mol</td></tr>
+    <tr><td>$\pi$</td><td>Pi</td><td>3,14159...</td></tr>
+    <tr><td>$e$</td><td>Base de l'exponencial</td><td>2,71828...</td></tr>
+  </table>
+</div>
+
+<!-- ============ T1 ENLLAÇOS ============ -->
+<h2 id="t1" class="t1">🔗 TEMA 1 · Enllaços</h2>
+
+<div class="formula-block">
+  <h3>Energia d'enllaç — corba F-r i E-r</h3>
+  <div class="fml">$$F_{net}(r) = F_{atracció}(r) - F_{repulsió}(r)$$
+  $$E_{net}(r) = \int F_{net}(r)\, dr$$</div>
+  <p style="font-size:13px"><b>Distància d'equilibri r₀:</b> mínim de $E(r)$ ⟺ $F_{net}(r_0) = 0$.<br>
+  <b>Energia d'enllaç E₀:</b> profunditat del pou a $r_0$ (valor negatiu, es dóna en absolut).</p>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$r$</td><td>Distància entre àtoms</td><td>m (o nm)</td></tr>
+    <tr><td>$r_0$</td><td>Distància d'equilibri</td><td>m</td></tr>
+    <tr><td>$F$</td><td>Força entre àtoms</td><td>N</td></tr>
+    <tr><td>$E_0$</td><td>Energia d'enllaç</td><td>J/enllaç o kJ/mol</td></tr>
+  </table>
+  <p class="note"><b>Rangs típics d'energia d'enllaç:</b><br>
+  Iònic: 600-1500 · Covalent: 200-700 · Metàl·lic: 70-850 · Pont H: 20-40 · VdW: 1-10 kJ/mol</p>
+</div>
+
+<!-- ============ T2A CRISTALOGRAFIA ============ -->
+<h2 id="t2a" class="t2">🔷 TEMA 2A · Cristalografia</h2>
+
+<div class="formula-block">
+  <h3>Densitat teòrica — FÓRMULA MESTRA</h3>
+  <div class="fml">$$\rho = \frac{n \cdot A}{V_{cel} \cdot N_A}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$\rho$</td><td>Densitat</td><td>kg/m³ (o g/cm³)</td></tr>
+    <tr><td>$n$</td><td>Àtoms per cel·la (BCC=2, FCC=4, HCP=6, CS=1)</td><td>adimensional</td></tr>
+    <tr><td>$A$</td><td>Massa atòmica</td><td>g/mol → kg/mol</td></tr>
+    <tr><td>$V_{cel}$</td><td>Volum cel·la unitària</td><td>m³ (o cm³)</td></tr>
+    <tr><td>$N_A$</td><td>Avogadro</td><td>6,022·10²³ /mol</td></tr>
+  </table>
+  <p class="note"><b>Amb aliatge substitucional:</b> $A$ = mitjana ponderada: $A = x_A \cdot A_A + x_B \cdot A_B$<br>
+  <b>Amb aliatge intersticial:</b> els intersticials s'afegeixen al pes, no afecten n.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Factor d'empaquetament atòmic (APF / FEA)</h3>
+  <div class="fml">$$\mathrm{APF} = \frac{n \cdot V_{àtom}}{V_{cel}} = \frac{n \cdot \frac{4}{3}\pi r^3}{V_{cel}}$$</div>
+  <p style="font-size:13px;color:var(--dim)"><b>Valors a memoritzar:</b> CS=0,52 · BCC=0,68 · FCC=HCP=0,74</p>
+</div>
+
+<div class="formula-block">
+  <h3>Relacions paràmetre de xarxa-radi</h3>
+  <div class="fml">BCC: $\quad 4r = a\sqrt{3} \quad\Rightarrow\quad a = \dfrac{4r}{\sqrt{3}}$<br><br>
+  FCC: $\quad 4r = a\sqrt{2} \quad\Rightarrow\quad a = \dfrac{4r}{\sqrt{2}} = 2r\sqrt{2}$<br><br>
+  CS: $\quad 2r = a$<br><br>
+  HCP: $\quad a = 2r \quad;\quad c/a \approx 1{,}633$ (ideal)</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$a$</td><td>Paràmetre de xarxa (aresta cel·la)</td><td>m (o nm)</td></tr>
+    <tr><td>$r$</td><td>Radi atòmic</td><td>m (o nm)</td></tr>
+    <tr><td>$c$</td><td>Altura cel·la HCP</td><td>m</td></tr>
+  </table>
+</div>
+
+<div class="formula-block">
+  <h3>Volum de cel·la</h3>
+  <div class="fml">BCC, FCC, CS (cúbiques): $\quad V_{cel} = a^3$<br><br>
+  HCP: $\quad V_{cel} = 6 \cdot \left(\frac{\sqrt{3}}{4} a^2\right) \cdot c = \dfrac{3\sqrt{3}}{2} a^2 c$<br><br>
+  Alternatiu HCP: $\quad V_{cel} = a^2 \cdot c \cdot \sin(60°) \cdot 3 \quad$ (fórmula paral·lelepípede)</div>
+</div>
+
+<!-- ============ T2B DEFECTES ============ -->
+<h2 id="t2b" class="t2">🔬 TEMA 2B · Defectes</h2>
+
+<div class="formula-block">
+  <h3>Concentració de vacants (Arrhenius)</h3>
+  <div class="fml">$$\frac{N_v}{N} = \exp\left(-\frac{Q_v}{k \cdot T}\right)$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$N_v$</td><td>Vacants per unitat de volum</td><td>/m³</td></tr>
+    <tr><td>$N$</td><td>Posicions atòmiques per volum</td><td>/m³</td></tr>
+    <tr><td>$Q_v$</td><td>Energia formació vacant</td><td>J (o J/mol si uses R)</td></tr>
+    <tr><td>$k$</td><td>Boltzmann</td><td>1,38·10⁻²³ J/K</td></tr>
+    <tr><td>$T$</td><td>Temperatura</td><td>K</td></tr>
+  </table>
+  <p class="note"><b>Comprovació dimensional:</b> $Q_v/(k T) = [J]/([J/K]\cdot[K]) = $ adimensional ✓<br>
+  Si $Q_v$ ve en J/mol, usa $R$ en lloc de $k$.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Nombre de vacants per cel·la (indirecta, per densitat)</h3>
+  <div class="fml">$$n_{efectiu} = \frac{\rho_{real} \cdot V_{cel} \cdot N_A}{A}$$
+  $$n_{vacants/cel} = n_{teòric} - n_{efectiu}$$</div>
+  <p style="font-size:13px;color:var(--dim)">Si $\rho_{real} < \rho_{teòrica}$, hi ha vacants. Aïlla $n$ i compara amb el valor teòric (2, 4, 6...).</p>
+</div>
+
+<!-- ============ T3 DIFUSIÓ ============ -->
+<h2 id="t3" class="t3">🌊 TEMA 3 · Difusió</h2>
+
+<div class="formula-block">
+  <h3>1a llei de Fick (règim ESTACIONARI)</h3>
+  <div class="fml">$$J = -D \cdot \frac{dC}{dx} \approx -D \cdot \frac{\Delta C}{\Delta x}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$J$</td><td>Flux de massa</td><td>kg/(m²·s)</td></tr>
+    <tr><td>$D$</td><td>Coef. difusió</td><td>m²/s</td></tr>
+    <tr><td>$dC/dx$</td><td>Gradient de concentració</td><td>kg/m⁴</td></tr>
+    <tr><td>$\Delta C$</td><td>Diferència C_ext − C_int</td><td>kg/m³</td></tr>
+    <tr><td>$\Delta x$</td><td>Gruix de la membrana</td><td>m</td></tr>
+  </table>
+  <p class="note"><b>Signe menys:</b> el flux va de més a menys C. Si el problema és de mòdul, pots ometre'l.</p>
+</div>
+
+<div class="formula-block">
+  <h3>2a llei de Fick (règim NO ESTACIONARI)</h3>
+  <div class="fml">$$\frac{C_x - C_0}{C_s - C_0} = 1 - \mathrm{erf}(z) \quad\text{amb}\quad z = \frac{x}{2\sqrt{D \cdot t}}$$</div>
+  <p style="font-size:13px"><b>Forma equivalent:</b> $\frac{C_s - C_x}{C_s - C_0} = \mathrm{erf}(z)$</p>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$C_s$</td><td>Concentració SUPERFICIAL (atmosfera)</td><td>kg/m³ o %w</td></tr>
+    <tr><td>$C_0$</td><td>Concentració INICIAL uniforme</td><td>kg/m³ o %w</td></tr>
+    <tr><td>$C_x$</td><td>Concentració a distància x, temps t</td><td>kg/m³ o %w</td></tr>
+    <tr><td>$x$</td><td>Distància des de la superfície</td><td>m</td></tr>
+    <tr><td>$t$</td><td>Temps del tractament</td><td>s</td></tr>
+    <tr><td>$z$</td><td>Paràmetre adimensional</td><td>adimensional</td></tr>
+    <tr><td>$\mathrm{erf}(z)$</td><td>Funció d'error (taula)</td><td>adimensional</td></tr>
+  </table>
+  <p class="note"><b>Ratio adimensional:</b> tots els C han d'anar en la MATEIXA unitat. Pots usar %w directament.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Arrhenius (coeficient de difusió vs T)</h3>
+  <div class="fml">$$D = D_0 \cdot \exp\left(-\frac{Q}{R \cdot T}\right)$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$D$</td><td>Coef. difusió a temperatura T</td><td>m²/s</td></tr>
+    <tr><td>$D_0$</td><td>Coef. pre-exponencial (CONSTANT, no depèn de T)</td><td>m²/s (taules sovint cm²/s)</td></tr>
+    <tr><td>$Q$</td><td>Energia activació per difusió</td><td>J/mol (taules: kJ/mol)</td></tr>
+    <tr><td>$R$</td><td>Constant gasos</td><td>8,314 J/(mol·K)</td></tr>
+    <tr><td>$T$</td><td>Temperatura ABSOLUTA</td><td>K (sempre)</td></tr>
+  </table>
+  <p class="note"><b>Inversió (quan et donen D i vols T):</b> $T = \dfrac{-Q}{R \cdot \ln(D/D_0)}$</p>
+</div>
+
+<div class="formula-block">
+  <h3>Flux a Fick 2a a la superfície (x=0)</h3>
+  <div class="fml">$$J(0, t) = (C_s - C_0) \cdot \sqrt{\frac{D}{\pi \cdot t}}$$</div>
+  <p style="font-size:13px;color:var(--dim)">El flux decreix com $1/\sqrt{t}$ — és màxim a t=0 (tot just comença).</p>
+</div>
+
+<div class="formula-block">
+  <h3>Massa TOTAL introduïda durant Fick 2a</h3>
+  <div class="fml">$$M = 2 \cdot A \cdot (C_s - C_0) \cdot \sqrt{\frac{D \cdot t}{\pi}}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$M$</td><td>Massa solut total introduïda</td><td>kg</td></tr>
+    <tr><td>$A$</td><td>Àrea superfície exposada</td><td>m²</td></tr>
+    <tr><td>$C_s - C_0$</td><td>Gradient inicial</td><td>kg/m³</td></tr>
+    <tr><td>$D, t$</td><td>Com Fick 2a</td><td>m²/s, s</td></tr>
+  </table>
+  <p class="note"><b>Creix com $\sqrt{t}$:</b> 4× temps = 2× massa. NO és lineal.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Geometries comunes — àrea i volum</h3>
+  <div class="fml">Paret plana: $A = L \times W \quad;\quad V = L \times W \times e$<br><br>
+  Cilindre lateral: $A_{lat} = 2\pi r h \quad;\quad V = \pi r^2 h$<br><br>
+  Esfera: $A = 4\pi r^2 \quad;\quad V = \dfrac{4}{3}\pi r^3$</div>
+</div>
+
+<div class="formula-block">
+  <h3>Taula erf — valors a memoritzar</h3>
+  <table>
+    <tr><th>z</th><th>erf(z)</th><th>1 - erf(z)</th></tr>
+    <tr><td>0</td><td>0</td><td>1</td></tr>
+    <tr><td>0,25</td><td>0,276</td><td>0,724</td></tr>
+    <tr><td>0,50</td><td>0,521</td><td>0,479</td></tr>
+    <tr><td>0,75</td><td>0,711</td><td>0,289</td></tr>
+    <tr><td>1,00</td><td>0,843</td><td>0,157</td></tr>
+    <tr><td>1,50</td><td>0,966</td><td>0,034</td></tr>
+    <tr><td>2,00</td><td>0,995</td><td>0,005</td></tr>
+    <tr><td>∞</td><td>1</td><td>0</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--dim)">Entre valors, interpolació lineal.</p>
+</div>
+
+<!-- ============ T4 POLÍMERS ============ -->
+<h2 id="t4" class="t4">🧬 TEMA 4 · Polímers</h2>
+
+<div class="formula-block">
+  <h3>Pes molecular mitjà en NOMBRE (M_n)</h3>
+  <div class="fml">$$\bar{M}_n = \frac{\sum_i N_i \cdot M_i}{\sum_i N_i} = \sum_i x_i M_i$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat</th></tr>
+    <tr><td>$\bar{M}_n$</td><td>Pes molecular mitjà numèric</td><td>g/mol</td></tr>
+    <tr><td>$N_i$</td><td>Nombre cadenes amb pes $M_i$</td><td>adimensional</td></tr>
+    <tr><td>$M_i$</td><td>Pes molecular de la fracció $i$</td><td>g/mol</td></tr>
+    <tr><td>$x_i$</td><td>Fracció en nombre ($N_i/\sum N$)</td><td>adimensional</td></tr>
+  </table>
+</div>
+
+<div class="formula-block">
+  <h3>Pes molecular mitjà en PES (M_w)</h3>
+  <div class="fml">$$\bar{M}_w = \frac{\sum_i N_i \cdot M_i^2}{\sum_i N_i \cdot M_i} = \sum_i w_i M_i$$</div>
+  <p style="font-size:13px;color:var(--dim)"><b>Sempre $\bar{M}_w \geq \bar{M}_n$</b>. $w_i$ = fracció en pes.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Índex de polidispersitat (PDI)</h3>
+  <div class="fml">$$\mathrm{PDI} = \frac{\bar{M}_w}{\bar{M}_n} \geq 1$$</div>
+  <p style="font-size:13px;color:var(--dim)">PDI = 1 → monodispers (ideal) · PDI 2-10 → real.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Grau de polimerització</h3>
+  <div class="fml">$$n = \frac{\bar{M}}{M_{monòmer}}$$</div>
+  <p style="font-size:13px;color:var(--dim)">Nombre mitjà d'unitats monomèriques per cadena.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Cristal·linitat (a partir de densitats)</h3>
+  <div class="fml">$$\% \text{cristal·linitat} = \frac{\rho_c (\rho_m - \rho_a)}{\rho_m (\rho_c - \rho_a)} \cdot 100$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat</th></tr>
+    <tr><td>$\rho_m$</td><td>Densitat mesurada de la mostra</td><td>g/cm³</td></tr>
+    <tr><td>$\rho_a$</td><td>Densitat amorf pur</td><td>g/cm³</td></tr>
+    <tr><td>$\rho_c$</td><td>Densitat cristal·lí pur</td><td>g/cm³</td></tr>
+  </table>
+</div>
+
+<!-- ============ T7 MECÀNIQUES ============ -->
+<h2 id="t7" class="t7">🔧 TEMA 7 · Propietats mecàniques</h2>
+
+<div class="formula-block">
+  <h3>Tensió i deformació (enginyerils)</h3>
+  <div class="fml">$$\sigma = \frac{F}{A_0} \quad;\quad \varepsilon = \frac{l - l_0}{l_0} = \frac{\Delta l}{l_0}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$\sigma$</td><td>Tensió (stress)</td><td>Pa = N/m² (sovint MPa)</td></tr>
+    <tr><td>$F$</td><td>Força aplicada</td><td>N</td></tr>
+    <tr><td>$A_0$</td><td>Àrea original secció transversal</td><td>m²</td></tr>
+    <tr><td>$\varepsilon$</td><td>Deformació (strain)</td><td>adimensional (o %)</td></tr>
+    <tr><td>$l_0$</td><td>Longitud original</td><td>m</td></tr>
+    <tr><td>$l, \Delta l$</td><td>Longitud actual, allargament</td><td>m</td></tr>
+  </table>
+  <p class="note"><b>Conversió:</b> 1 MPa = 10⁶ Pa = 1 N/mm².</p>
+</div>
+
+<div class="formula-block">
+  <h3>Tensió i deformació REALS (vs enginyerils)</h3>
+  <div class="fml">$$\sigma_{real} = \sigma \cdot (1 + \varepsilon) \quad;\quad \varepsilon_{real} = \ln(1 + \varepsilon)$$</div>
+  <p style="font-size:13px;color:var(--dim)">Diferència significativa a zona plàstica. A la zona elàstica (ε petita) són quasi iguals.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Llei de Hooke (zona elàstica)</h3>
+  <div class="fml">$$\sigma = E \cdot \varepsilon$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$E$</td><td>Mòdul de Young (rigidesa)</td><td>Pa (sovint GPa)</td></tr>
+  </table>
+  <p class="note">Valors típics: Acer 200 GPa · Al 70 GPa · Cu 110 GPa · Polímers 0,1-5 GPa.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Coeficient de Poisson</h3>
+  <div class="fml">$$\nu = -\frac{\varepsilon_{transversal}}{\varepsilon_{axial}}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Rang típic</th></tr>
+    <tr><td>$\nu$</td><td>Coef. Poisson</td><td>Metalls: ~0,3 · Goma: ~0,5 · Suro: ~0</td></tr>
+  </table>
+  <p class="note"><b>Aplicació:</b> si tires d'un cable, s'estreny (ε_axial > 0, ε_trans < 0). $\Delta d = -\nu \cdot \varepsilon_{axial} \cdot d_0$.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Resiliència (energia elàstica màxima)</h3>
+  <div class="fml">$$U_r = \frac{\sigma_y^2}{2 \cdot E}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$U_r$</td><td>Resiliència (energia per volum)</td><td>J/m³ = Pa</td></tr>
+    <tr><td>$\sigma_y$</td><td>Límit elàstic</td><td>Pa o MPa</td></tr>
+  </table>
+  <p class="note"><b>Geomètricament:</b> àrea del triangle sota la recta elàstica fins σ_y.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Ductilitat: elongació i estricció</h3>
+  <div class="fml">$$\% \mathrm{EL} = \frac{l_f - l_0}{l_0} \cdot 100 \quad;\quad \% \mathrm{RA} = \frac{A_0 - A_f}{A_0} \cdot 100$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat</th></tr>
+    <tr><td>%EL</td><td>Elongació a ruptura</td><td>%</td></tr>
+    <tr><td>%RA</td><td>Reducció d'àrea</td><td>%</td></tr>
+    <tr><td>$l_f$</td><td>Longitud final (post-ruptura)</td><td>m</td></tr>
+    <tr><td>$A_f$</td><td>Àrea final (post-ruptura)</td><td>m²</td></tr>
+  </table>
+  <p class="note"><b>Correcció estricta:</b> $\% \mathrm{EL}_{plàstic} = (\varepsilon_{rup} - \varepsilon_{elast}) \cdot 100$.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Tenacitat</h3>
+  <div class="fml">$$U_{tenacitat} = \int_0^{\varepsilon_r} \sigma \, d\varepsilon \approx \text{àrea total sota corba } \sigma\text{-}\varepsilon$$</div>
+  <p style="font-size:13px;color:var(--dim)">Unitat: J/m³ (energia per unitat de volum). Més %EL + bona σ_y = més tenacitat.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Tenacitat de fractura (crítica)</h3>
+  <div class="fml">$$K_{IC} = Y \cdot \sigma \cdot \sqrt{\pi \cdot a}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$K_{IC}$</td><td>Tenacitat a fractura (constant material)</td><td>MPa·√m</td></tr>
+    <tr><td>$Y$</td><td>Factor geomètric (≈1 per a esquerda central)</td><td>adimensional</td></tr>
+    <tr><td>$\sigma$</td><td>Tensió aplicada</td><td>MPa</td></tr>
+    <tr><td>$a$</td><td>Longitud esquerda (mitja esquerda interior o tota exterior)</td><td>m</td></tr>
+  </table>
+  <p class="note">Si $K_I > K_{IC}$ → fractura catastròfica. Relaciona tensió amb mida crítica d'esquerda.</p>
+</div>
+
+<!-- ============ T8A DEFORMACIÓ ============ -->
+<h2 id="t8a" class="t8">⛏️ TEMA 8A · Deformació plàstica</h2>
+
+<div class="formula-block">
+  <h3>Equació de Hall-Petch</h3>
+  <div class="fml">$$\sigma_y = \sigma_0 + k \cdot D^{-1/2} = \sigma_0 + \frac{k}{\sqrt{D}}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$\sigma_y$</td><td>Límit elàstic del policristall</td><td>Pa o MPa</td></tr>
+    <tr><td>$\sigma_0$</td><td>Resistència intrínseca de la xarxa (constant material)</td><td>Pa o MPa</td></tr>
+    <tr><td>$k$</td><td>Coeficient Hall-Petch (constant material)</td><td>Pa·√m o MPa·mm^½</td></tr>
+    <tr><td>$D$</td><td>Diàmetre mitjà dels grans</td><td>m (o mm)</td></tr>
+  </table>
+  <p class="note"><b>Grans petits</b> → $k/\sqrt{D}$ gran → σ_y gran → material MÉS dur.</p>
+</div>
+
+<div class="formula-block">
+  <h3>Sistemes de lliscament (# per estructura)</h3>
+  <table>
+    <tr><th>Estructura</th><th>Pla dens</th><th>Direcció</th><th># sistemes</th></tr>
+    <tr><td>FCC</td><td>{111}</td><td>⟨110⟩</td><td>12</td></tr>
+    <tr><td>BCC</td><td>{110}, {112}, {123}</td><td>⟨111⟩</td><td>12</td></tr>
+    <tr><td>HCP</td><td>basal {0001}</td><td>⟨11-20⟩</td><td>3</td></tr>
+  </table>
+</div>
+
+<!-- ============ CORROSIÓ ============ -->
+<h2 id="corrosio" class="corr">🧪 Corrosió</h2>
+
+<div class="formula-block">
+  <h3>Llei de Faraday (massa corroïda)</h3>
+  <div class="fml">$$m = \frac{I \cdot t \cdot M}{n \cdot F}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
+    <tr><td>$m$</td><td>Massa corroïda (o dipositada)</td><td>kg o g</td></tr>
+    <tr><td>$I$</td><td>Corrent elèctric</td><td>A</td></tr>
+    <tr><td>$t$</td><td>Temps</td><td>s</td></tr>
+    <tr><td>$M$</td><td>Massa atòmica del metall</td><td>g/mol</td></tr>
+    <tr><td>$n$</td><td>València (electrons per ió)</td><td>adimensional</td></tr>
+    <tr><td>$F$</td><td>Faraday</td><td>96 500 C/mol</td></tr>
+  </table>
+  <p class="note"><b>Comprovació dimensional:</b> $\frac{[A \cdot s \cdot g/mol]}{[C/mol]} = \frac{[C \cdot g/mol]}{[C/mol]} = [g]$ ✓</p>
+</div>
+
+<div class="formula-block">
+  <h3>Reaccions tipus</h3>
+  <div class="fml"><b>Ànode (oxidació):</b> &nbsp; $M \to M^{n+} + n \cdot e^-$<br><br>
+  <b>Càtode (reducció en medi àcid):</b> &nbsp; $2H^+ + 2e^- \to H_2$<br>
+  <b>Càtode (reducció amb O₂, medi neutre):</b> &nbsp; $O_2 + 2H_2O + 4e^- \to 4OH^-$<br>
+  <b>Càtode (reducció en medi àcid + O₂):</b> &nbsp; $O_2 + 4H^+ + 4e^- \to 2H_2O$</div>
+</div>
+
+<!-- ============ CONVERSIONS ============ -->
+<h2 id="conversions" class="const">🔄 Conversions d'unitats essencials</h2>
+<div class="card">
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
+    <tr><td>g</td><td>kg</td><td>× 10⁻³</td></tr>
+    <tr><td>g/cm³</td><td>kg/m³</td><td>× 10³</td></tr>
+    <tr><td>%w + ρ</td><td>kg/m³</td><td>× ρ/100</td></tr>
+    <tr><td>cm</td><td>m</td><td>× 10⁻²</td></tr>
+    <tr><td>mm</td><td>m</td><td>× 10⁻³</td></tr>
+    <tr><td>nm</td><td>m</td><td>× 10⁻⁹</td></tr>
+    <tr><td>°C</td><td>K</td><td>+ 273</td></tr>
+    <tr><td>h</td><td>s</td><td>× 3600</td></tr>
+    <tr><td>dia</td><td>s</td><td>× 86 400</td></tr>
+    <tr><td>setmana</td><td>s</td><td>× 604 800</td></tr>
+    <tr><td>any</td><td>s</td><td>× 3,15·10⁷</td></tr>
+    <tr><td>cm²/s</td><td>m²/s</td><td>× 10⁻⁴</td></tr>
+    <tr><td>kJ/mol</td><td>J/mol</td><td>× 10³</td></tr>
+    <tr><td>GPa</td><td>Pa</td><td>× 10⁹</td></tr>
+    <tr><td>MPa</td><td>Pa</td><td>× 10⁶</td></tr>
+    <tr><td>MPa</td><td>N/mm²</td><td>× 1 (idèntics)</td></tr>
+  </table>
+</div>
+
+<!-- ============ VALORS ÚTILS A MEMORITZAR ============ -->
+<h2 class="const">📐 Valors a memoritzar</h2>
+<div class="card">
+  <h3>Estructura cristal·lina</h3>
+  <table>
+    <tr><th>Estructura</th><th>n</th><th>Coord.</th><th>APF</th><th>Relació a-r</th></tr>
+    <tr><td>Cúbica simple (CS)</td><td>1</td><td>6</td><td>0,52</td><td>a = 2r</td></tr>
+    <tr><td>BCC</td><td>2</td><td>8</td><td>0,68</td><td>a = 4r/√3</td></tr>
+    <tr><td>FCC</td><td>4</td><td>12</td><td>0,74</td><td>a = 4r/√2 = 2r√2</td></tr>
+    <tr><td>HCP</td><td>6</td><td>12</td><td>0,74</td><td>a=2r, c/a≈1,633</td></tr>
+  </table>
+
+  <h3>Densitats de metalls (g/cm³)</h3>
+  <table>
+    <tr><th>Metall</th><th>ρ</th><th>PA (g/mol)</th><th>Estructura @ T ambient</th></tr>
+    <tr><td>Al</td><td>2,70</td><td>26,98</td><td>FCC</td></tr>
+    <tr><td>Ti</td><td>4,50</td><td>47,87</td><td>HCP</td></tr>
+    <tr><td>α-Fe</td><td>7,87</td><td>55,85</td><td>BCC</td></tr>
+    <tr><td>γ-Fe (900°C)</td><td>8,0</td><td>55,85</td><td>FCC</td></tr>
+    <tr><td>Cu</td><td>8,96</td><td>63,55</td><td>FCC</td></tr>
+    <tr><td>Mg</td><td>1,74</td><td>24,31</td><td>HCP</td></tr>
+    <tr><td>Pb</td><td>11,34</td><td>207,2</td><td>FCC</td></tr>
+    <tr><td>W</td><td>19,3</td><td>183,84</td><td>BCC</td></tr>
+  </table>
+
+  <h3>Radis atòmics (nm) — memòria ràpida</h3>
+  <table>
+    <tr><th>Àtom</th><th>r (nm)</th></tr>
+    <tr><td>Fe (α-BCC)</td><td>0,124</td></tr>
+    <tr><td>C (intersticial)</td><td>0,077</td></tr>
+    <tr><td>N (intersticial)</td><td>0,065</td></tr>
+    <tr><td>H</td><td>0,037</td></tr>
+    <tr><td>Al</td><td>0,143</td></tr>
+    <tr><td>Cu</td><td>0,128</td></tr>
+    <tr><td>Mg</td><td>0,158</td></tr>
+    <tr><td>Ti (HCP)</td><td>0,147</td></tr>
+  </table>
+</div>
+
+<footer style="text-align:center;margin-top:60px;color:var(--dim);font-size:13px;opacity:.7">
+  <p>Planck · Formulari CTM Parcial 1 · <b>10/10 o res</b></p>
+</footer>
+
+</div>
+</body>
+</html>
