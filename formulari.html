@@ -488,25 +488,100 @@ td:last-child{font-family:'JetBrains Mono','Consolas',monospace;color:var(--ok);
 <!-- ============ CONVERSIONS ============ -->
 <h2 id="conversions" class="const">🔄 Conversions d'unitats essencials</h2>
 <div class="card">
+
+  <h3>Longitud (1D)</h3>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
+    <tr><td>cm</td><td>m</td><td>× 10⁻²</td></tr>
+    <tr><td>mm</td><td>m</td><td>× 10⁻³</td></tr>
+    <tr><td>μm</td><td>m</td><td>× 10⁻⁶</td></tr>
+    <tr><td>nm</td><td>m</td><td>× 10⁻⁹</td></tr>
+    <tr><td>Å (angstrom)</td><td>m</td><td>× 10⁻¹⁰</td></tr>
+  </table>
+
+  <h3>ÀREA (2D) — truc: ELEVA el factor al QUADRAT</h3>
+  <div class="fml">$$1 \text{ mm}^2 = (10^{-3} \text{ m})^2 = 10^{-6} \text{ m}^2$$</div>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
+    <tr><td>cm²</td><td>m²</td><td>× 10⁻⁴</td></tr>
+    <tr><td>mm²</td><td>m²</td><td>× 10⁻⁶</td></tr>
+    <tr><td>μm²</td><td>m²</td><td>× 10⁻¹²</td></tr>
+    <tr><td>nm²</td><td>m²</td><td>× 10⁻¹⁸</td></tr>
+    <tr><td>mm²</td><td>cm²</td><td>× 10⁻²</td></tr>
+  </table>
+  <p class="note"><b>Regla:</b> factor lineal × 10⁻³ (mm→m) → àrea × (10⁻³)² = 10⁻⁶. <b>Sempre eleva el factor al quadrat per àrees.</b></p>
+
+  <h3>VOLUM (3D) — truc: ELEVA el factor al CUB</h3>
+  <div class="fml">$$1 \text{ mm}^3 = (10^{-3} \text{ m})^3 = 10^{-9} \text{ m}^3$$</div>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
+    <tr><td>cm³</td><td>m³</td><td>× 10⁻⁶</td></tr>
+    <tr><td>mm³</td><td>m³</td><td>× 10⁻⁹</td></tr>
+    <tr><td>nm³</td><td>m³</td><td>× 10⁻²⁷</td></tr>
+    <tr><td>L (litre)</td><td>m³</td><td>× 10⁻³</td></tr>
+    <tr><td>mL = cm³</td><td>m³</td><td>× 10⁻⁶</td></tr>
+  </table>
+  <p class="note"><b>Regla:</b> factor lineal × 10⁻³ (mm→m) → volum × (10⁻³)³ = 10⁻⁹.</p>
+
+  <h3>Exemples típics a l'examen (àrea)</h3>
+  <table>
+    <tr><th>Donat</th><th>Càlcul</th><th>En m²</th></tr>
+    <tr><td>10×10 cm</td><td>100 cm² × 10⁻⁴</td><td>0,01 m² = 10⁻² m²</td></tr>
+    <tr><td>2×2 mm (secció proveta)</td><td>4 mm² × 10⁻⁶</td><td>4·10⁻⁶ m²</td></tr>
+    <tr><td>d = 2 mm (proveta cil.)</td><td>A = π·(10⁻³)² = 3,14·10⁻⁶</td><td>3,14·10⁻⁶ m²</td></tr>
+    <tr><td>d = 0,3 mm (cable)</td><td>A = π·(1,5·10⁻⁴)²</td><td>7,07·10⁻⁸ m²</td></tr>
+    <tr><td>10 m × 1,2 m (paret)</td><td>directament</td><td>12 m²</td></tr>
+  </table>
+
+  <h3>Massa i densitat</h3>
   <table>
     <tr><th>De</th><th>A</th><th>Factor</th></tr>
     <tr><td>g</td><td>kg</td><td>× 10⁻³</td></tr>
     <tr><td>g/cm³</td><td>kg/m³</td><td>× 10³</td></tr>
     <tr><td>%w + ρ</td><td>kg/m³</td><td>× ρ/100</td></tr>
-    <tr><td>cm</td><td>m</td><td>× 10⁻²</td></tr>
-    <tr><td>mm</td><td>m</td><td>× 10⁻³</td></tr>
-    <tr><td>nm</td><td>m</td><td>× 10⁻⁹</td></tr>
+  </table>
+
+  <h3>Temperatura</h3>
+  <table>
+    <tr><th>De</th><th>A</th><th>Operació</th></tr>
     <tr><td>°C</td><td>K</td><td>+ 273</td></tr>
+    <tr><td>K</td><td>°C</td><td>− 273</td></tr>
+  </table>
+
+  <h3>Temps</h3>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
     <tr><td>h</td><td>s</td><td>× 3600</td></tr>
     <tr><td>dia</td><td>s</td><td>× 86 400</td></tr>
     <tr><td>setmana</td><td>s</td><td>× 604 800</td></tr>
+    <tr><td>mes (30 dies)</td><td>s</td><td>× 2,59·10⁶</td></tr>
     <tr><td>any</td><td>s</td><td>× 3,15·10⁷</td></tr>
+  </table>
+
+  <h3>Coef. de difusió i energia</h3>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
     <tr><td>cm²/s</td><td>m²/s</td><td>× 10⁻⁴</td></tr>
     <tr><td>kJ/mol</td><td>J/mol</td><td>× 10³</td></tr>
+  </table>
+
+  <h3>Tensió i pressió</h3>
+  <table>
+    <tr><th>De</th><th>A</th><th>Factor</th></tr>
     <tr><td>GPa</td><td>Pa</td><td>× 10⁹</td></tr>
     <tr><td>MPa</td><td>Pa</td><td>× 10⁶</td></tr>
+    <tr><td>kPa</td><td>Pa</td><td>× 10³</td></tr>
     <tr><td>MPa</td><td>N/mm²</td><td>× 1 (idèntics)</td></tr>
+    <tr><td>GPa</td><td>MPa</td><td>× 10³</td></tr>
+    <tr><td>bar</td><td>Pa</td><td>× 10⁵</td></tr>
+    <tr><td>atm</td><td>Pa</td><td>× 101 325</td></tr>
   </table>
+
+  <h3>Regla d'or universal</h3>
+  <div class="fml"><b>Si 1 unitat_petita = 10<sup>-n</sup> unitat_SI, llavors:</b><br>
+  <b>Àrea</b>: 1 unitat_petita² = 10<sup>-2n</sup> unitat_SI² &nbsp;(doble exponent)<br>
+  <b>Volum</b>: 1 unitat_petita³ = 10<sup>-3n</sup> unitat_SI³ &nbsp;(triple exponent)</div>
+  <p style="font-size:13px;color:var(--dim)">Ex: mm→m (n=3). Àrea: mm²→m² és 10⁻⁶ (2×3=6). Volum: mm³→m³ és 10⁻⁹ (3×3=9).</p>
 </div>
 
 <!-- ============ VALORS ÚTILS A MEMORITZAR ============ -->
