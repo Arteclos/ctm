@@ -861,6 +861,96 @@ Superfície lliure >> Contorn de gra > Intersticial > Vacants
   <p class="note">Si pots respondre totes 8 sense mirar, tens T3 dominat.</p>
 </div>
 
+<!-- ============ MASSA ACUMULADA A FICK 2A ============ -->
+<h2 style="border-left:3px solid #ff9c6b;padding-left:12px;color:#fff;font-size:24px;margin-top:50px">⚖️ Massa acumulada a règim NO estacionari</h2>
+<div class="card" style="background:#161a22;border:1px solid #262c3a;border-radius:12px;padding:22px 26px;margin:16px 0">
+  <p style="color:#ff9c6b;font-weight:700;margin-top:0">⚠ Error típic d'examen:</p>
+  <p>Si vols calcular la <b>quantitat total de C (o N, o H)</b> introduïda durant un tractament no estacionari, <b>NO pots fer servir J·A·t (Fick 1a)</b>.</p>
+  <p>El flux a la superfície <b>canvia amb el temps</b> — al principi entra molt (gran gradient), després cada cop menys (el material es "satura" prop de la superfície):</p>
+
+  <div style="background:#0a0d13;border-left:3px solid #7aa2ff;padding:14px 18px;border-radius:6px;margin:10px 0">
+    $$J(x=0, t) = (C_s - C_0) \cdot \sqrt{\frac{D}{\pi \cdot t}}$$
+  </div>
+
+  <p>El flux decreix com $1/\sqrt{t}$. Multiplicar $J \cdot A \cdot t$ amb un flux instantani sobreestima brutalment la massa.</p>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">Fórmula correcta — massa total introduïda</h3>
+
+  <div style="background:#0a0d13;border-left:3px solid #5ad7a3;padding:18px 22px;border-radius:6px;margin:14px 0;font-size:16px">
+    $$\boxed{M = 2 \cdot A \cdot (C_s - C_0) \cdot \sqrt{\frac{D \cdot t}{\pi}}}$$
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin:10px 0;font-size:14px">
+    <tr style="background:#1c2230"><th style="padding:10px;text-align:left;color:#ffd86b">Símbol</th><th style="padding:10px;text-align:left;color:#ffd86b">Significat</th><th style="padding:10px;text-align:left;color:#ffd86b">Unitat</th></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">$M$</td><td style="padding:8px;border-bottom:1px solid #262c3a">Massa total introduïda</td><td style="padding:8px;border-bottom:1px solid #262c3a">kg</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">$A$</td><td style="padding:8px;border-bottom:1px solid #262c3a">Àrea superfície exposada</td><td style="padding:8px;border-bottom:1px solid #262c3a">m²</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">$C_s - C_0$</td><td style="padding:8px;border-bottom:1px solid #262c3a">Gradient inicial de concentració</td><td style="padding:8px;border-bottom:1px solid #262c3a">kg/m³</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">$D$</td><td style="padding:8px;border-bottom:1px solid #262c3a">Coef. difusió (d'Arrhenius)</td><td style="padding:8px;border-bottom:1px solid #262c3a">m²/s</td></tr>
+    <tr><td style="padding:8px">$t$</td><td style="padding:8px">Durada del tractament</td><td style="padding:8px">s</td></tr>
+  </table>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">D'on surt (intuïció + derivació)</h3>
+  <p><b>Camí 1 — integrar el flux en el temps:</b></p>
+  <div style="background:#0a0d13;border-left:3px solid #7aa2ff;padding:14px 18px;border-radius:6px;margin:10px 0">
+    $$\frac{M}{A} = \int_0^t J(0, t') \, dt' = (C_s - C_0)\sqrt{\frac{D}{\pi}} \int_0^t \frac{dt'}{\sqrt{t'}} = 2(C_s - C_0)\sqrt{\frac{Dt}{\pi}}$$
+  </div>
+
+  <p><b>Camí 2 — integrar la concentració a l'espai (tot el C que hi ha al material):</b></p>
+  <div style="background:#0a0d13;border-left:3px solid #7aa2ff;padding:14px 18px;border-radius:6px;margin:10px 0">
+    $$\frac{M}{A} = \int_0^{\infty} [C(x,t) - C_0] \, dx = 2(C_s - C_0)\sqrt{\frac{Dt}{\pi}}$$
+  </div>
+
+  <p>Totes dues donen la mateixa cosa — és la mateixa realitat mirada de dos angles.</p>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">Intuïció clau: $M \propto \sqrt{t}$</h3>
+  <ul>
+    <li><b>Doble temps</b> → només $\sqrt{2} \approx 1{,}41$ vegades més massa.</li>
+    <li><b>Quatre vegades el temps</b> → el DOBLE de massa.</li>
+    <li>Per doblar la massa introduïda cal <b>4 vegades</b> el temps.</li>
+  </ul>
+  <p>Per això la carburació industrial té rendiments decreixents: tractaments inicials aporten molt C, allargar-los és cada cop menys eficient.</p>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">Exemple numèric (carburació típica)</h3>
+  <div style="background:rgba(255,122,163,.08);border-left:3px solid #ff7aa3;padding:10px 14px;border-radius:6px;margin:10px 0;font-size:14px">
+    <b>DADES:</b> Cs = 1,2 %w · C₀ = 0,1 %w · T = 950°C · t = 5 h · cara 10×10 cm · ρ_Fe = 7870 kg/m³
+  </div>
+
+  <div style="background:#1c2230;padding:12px 16px;border-radius:8px;margin:8px 0;border:1px solid #262c3a;font-size:14px">
+    <b>Pas 1 — conversions SI:</b><br>
+    $C_s = \frac{1{,}2}{100} \cdot 7870 = 94{,}4$ kg/m³<br>
+    $C_0 = \frac{0{,}1}{100} \cdot 7870 = 7{,}87$ kg/m³<br>
+    $T = 1223$ K · $t = 18\,000$ s · $A = 0{,}01$ m²
+  </div>
+
+  <div style="background:#1c2230;padding:12px 16px;border-radius:8px;margin:8px 0;border:1px solid #262c3a;font-size:14px">
+    <b>Pas 2 — D (Arrhenius, C en Fe-γ FCC):</b> D₀ = 2,3·10⁻⁵ m²/s, Q = 148 kJ/mol
+    $$D = 2{,}3\cdot 10^{-5} \cdot \exp\left(\frac{-148\,000}{8{,}314 \cdot 1223}\right) = 1{,}7\cdot 10^{-11} \text{ m}^2/\text{s}$$
+  </div>
+
+  <div style="background:#1c2230;padding:12px 16px;border-radius:8px;margin:8px 0;border:1px solid #262c3a;font-size:14px">
+    <b>Pas 3 — massa introduïda:</b>
+    $$M = 2 \cdot 0{,}01 \cdot (94{,}4 - 7{,}87) \cdot \sqrt{\frac{1{,}7\cdot 10^{-11} \cdot 18\,000}{\pi}}$$
+    $$M = 0{,}02 \cdot 86{,}5 \cdot 3{,}12\cdot 10^{-4} = 5{,}4\cdot 10^{-4} \text{ kg} = \boxed{0{,}54 \text{ g de C}}$$
+  </div>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">⚠ Matisos importants</h3>
+  <ul>
+    <li><b>Material semi-infinit:</b> la fórmula assumeix que el solut no arriba a l'altra cara. Comprovació ràpida: $2\sqrt{Dt}$ &lt; gruix. Si falla, sobreestima.</li>
+    <li><b>Una sola cara exposada:</b> si la peça té totes les cares a l'atmosfera, multiplica A per l'àrea total (amb les interaccions a arestes com aproximació).</li>
+    <li><b>La dada t ha de ser en segons i D en m²/s</b> perquè les unitats quadrin.</li>
+  </ul>
+
+  <h3 style="font-size:17px;margin:22px 0 8px;color:#ffd86b;font-weight:600">Regla mestra — quan uses cada cosa</h3>
+  <table style="width:100%;border-collapse:collapse;margin:10px 0;font-size:14px">
+    <tr style="background:#1c2230"><th style="padding:10px;text-align:left;color:#ffd86b">Pregunta</th><th style="padding:10px;text-align:left;color:#ffd86b">Fórmula</th></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">"Quanta massa passa per segon?"</td><td style="padding:8px;border-bottom:1px solid #262c3a">Fick 1a: $J \cdot A$ (estacionari)</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #262c3a">"Massa acumulada durant t a règim ESTACIONARI?"</td><td style="padding:8px;border-bottom:1px solid #262c3a">$M = J \cdot A \cdot t$ (flux constant)</td></tr>
+    <tr><td style="padding:8px"><b>"Massa acumulada durant t a règim NO ESTACIONARI?"</b></td><td style="padding:8px"><b>$M = 2A(C_s-C_0)\sqrt{Dt/\pi}$</b></td></tr>
+  </table>
+
+  <p style="background:rgba(90,215,163,.08);border-left:3px solid #5ad7a3;padding:10px 14px;border-radius:6px;margin:14px 0 0;font-size:14px"><b>Examen 06/05/2020</b> ja tenia aquest tipus de pregunta al problema de la barra d'acer carburada. Memoritza la fórmula — és l'única manera de resoldre massa acumulada a Fick 2a.</p>
+</div>
+
 </div>
 </body>
 </html>
