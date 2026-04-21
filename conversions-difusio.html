@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>CTM · Conversions d'unitats — Difusió</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+<style>
+:root{
+  --bg:#0e1016; --panel:#161a22; --panel2:#1c2230; --text:#e9edf5; --dim:#8a93a6;
+  --accent:#ffd86b; --ok:#5ad7a3; --bad:#ff7aa3; --info:#7aa2ff; --trap:#ff9c6b;
+  --border:#262c3a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',sans-serif;line-height:1.65}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:36px;margin:0 0 6px;font-weight:700;letter-spacing:-0.5px}
+h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px}
+h2{font-size:22px;margin:50px 0 12px;font-weight:600;border-left:3px solid var(--trap);padding-left:12px}
+h3{font-size:16px;margin:20px 0 8px;color:var(--accent);font-weight:600}
+p{margin:8px 0}
+.hero{padding:22px 28px;background:linear-gradient(135deg,#2a2016,#1a1426);border:1px solid var(--trap);border-radius:12px;margin:20px 0 28px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin:18px 0}
+.trap-num{display:inline-block;background:var(--trap);color:#0e1016;font-weight:800;padding:4px 12px;border-radius:6px;font-size:13px;letter-spacing:1px;margin-right:8px}
+.given{background:rgba(255,122,163,.08);border-left:3px solid var(--bad);padding:10px 14px;border-radius:6px;margin:10px 0;font-size:14px}
+.given b{color:var(--bad)}
+.good{background:rgba(90,215,163,.08);border-left:3px solid var(--ok);padding:10px 14px;border-radius:6px;margin:10px 0;font-size:14px}
+.good b{color:var(--ok)}
+.step{background:var(--panel2);padding:12px 16px;border-radius:8px;margin:8px 0;border:1px solid var(--border)}
+.step .snum{display:inline-block;background:var(--info);color:#0e1016;font-weight:800;width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;margin-right:8px}
+.formula{background:#0a0d13;border-left:3px solid var(--accent);padding:14px 18px;border-radius:6px;margin:10px 0;overflow-x:auto}
+.exam-src{display:inline-block;background:var(--panel2);color:var(--dim);padding:3px 10px;border-radius:999px;font-size:12px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--panel2);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
+.toc a{background:var(--panel);color:var(--dim);padding:6px 12px;border-radius:999px;font-size:12px;text-decoration:none;border:1px solid var(--border)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<nav class="ctm-nav">
+<style>
+.ctm-nav{position:sticky;top:0;z-index:100;background:rgba(14,16,22,.96);backdrop-filter:blur(10px);border-bottom:1px solid #262c3a;padding:12px 24px;font-family:'Inter','Segoe UI',sans-serif}
+.ctm-nav-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctm-nav-title{font-weight:700;color:#ffd86b;margin-right:16px;font-size:14px}
+.ctm-nav a{color:#8a93a6;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px;border:1px solid transparent;transition:all .15s}
+.ctm-nav a:hover{color:#e9edf5;background:#161a22}
+.ctm-nav a.active{color:#ffd86b;border-color:#ffd86b;background:rgba(255,216,107,.08)}
+.ctm-nav a.hunt{color:#ff7aa3;border:1px solid #ff7aa3}
+.ctm-nav a.test{color:#5ad7a3;border:1px solid #5ad7a3}
+</style>
+<div class="ctm-nav-inner">
+  <span class="ctm-nav-title">⚡ CTM — Parcial 1</span>
+  <a href="sessio-01-enllacos.html">T1 · Enllaços</a>
+  <a href="sessio-02-cristalografia.html">T2 · Cristalografia</a>
+  <a href="sessio-03-difusio.html">T3 · Difusió</a>
+  <a href="sessio-04-polimers.html">T4 · Polímers</a>
+  <a href="sessio-05-mecaniques.html">T7 · Mecàniques</a>
+  <a href="sessio-08-deformacio.html">T8A · Deformació</a>
+  <a href="sessio-09-corrosio.html">Corrosió</a>
+  <a href="conversions-difusio.html" class="active">⚙️ Conversions</a>
+  <a href="cacador-preguntes.html" class="hunt">🎯 Caçador</a>
+  <a href="simulador-test.html" class="test">🧪 Test</a>
+</div>
+</nav>
+
+<div class="wrap">
+
+<h1>⚙️ Conversions d'unitats — Difusió
+  <small>Totes les trampes reals d'exàmens anteriors · Amb fórmules i passos</small>
+</h1>
+
+<div class="hero">
+  <p><b>Per què aquesta pàgina existeix:</b> els problemes de difusió SEMPRE tenen trampes d'unitats. Els professors et donen dades en %w, g/setmana, mm, hores, °C... i TU has de convertir-ho tot a SI abans de calcular. Un error d'unitats = problema sencer malament.</p>
+  <p><b>Regla d'or:</b> abans de fer res, fes una taula de DADES amb tot en SI (kg, m, s, K). Després opera.</p>
+</div>
+
+<div class="toc">
+  <a href="#sistema">🔹 Sistema SI referència</a>
+  <a href="#t1">Trampa 1: %w → kg/m³</a>
+  <a href="#t2">Trampa 2: g → kg</a>
+  <a href="#t3">Trampa 3: cm/mm → m</a>
+  <a href="#t4">Trampa 4: hores/dies/anys → s</a>
+  <a href="#t5">Trampa 5: °C → K</a>
+  <a href="#t6">Trampa 6: g/setmana → SI</a>
+  <a href="#t7">Trampa 7: barreja d'unitats al ratio</a>
+  <a href="#t8">Trampa 8: Cs interior vs exterior</a>
+  <a href="#t9">Trampa 9: D0 unitats</a>
+  <a href="#resum">📋 Resum</a>
+</div>
+
+<!-- ============ SISTEMA SI ============ -->
+<h2 id="sistema">🔹 Sistema SI de referència</h2>
+<div class="card">
+  <p>Tot el càlcul de Fick i Arrhenius <b>funciona directament</b> si treballes en SI:</p>
+  <table>
+    <tr><th>Magnitud</th><th>Símbol</th><th>Unitat SI</th></tr>
+    <tr><td>Concentració</td><td>C</td><td>kg/m³</td></tr>
+    <tr><td>Flux</td><td>J</td><td>kg/(m²·s)</td></tr>
+    <tr><td>Distància</td><td>x</td><td>m</td></tr>
+    <tr><td>Temps</td><td>t</td><td>s</td></tr>
+    <tr><td>Temperatura</td><td>T</td><td>K</td></tr>
+    <tr><td>Coef. difusió</td><td>D</td><td>m²/s</td></tr>
+    <tr><td>Energia activació</td><td>Q</td><td>J/mol</td></tr>
+    <tr><td>Constant dels gasos</td><td>R</td><td>8,314 J/(mol·K)</td></tr>
+  </table>
+
+  <h3>Comprovació dimensional de Fick 1a</h3>
+  <div class="formula">$$J = -D \cdot \frac{\Delta C}{\Delta x}$$
+  $$\left[\frac{\mathrm{kg}}{\mathrm{m}^2 \cdot \mathrm{s}}\right] = \left[\frac{\mathrm{m}^2}{\mathrm{s}}\right] \cdot \frac{[\mathrm{kg/m}^3]}{[\mathrm{m}]} = \left[\frac{\mathrm{kg}}{\mathrm{m}^2 \cdot \mathrm{s}}\right] \checkmark$$</div>
+
+  <h3>Comprovació de z a Fick 2a</h3>
+  <div class="formula">$$z = \frac{x}{2\sqrt{D \cdot t}}$$
+  $$\left[\mathrm{adim}\right] = \frac{[\mathrm{m}]}{\sqrt{[\mathrm{m}^2/\mathrm{s}] \cdot [\mathrm{s}]}} = \frac{[\mathrm{m}]}{[\mathrm{m}]} \checkmark$$</div>
+</div>
+
+<!-- ============ TRAMPA 1 ============ -->
+<h2 id="t1"><span class="trap-num">TRAMPA 1</span>%w → kg/m³ (amb densitat)</h2>
+<div class="card">
+  <span class="exam-src">Exemple: Nitruració de Fe · Examen 24-25 QP</span>
+  <p>Aquesta és la trampa <b>MÉS FREQÜENT</b>. Et donen la concentració de C o N en tant per cent en pes (%w), però Fick necessita kg/m³.</p>
+
+  <div class="given"><b>DADES:</b> Fe, ρ = 7,55 g/cm³, Cs = 1,2 %w N, C₀ = 0,29 %w N</div>
+
+  <h3>Fórmula de conversió</h3>
+  <div class="formula">$$C \left[\frac{\mathrm{kg}}{\mathrm{m}^3}\right] = \frac{\%w}{100} \cdot \rho \left[\frac{\mathrm{kg}}{\mathrm{m}^3}\right]$$</div>
+  <p style="font-size:13px;color:var(--dim)">La lògica: si 1,2% del pes és N, i el material total pesa 7550 kg/m³, llavors el N pesa 0,012·7550 kg/m³.</p>
+
+  <h3>Pas a pas</h3>
+  <div class="step"><span class="snum">1</span><b>Convertir ρ a SI:</b> 7,55 g/cm³ × 1000 = <b>7550 kg/m³</b></div>
+  <div class="step"><span class="snum">2</span><b>Calcular Cs:</b> $C_s = \frac{1{,}2}{100} \cdot 7550 = 90{,}6 \mathrm{\ kg/m^3}$</div>
+  <div class="step"><span class="snum">3</span><b>Calcular C₀:</b> $C_0 = \frac{0{,}29}{100} \cdot 7550 = 21{,}9 \mathrm{\ kg/m^3}$</div>
+
+  <div class="good"><b>ALTERNATIVA:</b> si TOTES les concentracions són en %w, pots treballar directament en %w (el ratio és el mateix). Només cal convertir si mescles %w amb kg/m³.</div>
+</div>
+
+<!-- ============ TRAMPA 2 ============ -->
+<h2 id="t2"><span class="trap-num">TRAMPA 2</span>g/cm³ → kg/m³</h2>
+<div class="card">
+  <span class="exam-src">Exemple: múltiples exàmens amb densitats</span>
+  <p>Les densitats en taules solen venir en g/cm³. SI usa kg/m³.</p>
+
+  <div class="formula">$$\rho \left[\frac{\mathrm{kg}}{\mathrm{m}^3}\right] = \rho \left[\frac{\mathrm{g}}{\mathrm{cm}^3}\right] \times 1000$$</div>
+
+  <h3>Deducció (per entendre-ho)</h3>
+  <div class="formula">$$\frac{1 \mathrm{\ g}}{1 \mathrm{\ cm}^3} = \frac{10^{-3} \mathrm{\ kg}}{10^{-6} \mathrm{\ m}^3} = 10^{3} \frac{\mathrm{kg}}{\mathrm{m}^3}$$</div>
+
+  <h3>Exemples comuns</h3>
+  <table>
+    <tr><th>Material</th><th>g/cm³</th><th>kg/m³</th></tr>
+    <tr><td>Fe</td><td>7,87</td><td>7870</td></tr>
+    <tr><td>Al</td><td>2,70</td><td>2700</td></tr>
+    <tr><td>Cu</td><td>8,96</td><td>8960</td></tr>
+    <tr><td>Mg</td><td>1,74</td><td>1740</td></tr>
+    <tr><td>Ti</td><td>4,50</td><td>4500</td></tr>
+    <tr><td>Pb</td><td>11,34</td><td>11340</td></tr>
+  </table>
+</div>
+
+<!-- ============ TRAMPA 3 ============ -->
+<h2 id="t3"><span class="trap-num">TRAMPA 3</span>cm / mm / μm → m</h2>
+<div class="card">
+  <span class="exam-src">Exemple: carburació 0,5 mm a 950°C</span>
+  <p>Les distàncies solen venir en mm (profunditat carburació) o cm (gruix paret). D sempre es dóna en m²/s, així que x ha d'estar en m.</p>
+
+  <div class="formula">$$1 \mathrm{\ mm} = 10^{-3} \mathrm{\ m} \quad|\quad 1 \mathrm{\ cm} = 10^{-2} \mathrm{\ m} \quad|\quad 1 \mathrm{\ \mu m} = 10^{-6} \mathrm{\ m}$$</div>
+
+  <h3>Exemples típics d'examen</h3>
+  <table>
+    <tr><th>Valor donat</th><th>Valor en m</th><th>En notació científica</th></tr>
+    <tr><td>0,5 mm</td><td>0,0005 m</td><td>5·10⁻⁴ m</td></tr>
+    <tr><td>1 mm</td><td>0,001 m</td><td>10⁻³ m</td></tr>
+    <tr><td>30 cm</td><td>0,30 m</td><td>3·10⁻¹ m</td></tr>
+    <tr><td>180 cm</td><td>1,80 m</td><td>1,80 m</td></tr>
+    <tr><td>4 mm (gruix)</td><td>0,004 m</td><td>4·10⁻³ m</td></tr>
+    <tr><td>2 mm</td><td>0,002 m</td><td>2·10⁻³ m</td></tr>
+  </table>
+
+  <div class="given"><b>TRAMPA COMÚ:</b> et donen gruix 180 cm però volen concentració a 30 cm de la cara INTERIOR. Has d'usar <b>x = 180 - 30 = 150 cm = 1,5 m</b> des de la cara exterior (on hi ha Cs).</div>
+</div>
+
+<!-- ============ TRAMPA 4 ============ -->
+<h2 id="t4"><span class="trap-num">TRAMPA 4</span>hores / dies / anys → segons</h2>
+<div class="card">
+  <span class="exam-src">Exemple: t = 1 any (búnker Pu), t = 10 h (nitruració)</span>
+  <p>D és en m²/s. El temps HA d'estar en segons.</p>
+
+  <div class="formula">$$\begin{aligned}
+  1 \mathrm{\ h} &= 3600 \mathrm{\ s} \\
+  1 \mathrm{\ dia} &= 86\,400 \mathrm{\ s} \\
+  1 \mathrm{\ setmana} &= 604\,800 \mathrm{\ s} \\
+  1 \mathrm{\ any} &= 3{,}15\cdot 10^7 \mathrm{\ s}
+  \end{aligned}$$</div>
+
+  <h3>Exemples típics d'examen</h3>
+  <table>
+    <tr><th>Valor donat</th><th>En segons</th></tr>
+    <tr><td>5 hores</td><td>18 000 s = 1,8·10⁴ s</td></tr>
+    <tr><td>10 hores</td><td>36 000 s = 3,6·10⁴ s</td></tr>
+    <tr><td>24 hores</td><td>86 400 s</td></tr>
+    <tr><td>1 setmana</td><td>604 800 s ≈ 6,05·10⁵ s</td></tr>
+    <tr><td>1 mes (30 dies)</td><td>2 592 000 s ≈ 2,6·10⁶ s</td></tr>
+    <tr><td>1 any</td><td>31 536 000 s ≈ 3,15·10⁷ s</td></tr>
+  </table>
+
+  <h3>Snippet calculadora</h3>
+  <p style="font-size:13px;color:var(--dim)">Exemple càlcul mental: 10 h × 3600 = 36 000 s. 6 h × 3600 = 21 600 s. Si tens 5 hores → mitjà any no és problema, fes × 3600.</p>
+</div>
+
+<!-- ============ TRAMPA 5 ============ -->
+<h2 id="t5"><span class="trap-num">TRAMPA 5</span>°C → K</h2>
+<div class="card">
+  <p>Arrhenius usa TEMPERATURA ABSOLUTA (Kelvin), sempre.</p>
+
+  <div class="formula">$$T [K] = T [°C] + 273$$</div>
+
+  <p style="font-size:13px;color:var(--dim)">Nota: tècnicament és +273,15, però a l'examen +273 és suficient (error &lt;0,1%).</p>
+
+  <h3>Exemples comuns</h3>
+  <table>
+    <tr><th>°C</th><th>Kelvin</th><th>Quan apareix</th></tr>
+    <tr><td>-200°C</td><td>73 K</td><td>Assaigs criogènics</td></tr>
+    <tr><td>-100°C</td><td>173 K</td><td>Assaigs baixa T</td></tr>
+    <tr><td>-15°C</td><td>258 K</td><td>Búnker país fred</td></tr>
+    <tr><td>20°C</td><td>293 K</td><td>T ambient</td></tr>
+    <tr><td>25°C</td><td>298 K</td><td>T ambient estàndard</td></tr>
+    <tr><td>475°C</td><td>748 K</td><td>Nitruració</td></tr>
+    <tr><td>662°C</td><td>935 K</td><td>Nitruració engranatge</td></tr>
+    <tr><td>900°C</td><td>1173 K</td><td>Carburació</td></tr>
+    <tr><td>950°C</td><td>1223 K</td><td>Carburació Fe-γ</td></tr>
+    <tr><td>1000°C</td><td>1273 K</td><td>Tractaments alta T</td></tr>
+    <tr><td>1100°C</td><td>1373 K</td><td>Carburació accelerada</td></tr>
+  </table>
+
+  <div class="given"><b>⚠ ERROR CLÀSSIC:</b> posar °C directament a D = D₀·exp(-Q/RT). Dóna resultats absurds o negatius. SEMPRE converteix a K primer.</div>
+</div>
+
+<!-- ============ TRAMPA 6 ============ -->
+<h2 id="t6"><span class="trap-num">TRAMPA 6</span>Flux en g/setmana o g/mes → kg/(m²·s)</h2>
+<div class="card">
+  <span class="exam-src">Exemple: 20 g/setmana (Ti paret difusió Ar) · 5 g/mes (membrana cilíndrica)</span>
+  <p>Els problemes de Fick 1a de vegades et donen un "pes per temps" — has de dividir per àrea i convertir a segons.</p>
+
+  <div class="formula">$$J \left[\frac{\mathrm{kg}}{\mathrm{m}^2 \cdot \mathrm{s}}\right] = \frac{m [\mathrm{kg}]}{A [\mathrm{m}^2] \cdot t [\mathrm{s}]}$$</div>
+
+  <h3>Exemple real: 20 g/setmana, paret 10×10 cm</h3>
+
+  <div class="given"><b>DADES:</b> m = 20 g, t = 1 setmana, A = 10×10 cm</div>
+
+  <div class="step"><span class="snum">1</span><b>Massa:</b> 20 g = 0,020 kg = 2·10⁻² kg</div>
+  <div class="step"><span class="snum">2</span><b>Àrea:</b> 10 cm × 10 cm = 0,10 m × 0,10 m = 0,01 m² = 10⁻² m²</div>
+  <div class="step"><span class="snum">3</span><b>Temps:</b> 1 setmana = 7 × 24 × 3600 = 604 800 s ≈ 6,05·10⁵ s</div>
+  <div class="step"><span class="snum">4</span><b>Flux:</b>
+    <div class="formula">$$J = \frac{2\cdot 10^{-2}}{10^{-2} \cdot 6{,}05\cdot 10^5} = 3{,}3\cdot 10^{-6} \mathrm{\ kg/(m^2 \cdot s)}$$</div>
+  </div>
+
+  <h3>Cas cilindre (membrana)</h3>
+  <p>Si la paret és cilíndrica, l'àrea lateral és:</p>
+  <div class="formula">$$A = 2\pi r h$$</div>
+  <p>Ex: r = 10 cm = 0,10 m · h = 90 cm = 0,90 m</p>
+  <div class="formula">$$A = 2\pi \cdot 0{,}10 \cdot 0{,}90 = 0{,}565 \mathrm{\ m}^2$$</div>
+
+  <h3>Cas esfera</h3>
+  <p>Àrea superfície esfera:</p>
+  <div class="formula">$$A = 4\pi r^2$$</div>
+  <p>Ex: r = 1 m → A = 4π ≈ 12,57 m². Radi exterior 30 cm = 0,30 m → A = 4π·0,09 = 1,13 m².</p>
+</div>
+
+<!-- ============ TRAMPA 7 ============ -->
+<h2 id="t7"><span class="trap-num">TRAMPA 7</span>Barreja d'unitats al ratio Fick 2a</h2>
+<div class="card">
+  <span class="exam-src">Exemple: Cs en %w + C₀ en kg/m³ (mescla perillosa)</span>
+  <p>El ratio $(C_x - C_0) / (C_s - C_0)$ ha de tenir <b>totes les C en les MATEIXES unitats</b>.</p>
+
+  <h3>Què NO pots fer</h3>
+  <div class="given">
+    <b>MALAMENT:</b> C_s = 1,2 %w · C₀ = 0 kg/m³ · C_x = 0,6 %w
+    <br>$(0,6 - 0)/(1,2 - 0) = 0,5$ ← nombre enganyós, no vol dir res físic.
+  </div>
+
+  <h3>Què HAS de fer</h3>
+  <p>Converteix TOT a la mateixa unitat (recomanat: %w o kg/m³):</p>
+  <div class="good"><b>BÉ (en %w):</b> C_s = 1,2 %w · C₀ = 0 %w · C_x = 0,6 %w → ratio = 0,5 (correcte)</div>
+  <div class="good"><b>BÉ (en kg/m³):</b> $C_s = 0{,}012 \cdot 7550 = 90{,}6$ · $C_0 = 0$ · $C_x = 0{,}006 \cdot 7550 = 45{,}3$ → ratio = 0,5 (correcte, mateix valor)</div>
+
+  <h3>Regla mestra</h3>
+  <p>Com que el ratio és ADIMENSIONAL, quadra igual amb qualsevol unitat (si són totes iguals). <b>Però no barregis.</b></p>
+
+  <h3>Comprovació ràpida</h3>
+  <ul>
+    <li>Ratio ha d'estar entre 0 i 1 (<b>sempre</b>).</li>
+    <li>Si surt >1 o <0 → unitats mal barrejades (o C_s i C₀ invertits).</li>
+  </ul>
+</div>
+
+<!-- ============ TRAMPA 8 ============ -->
+<h2 id="t8"><span class="trap-num">TRAMPA 8</span>Distància des de quina cara?</h2>
+<div class="card">
+  <span class="exam-src">Exemple: búnker Pu · paret 180 cm · C_x a 30 cm de cara interior</span>
+  <p>A Fick 2a, <b>x sempre es mesura DES DE LA CARA AMB CONCENTRACIÓ Cs</b> (la superfície "font").</p>
+
+  <h3>Truc visual</h3>
+  <table>
+    <tr>
+      <td style="background:rgba(255,122,163,.2);padding:20px;text-align:center;border-right:2px dashed var(--dim)">
+        <b style="color:var(--bad)">CARA EXTERIOR</b><br>
+        Cs = 3·10⁻² kg/m³<br>
+        (on x=0)
+      </td>
+      <td style="padding:20px;text-align:center">
+        ← 150 cm → (x)<br>
+        Punt crític<br>
+        C_x = 4·10⁻⁵
+      </td>
+      <td style="background:rgba(90,215,163,.2);padding:20px;text-align:center;border-left:2px dashed var(--dim)">
+        <b style="color:var(--ok)">CARA INTERIOR</b><br>
+        (30 cm a l'esquerra<br>del punt crític)
+      </td>
+    </tr>
+  </table>
+
+  <h3>Pas a pas</h3>
+  <div class="step"><span class="snum">1</span><b>Gruix total paret:</b> 180 cm</div>
+  <div class="step"><span class="snum">2</span><b>Punt crític:</b> 30 cm des de CARA INTERIOR</div>
+  <div class="step"><span class="snum">3</span><b>Distància des de la font (cara exterior):</b> 180 − 30 = <b>150 cm = 1,5 m</b></div>
+  <div class="step"><span class="snum">4</span>A Fick 2a: $z = \dfrac{1{,}5}{2\sqrt{D \cdot t}}$ (usa x = 1,5 m)</div>
+
+  <div class="given"><b>ERROR COMÚ:</b> usar x = 30 cm = 0,3 m. Això donaria que el Pu ja ha travessat 30 cm → ratio molt més gran → conclusió errònia (diries que NO és segur quan sí ho és).</div>
+</div>
+
+<!-- ============ TRAMPA 9 ============ -->
+<h2 id="t9"><span class="trap-num">TRAMPA 9</span>D₀ en cm²/s vs m²/s</h2>
+<div class="card">
+  <span class="exam-src">Exemple: taules de difusió amb D₀ en cm²/s o m²/s</span>
+  <p>Algunes taules de D₀ venen en <b>cm²/s</b>, altres en <b>m²/s</b>. <b>1 cm²/s = 10⁻⁴ m²/s</b>.</p>
+
+  <div class="formula">$$D \left[\frac{\mathrm{m}^2}{\mathrm{s}}\right] = D \left[\frac{\mathrm{cm}^2}{\mathrm{s}}\right] \times 10^{-4}$$</div>
+
+  <h3>Exemples comuns</h3>
+  <table>
+    <tr><th>Material / Solut</th><th>D₀ cm²/s</th><th>D₀ m²/s</th><th>Q kJ/mol</th></tr>
+    <tr><td>C en Fe-α (BCC)</td><td>6,2·10⁻³</td><td>6,2·10⁻⁷</td><td>80</td></tr>
+    <tr><td>C en Fe-γ (FCC)</td><td>2,3·10⁻⁵</td><td>2,3·10⁻⁹</td><td>148</td></tr>
+    <tr><td>N en Fe-α</td><td>3·10⁻⁷ (taula)</td><td>3·10⁻⁷</td><td>76</td></tr>
+    <tr><td>Fe en Fe-α (autodifusió)</td><td>1,9·10⁻⁴</td><td>1,9·10⁻⁸</td><td>250</td></tr>
+  </table>
+
+  <h3>Comprovació ràpida</h3>
+  <p>Si D surt en ordre de magnitud:</p>
+  <ul>
+    <li><b>10⁻⁹ a 10⁻¹²</b> m²/s → valor normal per difusió en sòlid a T moderada-alta.</li>
+    <li><b>10⁻²⁰</b> o més petit → probable error (T massa baixa o Q massa gran).</li>
+    <li><b>10⁰ a 10⁻²</b> → probable que D₀ estigui en cm²/s i no hagis convertit.</li>
+  </ul>
+</div>
+
+<!-- ============ RESUM ============ -->
+<h2 id="resum">📋 Resum ràpid — taula de conversions</h2>
+<div class="card">
+  <table>
+    <tr><th>Dada donada</th><th>Convertir a SI</th><th>Multiplicar per</th></tr>
+    <tr><td>g</td><td>kg</td><td>10⁻³</td></tr>
+    <tr><td>g/cm³</td><td>kg/m³</td><td>10³</td></tr>
+    <tr><td>%w (amb ρ)</td><td>kg/m³</td><td>%w/100 · ρ</td></tr>
+    <tr><td>cm</td><td>m</td><td>10⁻²</td></tr>
+    <tr><td>mm</td><td>m</td><td>10⁻³</td></tr>
+    <tr><td>μm</td><td>m</td><td>10⁻⁶</td></tr>
+    <tr><td>h</td><td>s</td><td>3600</td></tr>
+    <tr><td>dia</td><td>s</td><td>86 400</td></tr>
+    <tr><td>setmana</td><td>s</td><td>604 800</td></tr>
+    <tr><td>any</td><td>s</td><td>3,15·10⁷</td></tr>
+    <tr><td>°C</td><td>K</td><td>+273</td></tr>
+    <tr><td>cm²/s</td><td>m²/s</td><td>10⁻⁴</td></tr>
+    <tr><td>kJ/mol</td><td>J/mol</td><td>10³</td></tr>
+  </table>
+
+  <h3>Workflow recomanat (tot problema de difusió)</h3>
+  <ol>
+    <li><b>Llegeix l'enunciat sencer</b> i identifica totes les dades.</li>
+    <li><b>Fes una taula de DADES</b> al principi del full amb tot convertit a SI.</li>
+    <li><b>Identifica</b> si és Fick 1a (estacionari) o Fick 2a (no estacionari).</li>
+    <li><b>Arrhenius primer</b> → D a la T del problema.</li>
+    <li><b>Apply Fick</b> → resol incògnita.</li>
+    <li><b>Comprovació final</b>: magnitud lògica? Ratio entre 0 i 1? Unitats del resultat correctes?</li>
+  </ol>
+
+  <h3>Taula de DADES model (copia aquest format)</h3>
+  <div class="formula">
+<pre style="margin:0;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px">
+DADES (totes en SI):
+  Cs  = ____ kg/m³   ← convertit de ____ %w
+  C₀  = ____ kg/m³
+  Cx  = ____ kg/m³
+  x   = ____ m       ← convertit de ____ cm/mm
+  t   = ____ s       ← convertit de ____ h/dies/anys
+  T   = ____ K       ← convertit de ____ °C
+  D₀  = ____ m²/s    ← convertit de ____ cm²/s (si cal)
+  Q   = ____ J/mol   ← convertit de ____ kJ/mol
+  ρ   = ____ kg/m³   ← convertit de ____ g/cm³
+</pre>
+  </div>
+
+  <p style="text-align:center;margin-top:16px">
+    <a href="sessio-03-difusio.html" style="display:inline-block;background:var(--info);color:#0e1016;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🌊 Tema 3 Difusió</a>
+    &nbsp;
+    <a href="cacador-preguntes.html#problemes" style="display:inline-block;background:var(--bad);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700">🎯 Predicció problemes</a>
+  </p>
+</div>
+
+</div>
+</body>
+</html>
