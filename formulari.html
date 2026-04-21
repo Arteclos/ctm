@@ -195,8 +195,8 @@ td:last-child{font-family:'JetBrains Mono','Consolas',monospace;color:var(--ok);
   <div class="fml">$$\frac{N_v}{N} = \exp\left(-\frac{Q_v}{k \cdot T}\right)$$</div>
   <table>
     <tr><th>Símbol</th><th>Significat</th><th>Unitat SI</th></tr>
-    <tr><td>$N_v$</td><td>Vacants per unitat de volum</td><td>/m³</td></tr>
-    <tr><td>$N$</td><td>Posicions atòmiques per volum</td><td>/m³</td></tr>
+    <tr><td>$N_v$</td><td>Vacants per unitat de volum</td><td>/m³ (o /cm³)</td></tr>
+    <tr><td>$N$</td><td>Posicions atòmiques per volum</td><td>/m³ (o /cm³)</td></tr>
     <tr><td>$Q_v$</td><td>Energia formació vacant</td><td>J (o J/mol si uses R)</td></tr>
     <tr><td>$k$</td><td>Boltzmann</td><td>1,38·10⁻²³ J/K</td></tr>
     <tr><td>$T$</td><td>Temperatura</td><td>K</td></tr>
@@ -206,10 +206,33 @@ td:last-child{font-family:'JetBrains Mono','Consolas',monospace;color:var(--ok);
 </div>
 
 <div class="formula-block">
-  <h3>Nombre de vacants per cel·la (indirecta, per densitat)</h3>
+  <h3>Càlcul de N (posicions atòmiques per unitat de volum)</h3>
+  <div class="fml">$$N = \frac{\rho \cdot N_A}{A}$$</div>
+  <table>
+    <tr><th>Símbol</th><th>Significat</th><th>Unitat</th></tr>
+    <tr><td>$N$</td><td>Nombre total de posicions atòmiques per volum</td><td>àtoms/cm³ (o àtoms/m³)</td></tr>
+    <tr><td>$\rho$</td><td>Densitat del material</td><td>g/cm³ (o kg/m³)</td></tr>
+    <tr><td>$N_A$</td><td>Avogadro</td><td>6,022·10²³ /mol</td></tr>
+    <tr><td>$A$</td><td>Massa atòmica</td><td>g/mol</td></tr>
+  </table>
+  <p class="note"><b>Coherència d'unitats:</b> si $\rho$ en g/cm³ i $A$ en g/mol → $N$ surt en àtoms/cm³. Si $\rho$ en kg/m³ i $A$ en kg/mol → $N$ surt en àtoms/m³.</p>
+
+  <h3>Exemple: N per al Cu</h3>
+  <p style="font-size:13px">ρ = 8,96 g/cm³, A = 63,55 g/mol</p>
+  <div class="fml">$$N_{Cu} = \frac{8{,}96 \cdot 6{,}022 \cdot 10^{23}}{63{,}55} = 8{,}49 \cdot 10^{22} \text{ àtoms/cm}^3$$</div>
+  <p style="font-size:13px;color:var(--dim)">Valor típic per metalls: ~10²² - 10²³ àtoms/cm³. Això és el denominador de N_v/N.</p>
+
+  <h3>Exemple complet: vacants per cm³ en Cu a 1000°C</h3>
+  <p style="font-size:13px">Q_v = 0,9 eV = 1,44·10⁻¹⁹ J · T = 1273 K · k = 1,38·10⁻²³ J/K</p>
+  <div class="fml">$$\frac{N_v}{N} = \exp\left(-\frac{1{,}44 \cdot 10^{-19}}{1{,}38\cdot 10^{-23} \cdot 1273}\right) = \exp(-8{,}20) = 2{,}74 \cdot 10^{-4}$$
+  $$N_v = 2{,}74 \cdot 10^{-4} \cdot 8{,}49 \cdot 10^{22} = 2{,}33 \cdot 10^{19} \text{ vacants/cm}^3$$</div>
+</div>
+
+<div class="formula-block">
+  <h3>Vacants per cel·la (a partir de densitat real)</h3>
   <div class="fml">$$n_{efectiu} = \frac{\rho_{real} \cdot V_{cel} \cdot N_A}{A}$$
   $$n_{vacants/cel} = n_{teòric} - n_{efectiu}$$</div>
-  <p style="font-size:13px;color:var(--dim)">Si $\rho_{real} < \rho_{teòrica}$, hi ha vacants. Aïlla $n$ i compara amb el valor teòric (2, 4, 6...).</p>
+  <p style="font-size:13px;color:var(--dim)">Si $\rho_{real} < \rho_{teòrica}$, hi ha vacants. Aïlla n i compara amb el valor teòric (BCC=2, FCC=4, HCP=6).</p>
 </div>
 
 <!-- ============ T3 DIFUSIÓ ============ -->
